@@ -17,7 +17,11 @@ import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
-
+/**
+ * desc:登录页
+ * time:2023/12/9
+ * author:MJ
+ */
 class LoginActivity : BaseMvActivity<ActivityLoginBinding, LoginViewModel>() {
     private val nameTV by lazy { binding.username as ShapeEditText }
     private val passwordTv by lazy { binding.password as ShapeEditText }
