@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 import cn.jpush.android.api.JPushInterface
 import cn.jpush.android.ups.JPushUPSManager
+import com.mj.preventbullying.client.webrtc.SocketEventViewModel
 
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
@@ -19,6 +20,7 @@ class MyApp : Application(), ViewModelStoreOwner {
     companion object {
         @SuppressLint("StaticFieldLeak")
         lateinit var context: Context
+        lateinit var socketEventViewModel: SocketEventViewModel
     }
 
     private lateinit var mAppViewModelStore: ViewModelStore
@@ -34,7 +36,7 @@ class MyApp : Application(), ViewModelStoreOwner {
         SpManager.init(this)
         mAppViewModelStore = ViewModelStore()
         mApplicationProvider = ViewModelProvider(this)
-
+        socketEventViewModel = getApplicationViewModel(SocketEventViewModel::class.java)
         initJGPush()
     }
 
