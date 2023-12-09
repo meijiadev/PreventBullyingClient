@@ -7,9 +7,14 @@ import android.view.View
 import androidx.lifecycle.Observer
 import coil.load
 import com.hjq.shape.view.ShapeEditText
+import com.mj.preventbullying.client.ACCESS_TOKEN_KEY
+import com.mj.preventbullying.client.FRESH_TOKEN_KEY
 import com.mj.preventbullying.client.NetworkUtil
 import com.mj.preventbullying.client.R
+import com.mj.preventbullying.client.SpManager
+import com.mj.preventbullying.client.USER_ID_KEY
 import com.mj.preventbullying.client.databinding.ActivityLoginBinding
+import com.mj.preventbullying.client.ui.MainActivity
 import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseMvActivity
 import java.util.Random
@@ -110,7 +115,10 @@ class LoginActivity : BaseMvActivity<ActivityLoginBinding, LoginViewModel>() {
         })
         // 登录返回值
         loginViewModel.loginResult.observe(this) {
-
+            SpManager.putString(FRESH_TOKEN_KEY, it.refresh_token)
+            SpManager.putString(ACCESS_TOKEN_KEY, it.access_token)
+            SpManager.putString(USER_ID_KEY, it.user_id)
+            startActivity(MainActivity::class.java)
         }
 
     }

@@ -37,7 +37,7 @@ object NetworkUtil {
     }
 
     //获取NetworkInfo
-    fun getNetworkInfo(context: Context) = getConnectivityManager(context).activeNetworkInfo
+    private fun getNetworkInfo(context: Context) = getConnectivityManager(context).activeNetworkInfo
 
     //判断网络是否可用
     fun isAvailable(): Boolean {
