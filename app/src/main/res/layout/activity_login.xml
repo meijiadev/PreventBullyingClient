@@ -18,7 +18,6 @@
         app:layout_constraintHeight_percent="0.25"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-
         />
 
     <com.hjq.shape.layout.ShapeConstraintLayout
@@ -26,7 +25,7 @@
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.7"
+        app:layout_constraintHeight_percent="0.75"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/icon_iv"
         app:shape_solidColor="@color/white"
@@ -57,7 +56,7 @@
             android:hint="@string/prompt_email"
             android:paddingStart="8dp"
             android:selectAllOnFocus="true"
-            android:text="admin"
+            android:text="qiaofeng"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/login_text_tv"
@@ -82,7 +81,7 @@
             android:inputType="textPassword"
             android:paddingStart="8dp"
             android:selectAllOnFocus="true"
-            android:text="123456"
+            android:text="Spad12#"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/username"
@@ -130,7 +129,6 @@
             android:layout_marginStart="35dp"
             android:layout_marginTop="40dp"
             android:layout_marginEnd="35dp"
-            android:clickable="false"
             android:gravity="center"
             android:onClick="onLogin"
             android:text="登录"
@@ -141,8 +139,6 @@
             app:layout_constraintTop_toBottomOf="@id/code_tv"
             app:shape_radius="12dp"
             app:shape_solidColor="@color/orange"
-            app:shape_solidDisabledColor="@color/common_button_disable_color"
-
             />
 
     </com.hjq.shape.layout.ShapeConstraintLayout>

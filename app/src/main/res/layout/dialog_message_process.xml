@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <com.hjq.shape.layout.ShapeRelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:shape_radius="20dp"
+        app:shape_solidColor="@color/white90">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/loading_tv"
+            android:layout_width="250dp"
+            android:layout_height="120dp"
+            android:text="正在拨打中..."
+            android:gravity="center"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            />
+
+        <LinearLayout
+            android:id="@+id/call_ll"
+            android:layout_width="250dp"
+            android:layout_height="120dp"
+            android:visibility="gone"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/call_time_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:text="00:00:00" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="正在通话中..." />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/hang_up_iv"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="20dp"
+                android:src="@mipmap/hangup_icon" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/action_ll"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/go_call_tv"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="拨打设备"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <View
+                android:id="@+id/line1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_margin="5dp"
+                android:background="@color/common_line_color" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/play_waring_tv"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:text="播放报警音频"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <View
+                android:id="@+id/line2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@color/common_line_color" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/ignore_tv"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:gravity="center"
+                android:text="直接忽略"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <View
+                android:id="@+id/line3"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@color/common_line_color" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/cancel_tv"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:gravity="center"
+                android:text="取消"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <View
+                android:id="@+id/line4"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@color/common_line_color" />
+
+        </LinearLayout>
+
+    </com.hjq.shape.layout.ShapeRelativeLayout>
+
+</FrameLayout>

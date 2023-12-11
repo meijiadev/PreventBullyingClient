@@ -65,7 +65,6 @@ abstract class BaseMvActivity<V : ViewBinding, VM : BaseViewModel> : AppCompatAc
      */
     private fun initStatus() {
         ImmersionBar.with(this) // 默认状态栏字体颜色为黑色
-            .hideBar(BarHide.FLAG_HIDE_STATUS_BAR)
             .init()
     }
 

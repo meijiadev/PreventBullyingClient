@@ -1,9 +1,9 @@
 package com.blackview.base.http
 
 import androidx.lifecycle.viewModelScope
+import com.mj.preventbullying.client.Constant
 
 import com.mj.preventbullying.client.SpManager
-import com.mj.preventbullying.client.USER_TOKEN
 import com.mj.preventbullying.client.http.exception.AppException
 import com.mj.preventbullying.client.http.exception.ExceptionHandle
 import com.mj.preventbullying.client.http.request.BaseResponse
@@ -59,11 +59,12 @@ fun <T> BaseViewModel.request(
                         val message = JSONObject(this).optString("message")
                         uiChangeLiveData.toastEvent.postValue(message)
                         //token 过期 重新登录
-                        if (message.contains("unauthenticated")){
-                            SpManager.putString(USER_TOKEN,"")
+                        if (message.contains("unauthenticated")) {
+                            // SpManager.putString(USER_TOKEN,"")
+                            Constant.accessToken = null
                             //App.instance.gotoAct<LoginActivity>()
                         }
-                        
+
                     } else {
                         uiChangeLiveData.toastEvent.postValue(it.response()?.message())
                     }
@@ -128,8 +129,8 @@ fun <T> BaseViewModel.request(
                         val message = JSONObject(this).optString("message")
                         uiChangeLiveData.toastEvent.postValue(message)
                         //token 过期 重新登录
-                        if (message.contains("unauthenticated")){
-                           // App.instance.gotoAct<LoginActivity>()
+                        if (message.contains("unauthenticated")) {
+                            // App.instance.gotoAct<LoginActivity>()
                             Logger.e("token 过期 重新登录")
                         }
                     } else {
@@ -181,12 +182,12 @@ fun <T> BaseViewModel.requestNoCheck(
             if (it is HttpException) {
                 it.response()?.errorBody()?.string()?.apply {
                     if (this.isNotEmpty()) {
-                        val code=JSONObject(this).optString("code")
+                        val code = JSONObject(this).optString("code")
                         val message = JSONObject(this).optString("message")
                         uiChangeLiveData.toastEvent.postValue(message)
                         //token 过期 重新登录
-                        if (message.contains("unauthenticated")){
-                           // App.instance.gotoAct<LoginActivity>()
+                        if (message.contains("unauthenticated")) {
+                            // App.instance.gotoAct<LoginActivity>()
                             Logger.e("token 过期重新登录")
                         }
                     } else {
@@ -237,13 +238,13 @@ fun <T> BaseViewModel.requestNoCheckAndError(
             if (it is HttpException) {
                 it.response()?.errorBody()?.string()?.apply {
                     if (this.isNotEmpty()) {
-                        val code=JSONObject(this).optInt("code")
+                        val code = JSONObject(this).optInt("code")
                         val message = JSONObject(this).optString("message")
-                        error(AppException(code,message))
+                        error(AppException(code, message))
                         uiChangeLiveData.toastEvent.postValue(message)
                         //token 过期 重新登录
-                        if (message.contains("unauthenticated")){
-                          //  App.instance.gotoAct<LoginActivity>()
+                        if (message.contains("unauthenticated")) {
+                            //  App.instance.gotoAct<LoginActivity>()
                             Logger.e("重新登录")
                         }
                     } else {
@@ -272,11 +273,12 @@ suspend fun <T> executeResponse(
 ) {
     coroutineScope {
         when (response.code) {
-            0, 20000,20004 -> {
+            0, 20000, 20004 -> {
                 response.data?.let {
                     success(it)
                 }
             }
+
             else -> {
                 throw AppException(response.code, response.message)
             }

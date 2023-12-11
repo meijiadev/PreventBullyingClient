@@ -1,18 +1,18 @@
 package com.mj.preventbullying.client.ui.login
 
+import android.annotation.SuppressLint
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Base64
 import android.view.View
 import androidx.lifecycle.Observer
 import coil.load
+import com.gyf.immersionbar.ImmersionBar
+import com.gyf.immersionbar.ktx.immersionBar
 import com.hjq.shape.view.ShapeEditText
-import com.mj.preventbullying.client.ACCESS_TOKEN_KEY
-import com.mj.preventbullying.client.FRESH_TOKEN_KEY
+import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.NetworkUtil
 import com.mj.preventbullying.client.R
-import com.mj.preventbullying.client.SpManager
-import com.mj.preventbullying.client.USER_ID_KEY
 import com.mj.preventbullying.client.databinding.ActivityLoginBinding
 import com.mj.preventbullying.client.ui.MainActivity
 import com.orhanobut.logger.Logger
@@ -41,6 +41,7 @@ class LoginActivity : BaseMvActivity<ActivityLoginBinding, LoginViewModel>() {
     }
 
 
+    @SuppressLint("ResourceType")
     override fun initParam() {
         loginViewModel = getActivityViewModel(LoginViewModel::class.java)
 
@@ -115,9 +116,9 @@ class LoginActivity : BaseMvActivity<ActivityLoginBinding, LoginViewModel>() {
         })
         // 登录返回值
         loginViewModel.loginResult.observe(this) {
-            SpManager.putString(FRESH_TOKEN_KEY, it.refresh_token)
-            SpManager.putString(ACCESS_TOKEN_KEY, it.access_token)
-            SpManager.putString(USER_ID_KEY, it.user_id)
+            Constant.userId = it.user_id
+            Constant.refreshToken = it.refresh_token
+            Constant.accessToken = it.access_token
             startActivity(MainActivity::class.java)
         }
 
@@ -141,13 +142,17 @@ class LoginActivity : BaseMvActivity<ActivityLoginBinding, LoginViewModel>() {
      * 登录点击事件
      */
     fun onLogin(v: View) {
-        val psTV = passwordTv.text.toString()
-        val ps = encrypt("thanks,pig4cloud", psTV).trim()
-        val name = nameTV.text.toString()
-        val code = codeTv?.text.toString()
-        Logger.i("加密后的密码：$ps")
-        randomStr?.let {
-            loginViewModel.login(name, it, code, ps)
+        if (login.isEnabled) {
+            val psTV = passwordTv.text.toString()
+            val ps = encrypt("thanks,pig4cloud", psTV).trim()
+            val name = nameTV.text.toString()
+            val code = codeTv?.text.toString()
+            Logger.i("加密后的密码：$ps")
+            randomStr?.let {
+                loginViewModel.login(name, it, code, ps)
+            }
+        } else {
+            toast("请完整填写登录账号密码和验证码")
         }
 
 

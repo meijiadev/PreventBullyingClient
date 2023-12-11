@@ -25,3 +25,25 @@ data class LoginResult(
     val success: String
 
 )
+
+
+class Attributes
+
+data class Authority(
+    val authority: String
+)
+
+data class UserInfo(
+    val accountNonExpired: Boolean,
+    val accountNonLocked: Boolean,
+    val attributes: Attributes,
+    val authorities: List<Authority>,
+    val credentialsNonExpired: Boolean,
+    val enabled: Boolean,
+    val id: String,
+    val name: String,
+    val orgId: String,
+    val password: Any,
+    val phone: String,
+    val username: String
+)

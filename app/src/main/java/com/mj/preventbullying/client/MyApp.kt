@@ -65,7 +65,8 @@ class MyApp : Application(), ViewModelStoreOwner {
         JPushUPSManager.registerToken(
             this, "1f56ed865ec03bb22a91c9ed", null, ""
         ) {
-            Logger.e("initJGPush: ${it.token},registerID:${JPushInterface.getRegistrationID(this)}")
+            Constant.registerId = JPushInterface.getRegistrationID(this)
+            Logger.e("initJGPush: ${it.token},registerID:${Constant.registerId}")
         }
 
 

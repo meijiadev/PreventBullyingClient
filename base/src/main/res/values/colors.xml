@@ -60,6 +60,7 @@
     <color name="yellow">#FFFFFF00</color>
     <!-- 绿色 -->
     <color name="green">#FF008000</color>
+    <color name="green60">#99008000</color>
     <!-- 蓝色 -->
     <color name="blue">#FF0000FF</color>
     <!-- 紫色 -->
@@ -70,6 +71,7 @@
     <color name="orange">#FFFFA500</color>
     <color name="orange1">#F0B663</color>
     <color name="orange2">#F7BB62</color>
+    <color name="green1">#C9E1AB</color>
 
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
