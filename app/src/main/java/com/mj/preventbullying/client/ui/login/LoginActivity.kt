@@ -9,6 +9,9 @@ import androidx.lifecycle.Observer
 import coil.load
 import com.gyf.immersionbar.ImmersionBar
 import com.gyf.immersionbar.ktx.immersionBar
+import com.hjq.permissions.OnPermissionCallback
+import com.hjq.permissions.Permission
+import com.hjq.permissions.XXPermissions
 import com.hjq.shape.view.ShapeEditText
 import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.NetworkUtil
@@ -48,6 +51,24 @@ class LoginActivity : BaseMvActivity<ActivityLoginBinding, LoginViewModel>() {
     }
 
     override fun initData() {
+        XXPermissions.with(this)
+            // .permission(Permission.MANAGE_EXTERNAL_STORAGE)
+            .permission(Permission.RECORD_AUDIO)
+            .request(object : OnPermissionCallback {
+                override fun onGranted(permissions: MutableList<String>?, all: Boolean) {
+                    Logger.i("录音权限获取成功")
+                    if (all) {
+
+                    }
+
+                }
+
+                override fun onDenied(permissions: MutableList<String>?, never: Boolean) {
+                    super.onDenied(permissions, never)
+                    Logger.i("权限获取失败")
+                }
+            })
+
 
     }
 

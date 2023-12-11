@@ -63,6 +63,7 @@ class MessageProcessDialog(context: Context) : CenterPopupView(context) {
 
         hangUpIv.setOnClickListener {
             MyApp.socketEventViewModel.sendHangUp()
+            dismiss()
         }
 
 
