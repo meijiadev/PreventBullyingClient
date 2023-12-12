@@ -8,24 +8,22 @@
     <com.hjq.shape.layout.ShapeConstraintLayout
         android:id="@+id/layout_item"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_height="130dp"
         app:shape_radius="20dp"
         app:shape_solidColor="@color/device_offline">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/device_sn_tv"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:text="SN:2A82312000031330"
             android:textColor="@color/black"
-            android:textSize="15sp"
+            android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.5" />
+            />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/device_org_tv"
@@ -35,25 +33,24 @@
             android:layout_marginTop="10dp"
             android:text="所属组织：惠州市一中"
             android:textColor="@color/black"
-            android:textSize="15sp"
+            android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/device_sn_tv"
-            app:layout_constraintWidth_percent="0.45" />
+            app:layout_constraintWidth_percent="0.4" />
 
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/device_location_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="10dp"
             android:text="位置：二楼洗手间"
             android:textColor="@color/black"
-            android:textSize="15sp"
+            android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/device_sn_tv"
-            app:layout_constraintWidth_percent="0.4" />
+            app:layout_constraintWidth_percent="0.5" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/keyword_tv"
@@ -63,10 +60,10 @@
             android:layout_marginTop="10dp"
             android:text="关键字："
             android:textColor="@color/black"
-            android:textSize="15sp"
+            android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/device_org_tv"
-            app:layout_constraintWidth_percent="0.45"
+            app:layout_constraintWidth_percent="0.4"
 
             />
 
@@ -75,35 +72,35 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginEnd="10dp"
             android:text="报警时间：2023-12-11 15:51:02"
             android:textColor="@color/black"
-            android:textSize="15sp"
+            android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/device_location_tv"
-            app:layout_constraintWidth_percent="0.45" />
+            app:layout_constraintWidth_percent="0.5" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/status_iv"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:layout_marginEnd="80dp"
+            android:layout_marginEnd="10dp"
             android:src="@mipmap/pending_icon"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/device_sn_tv" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/go_process_tv"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:layout_marginEnd="15dp"
+            android:layout_marginEnd="10dp"
             android:drawableRight="@mipmap/go_process_icon"
             android:text="处理"
-            android:textSize="15sp"
+            android:textSize="12sp"
             android:textStyle="bold"
             android:gravity="center_vertical"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/keyword_tv"
+            app:layout_constraintTop_toBottomOf="@id/waring_time_tv"
 
             />
 

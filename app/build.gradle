@@ -99,8 +99,10 @@ dependencies {
     implementation 'com.tencent.bugly:nativecrashreport:3.9.2'
 
     // 极光推送
-    implementation 'cn.jiguang.sdk:jcore:2.7.2'  // 此处以JCore 2.7.2 版本为例。
-    implementation 'cn.jiguang.sdk:jpush:4.0.0'  // 此处以JPush 4.0.0 版本为例
+//    implementation 'cn.jiguang.sdk:jcore:2.7.2'  // 此处以JCore 2.7.2 版本为例。
+//    implementation 'cn.jiguang.sdk:jpush:4.0.0'  // 此处以JPush 4.0.0 版本为例
+    // 此处以JPush 5.0.3 版本为例，注意：从 5.0.0 版本开始可以自动拉取 JCore 包，无需另外配置
+    implementation 'cn.jiguang.sdk:jpush:5.2.2'
 
     //万能适配器 https://github.com/CymChad/BaseRecyclerViewAdapterHelper/wiki
     implementation "io.github.cymchad:BaseRecyclerViewAdapterHelper4:4.1.2"

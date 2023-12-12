@@ -45,21 +45,27 @@ class SocketEventViewModel : ViewModel(), HandlerAction {
     private var registerId: String? = null
 
 
+    private var isConnected = false
+
     fun initSocket(sn: String, registerId: String) {
-        userId = sn
-        this.registerId = registerId
-        kotlin.runCatching {
-            mSocket = IO.socket(
-                "http://192.168.1.6:7099/spad-cloud?token=1231&clientType=anti_bullying_device&clientId=$sn"
-            )
-        }.onFailure {
-            Logger.e("${it.message}")
+        if (!isConnected) {
+            userId = sn
+            this.registerId = registerId
+            kotlin.runCatching {
+                mSocket = IO.socket(
+                    "http://192.168.1.6:7099/spad-cloud?token=1231&clientType=anti_bullying_device&clientId=$sn"
+                )
+            }.onFailure {
+                Logger.e("${it.message}")
+            }
+            mSocket?.connect()
+            receiveMessage()
+            webRtcManager = WebRtcManager(MyApp.context)
+            // this.from = sn
+            Logger.i("初始化socket:${mSocket?.isActive}")
+        }else{
+            Logger.e("socket.io 已经连接")
         }
-        mSocket?.connect()
-        receiveMessage()
-        webRtcManager = WebRtcManager(MyApp.context)
-        // this.from = sn
-        Logger.i("初始化socket:${mSocket?.isActive}")
     }
 
 
@@ -99,7 +105,7 @@ class SocketEventViewModel : ViewModel(), HandlerAction {
     }
 
     fun icecandidate(iceCandidate: IceCandidate) {
-        val message = Message("icecandidate", userId, toId, iceCandidate)
+        val message = Message("icecandidate", userId, toId, Gson().toJson(iceCandidate))
         mSocket?.emit("message", Gson().toJson(message))
     }
 
@@ -180,11 +186,13 @@ class SocketEventViewModel : ViewModel(), HandlerAction {
 
         mSocket?.on("connect") {
             Logger.i("socket.io 正在连接")
+            isConnected = true
             login()
         }
 
         mSocket?.on("disconnected") {
             Logger.i("socket.io 断开连接")
+            isConnected = false
         }
 
     }

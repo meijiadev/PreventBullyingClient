@@ -61,7 +61,7 @@ fun <T> BaseViewModel.request(
                         //token 过期 重新登录
                         if (message.contains("unauthenticated")) {
                             // SpManager.putString(USER_TOKEN,"")
-                            Constant.accessToken = null
+                           // Constant.accessToken = null
                             //App.instance.gotoAct<LoginActivity>()
                         }
 

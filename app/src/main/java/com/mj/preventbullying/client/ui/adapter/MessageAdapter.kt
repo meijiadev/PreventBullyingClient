@@ -17,6 +17,10 @@ import com.mj.preventbullying.client.http.result.Record
  * Create by MJ on 2023/12/11.
  * Describe :
  */
+const val PENDING_STATUS = "0"
+const val PROCESSING_STATUS = "1"
+const val PROCESSED_STATUS = "2"
+const val PROCESSED_IGNORE = "3"
 
 class MessageAdapter : BaseQuickAdapter<Record, MessageAdapter.VH>() {
     class VH(
@@ -37,22 +41,22 @@ class MessageAdapter : BaseQuickAdapter<Record, MessageAdapter.VH>() {
             waringTimeTv.text = "报警时间：${item?.waringTime}"
             val resource = when (item?.state) {
                 // 待处理
-                "0" -> {
+                PENDING_STATUS -> {
                     goProcessTv.visibility = View.VISIBLE
                     R.mipmap.pending_icon
                 }
                 // 处理中
-                "1" -> {
+                PROCESSING_STATUS -> {
                     goProcessTv.visibility = View.GONE
                     R.mipmap.processing_icon
                 }
                 // 已处理
-                "2" -> {
+                PROCESSED_STATUS -> {
                     goProcessTv.visibility = View.GONE
                     R.mipmap.processed_icon
                 }
                 // 已忽略
-                "3" -> {
+                PROCESSED_IGNORE -> {
                     goProcessTv.visibility = View.GONE
                     R.mipmap.ignore_icon
                 }

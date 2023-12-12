@@ -8,25 +8,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:shape_radius="20dp"
-        app:shape_solidColor="@color/white90">
+        app:shape_solidColor="@color/white">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/loading_tv"
             android:layout_width="250dp"
             android:layout_height="120dp"
-            android:text="正在拨打中..."
             android:gravity="center"
+            android:text="正在拨打中..."
             android:textSize="18sp"
             android:textStyle="bold"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/call_ll"
             android:layout_width="250dp"
-            android:layout_height="120dp"
-            android:visibility="gone"
-            android:orientation="vertical">
+            android:layout_height="150dp"
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/call_time_tv"
@@ -42,19 +41,35 @@
                 android:layout_gravity="center_horizontal"
                 android:text="正在通话中..." />
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/hang_up_iv"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="20dp"
-                android:src="@mipmap/hangup_icon" />
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/speak_phone_on_iv"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@mipmap/loud_able" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/hang_up_iv"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginStart="40dp"
+                    android:src="@mipmap/hangup_icon" />
+            </LinearLayout>
+
         </LinearLayout>
 
 
         <LinearLayout
             android:id="@+id/action_ll"
-            android:layout_width="200dp"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:visibility="visible">
@@ -130,7 +145,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
-                android:layout_marginBottom="5dp"
+                android:layout_marginBottom="15dp"
                 android:background="@color/common_line_color" />
 
         </LinearLayout>

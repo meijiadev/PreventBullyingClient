@@ -9,6 +9,10 @@ import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 import cn.jpush.android.api.JPushInterface
 import cn.jpush.android.ups.JPushUPSManager
+import com.hjq.toast.ToastLogInterceptor
+import com.hjq.toast.ToastUtils
+import com.hjq.toast.style.WhiteToastStyle
+import com.mj.preventbullying.client.ui.TimerViewModel
 import com.mj.preventbullying.client.webrtc.SocketEventViewModel
 
 import com.orhanobut.logger.AndroidLogAdapter
@@ -21,6 +25,7 @@ class MyApp : Application(), ViewModelStoreOwner {
         @SuppressLint("StaticFieldLeak")
         lateinit var context: Context
         lateinit var socketEventViewModel: SocketEventViewModel
+        lateinit var timerViewModel: TimerViewModel
     }
 
     private lateinit var mAppViewModelStore: ViewModelStore
@@ -34,8 +39,16 @@ class MyApp : Application(), ViewModelStoreOwner {
         context = this
         Logger.addLogAdapter(AndroidLogAdapter())
         SpManager.init(this)
+        // 初始化吐司
+        ToastUtils.init(this, WhiteToastStyle())
+        // 设置调试模式
+        // ToastUtils.setDebugMode(isDebug())
+//        ToastUtils.setStyle(WhiteToastStyle())
+        // 设置 Toast 拦截器
+        ToastUtils.setInterceptor(ToastLogInterceptor())
         mAppViewModelStore = ViewModelStore()
         mApplicationProvider = ViewModelProvider(this)
+        timerViewModel = getApplicationViewModel(TimerViewModel::class.java)
         socketEventViewModel = getApplicationViewModel(SocketEventViewModel::class.java)
         initJGPush()
     }
@@ -65,8 +78,8 @@ class MyApp : Application(), ViewModelStoreOwner {
         JPushUPSManager.registerToken(
             this, "1f56ed865ec03bb22a91c9ed", null, ""
         ) {
-            Constant.registerId = JPushInterface.getRegistrationID(this)
-            Logger.e("initJGPush: ${it.token},registerID:${Constant.registerId}")
+            SpManager.putString(Constant.REGISTER_ID_KEY, JPushInterface.getRegistrationID(this))
+            Logger.e("initJGPush: ${it.token},registerID:${JPushInterface.getRegistrationID(this)}")
         }
 
 

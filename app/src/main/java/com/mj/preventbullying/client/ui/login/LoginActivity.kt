@@ -6,6 +6,8 @@ import android.text.TextWatcher
 import android.util.Base64
 import android.view.View
 import androidx.lifecycle.Observer
+import cn.jpush.android.cache.Sp
+import cn.jpush.android.ups.JPushUPSManager
 import coil.load
 import com.gyf.immersionbar.ImmersionBar
 import com.gyf.immersionbar.ktx.immersionBar
@@ -16,6 +18,7 @@ import com.hjq.shape.view.ShapeEditText
 import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.NetworkUtil
 import com.mj.preventbullying.client.R
+import com.mj.preventbullying.client.SpManager
 import com.mj.preventbullying.client.databinding.ActivityLoginBinding
 import com.mj.preventbullying.client.ui.MainActivity
 import com.orhanobut.logger.Logger
@@ -137,10 +140,14 @@ class LoginActivity : BaseMvActivity<ActivityLoginBinding, LoginViewModel>() {
         })
         // 登录返回值
         loginViewModel.loginResult.observe(this) {
-            Constant.userId = it.user_id
-            Constant.refreshToken = it.refresh_token
-            Constant.accessToken = it.access_token
+            SpManager.putString(Constant.ACCESS_TOKEN_KEY, it.access_token)
+            SpManager.putString(Constant.FRESH_TOKEN_KEY, it.refresh_token)
+            SpManager.putString(Constant.USER_ID_KEY, it.user_id)
+            JPushUPSManager.turnOnPush(this) {
+                Logger.i("打开极光推送服务：$it")
+            }
             startActivity(MainActivity::class.java)
+            finish()
         }
 
     }

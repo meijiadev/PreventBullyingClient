@@ -35,11 +35,8 @@ class DeviceFragment : BaseMvFragment<FragmentDeviceBinding, DeviceViewModel>() 
     }
 
     override fun initParam() {
-        if (Constant.userId != null && Constant.registerId != null) {
-            MyApp.socketEventViewModel.initSocket(Constant.userId!!, Constant.registerId!!)
-            // viewModel.getAllDeviceRecords()
-            viewModel.getAllDevices()
-        }
+        viewModel.getAllDevices()
+
     }
 
     override fun initData() {

@@ -3,19 +3,23 @@ package com.mj.preventbullying.client.ui
 import android.annotation.SuppressLint
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.gyf.immersionbar.ImmersionBar
+import cn.jpush.android.api.JPushInterface
+import cn.jpush.android.ups.JPushUPSManager
+import cn.jpush.android.ups.TokenResult
+import cn.jpush.android.ups.UPSTurnCallBack
+import com.google.gson.Gson
 import com.gyf.immersionbar.ktx.immersionBar
-import com.mj.preventbullying.client.Constant.registerId
-import com.mj.preventbullying.client.Constant.userId
+import com.mj.preventbullying.client.Constant
+import com.mj.preventbullying.client.Constant.USER_ID_KEY
 import com.mj.preventbullying.client.MyApp
 import com.mj.preventbullying.client.R
+import com.mj.preventbullying.client.SpManager
 import com.mj.preventbullying.client.databinding.ActivityMainBinding
-import com.mj.preventbullying.client.ui.adapter.DeviceListAdapter
+import com.mj.preventbullying.client.jpush.receive.JPushExtraMessage
 import com.mj.preventbullying.client.ui.fragment.DeviceFragment
 import com.mj.preventbullying.client.ui.fragment.MessageFragment
+import com.mj.preventbullying.client.ui.login.LoginActivity
+import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseMvActivity
 
 
@@ -27,6 +31,8 @@ class MainActivity : BaseMvActivity<ActivityMainBinding, MainViewModel>() {
     private val messageFragment by lazy { MessageFragment.newInstance() }
     private val deviceFragment by lazy { DeviceFragment.newInstance() }
 
+    private var jPushExtraMessage: JPushExtraMessage? = null
+
 
     override fun getViewBinding(): ActivityMainBinding {
         return ActivityMainBinding.inflate(layoutInflater)
@@ -34,6 +40,9 @@ class MainActivity : BaseMvActivity<ActivityMainBinding, MainViewModel>() {
 
     @SuppressLint("ResourceType")
     override fun initParam() {
+        val extras = intent.extras?.getString(JPushInterface.EXTRA_NOTIFICATION_ACTION_EXTRA)
+        Logger.e("收到极光推送的报警recordId:$extras")
+        jPushExtraMessage = Gson().fromJson(extras, JPushExtraMessage::class.java)
         immersionBar {
             //深色字体
             statusBarDarkFont(true)
@@ -41,7 +50,12 @@ class MainActivity : BaseMvActivity<ActivityMainBinding, MainViewModel>() {
     }
 
     override fun initData() {
-
+        val userId = SpManager.getString(USER_ID_KEY)
+        val registerId = SpManager.getString(Constant.REGISTER_ID_KEY)
+        if (userId != null && registerId != null) {
+            MyApp.socketEventViewModel.initSocket(userId, registerId)
+            // viewModel.getAllDeviceRecords()
+        }
     }
 
     override fun initViewObservable() {
@@ -56,6 +70,17 @@ class MainActivity : BaseMvActivity<ActivityMainBinding, MainViewModel>() {
     override fun initListener() {
     }
 
+
+    fun onExit(v: View) {
+        SpManager.putString(Constant.ACCESS_TOKEN_KEY, null)
+        SpManager.putString(Constant.FRESH_TOKEN_KEY, null)
+        SpManager.putString(Constant.USER_ID_KEY, null)
+        JPushUPSManager.turnOffPush(this) {
+            Logger.i("关闭极光推送服务：$it")
+        }
+        startActivity(LoginActivity::class.java)
+        finish()
+    }
 
     fun onMessage(v: View) {
         binding.titleTv.text = "消息通知"

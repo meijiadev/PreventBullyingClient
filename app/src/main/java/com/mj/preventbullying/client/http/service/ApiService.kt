@@ -1,9 +1,14 @@
 package com.mj.preventbullying.client.http.service
 
+import android.util.ArrayMap
 import com.mj.preventbullying.client.Constant
+import com.mj.preventbullying.client.SpManager
 import com.mj.preventbullying.client.http.result.DeviceRecordResult
 import com.mj.preventbullying.client.http.result.DeviceResult
 import com.mj.preventbullying.client.http.result.LoginResult
+import com.mj.preventbullying.client.http.result.RecordProcessResult
+import okhttp3.RequestBody
+import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -31,23 +36,30 @@ interface ApiService {
         @Query("grant_type") grant_type: String = "password",
         @Query("scope") scope: String = "server",
         @Field("password") ps: String,
-        @Header("Authorization") authorization: String = "Basic cGlnOnBpZw=="
+        @Header("Authorization") authorization: String = "Basic YXBwOmFwcA=="
     ): LoginResult
 
 
     @GET("/anti-bullying/record/page")
     suspend fun getAllRecords(
         @Query("current") current: Int = 1,
-        @Query("size") size: Int = 10,
-        @Header("Authorization") authorization: String = "Bearer ${Constant.accessToken}"
+        @Query("size") size: Int = 100,
+        @Header("Authorization") authorization: String = "Bearer ${SpManager.getString(Constant.ACCESS_TOKEN_KEY)}"
     ): DeviceRecordResult
 
 
     @GET("/anti-bullying/device/page")
     suspend fun getAllDevices(
         @Query("current") current: Int = 1,
-        @Query("size") size: Int = 10,
-        @Header("Authorization") authorization: String = "Bearer ${Constant.accessToken}"
+        @Query("size") size: Int = 100,
+        @Header("Authorization") authorization: String = "Bearer ${SpManager.getString(Constant.ACCESS_TOKEN_KEY)}"
     ): DeviceResult
+
+    @POST("/anti-bullying/record/process")
+    suspend fun recordProcess(
+        @Body params: ArrayMap<Any, Any>,
+        @Header("Authorization") authorization: String = "Bearer ${SpManager.getString(Constant.ACCESS_TOKEN_KEY)}"
+    ): RecordProcessResult
+
 
 }

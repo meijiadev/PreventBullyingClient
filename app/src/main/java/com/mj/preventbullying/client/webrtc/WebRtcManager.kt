@@ -125,7 +125,7 @@ class WebRtcManager(context: Context) : SdpObserver {
                     override fun onIceCandidate(iceCandidate: IceCandidate) {
                         //自动请求stun/turn服务器后回调这个方法
                         //发送Ice信息给对端用户 ,下面的代码只是用于发送信息给远端用户，我使用的是websocket，自己可以用其他方式实现。最后结尾我会给出服务器端的代码。
-                        //MyApp.socketEventViewModel.icecandidate(iceCandidate)
+                        MyApp.socketEventViewModel.icecandidate(iceCandidate)
                         Logger.d("发送iceCandidate")
 
                     }
