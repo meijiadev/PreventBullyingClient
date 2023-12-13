@@ -40,6 +40,14 @@ interface ApiService {
     ): LoginResult
 
 
+    @POST("/auth/oauth2/token")
+    suspend fun refreshToken(
+        @Query("grant_type") grant_type: String = "refresh_token",
+        @Query("refresh_token") refresh_token: String,
+        @Query("scope") scope: String = "server"
+    )
+
+
     @GET("/anti-bullying/record/page")
     suspend fun getAllRecords(
         @Query("current") current: Int = 1,

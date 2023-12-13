@@ -12,9 +12,8 @@ import com.mj.preventbullying.client.http.result.DeviceRecord
 
 /**
  * Create by MJ on 2023/12/9.
- * Describe :
+ * Describe :设备列表适配器
  */
-
 class DeviceListAdapter : BaseQuickAdapter<DeviceRecord, DeviceListAdapter.VH>() {
     class VH(
         parent: ViewGroup,
@@ -48,10 +47,7 @@ class DeviceListAdapter : BaseQuickAdapter<DeviceRecord, DeviceListAdapter.VH>()
                 }
             }
             deviceLocationTv.text = "位置：${item?.location}"
-
-
         }
-
     }
 
     override fun onCreateViewHolder(context: Context, parent: ViewGroup, viewType: Int): VH {
