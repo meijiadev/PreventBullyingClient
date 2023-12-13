@@ -5,14 +5,16 @@ import com.mj.preventbullying.client.http.exception.AppException
 
 
 open class BaseResponse<T> {
-    var message: String? = null
+    var msg: String? = null
     var code = 0
     var data: T? = null
+    var success = false
 
     override fun toString(): String {
-        return "$message:$message\n" +
+        return "$msg:$msg\n" +
                 "code:$code\n" +
-                "data:$data"
+                "data:$data\n" +
+                "success:$success"
 
     }
 }

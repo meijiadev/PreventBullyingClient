@@ -26,7 +26,7 @@ class LoginViewModel() : BaseViewModel() {
             }
             Logger.i("登录返回结果：$it")
         }, {
-            Logger.i("报错：${it.message}")
+            Logger.i("报错：${it}")
         }
         )
 

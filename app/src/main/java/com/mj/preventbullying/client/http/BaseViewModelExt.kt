@@ -1,9 +1,7 @@
 package com.blackview.base.http
 
 import androidx.lifecycle.viewModelScope
-import com.mj.preventbullying.client.Constant
 
-import com.mj.preventbullying.client.SpManager
 import com.mj.preventbullying.client.http.exception.AppException
 import com.mj.preventbullying.client.http.exception.ExceptionHandle
 import com.mj.preventbullying.client.http.request.BaseResponse
@@ -176,6 +174,7 @@ fun <T> BaseViewModel.requestNoCheck(
             //成功回调
             success(it)
         }.onFailure {
+            Logger.e("${it.message}")
             //网络请求异常 关闭弹窗
             uiChangeLiveData.dismissDialogEvent.postValue(null)
             error(ExceptionHandle.handleException(it))
@@ -280,7 +279,7 @@ suspend fun <T> executeResponse(
             }
 
             else -> {
-                throw AppException(response.code, response.message)
+                throw AppException(response.code, response.msg)
             }
         }
     }

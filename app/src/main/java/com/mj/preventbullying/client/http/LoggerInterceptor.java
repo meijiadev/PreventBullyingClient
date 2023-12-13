@@ -8,9 +8,15 @@ package com.mj.preventbullying.client.http;
 import android.text.TextUtils;
 
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.hjq.toast.ToastUtils;
+import com.mj.preventbullying.client.http.request.BaseResponse;
 import com.orhanobut.logger.Logger;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.Objects;
 
 import okhttp3.Headers;
 import okhttp3.Interceptor;
@@ -32,106 +38,119 @@ import okio.Buffer;
 
 public class LoggerInterceptor implements Interceptor {
 
-	private String tag = "Http";
-	private boolean showResponse = true;
+    private String tag = "Http";
+    private boolean showResponse = true;
 
-	public LoggerInterceptor(String tag, boolean showResponse) {
-		this.showResponse = showResponse;
-		this.tag = tag;
-	}
+    public LoggerInterceptor(String tag, boolean showResponse) {
+        this.showResponse = showResponse;
+        this.tag = tag;
+    }
 
-	public LoggerInterceptor() {
+    public LoggerInterceptor() {
 
-	}
+    }
 
-	public Response intercept(Chain chain) throws IOException {
-		Request request = chain.request();
-		this.logForRequest(request);
-		Response response = chain.proceed(request);
-		return this.logForResponse(response);
-	}
+    public Response intercept(Chain chain) throws IOException {
+        Request request = chain.request();
+        this.logForRequest(request);
+        Response response = chain.proceed(request);
+        return this.logForResponse(response);
+    }
 
-	private Response logForResponse(Response response) {
-		try {
-			Logger.d( "============================response\'log============================");
-			Builder e = response.newBuilder();
-			Response clone = e.build();
-			Logger.d( "url : " + clone.request().url());
-			Logger.d( "code : " + clone.code());
-			Logger.d( "protocol : " + clone.protocol());
-			if (!TextUtils.isEmpty(clone.message())) {
-				Logger.d( "message : " + clone.message());
-			}
-			if (this.showResponse) {
-				ResponseBody body = clone.body();
-				if (body != null) {
-					MediaType mediaType = body.contentType();
-					if (mediaType != null) {
-						Logger.d( "responseBody\'s contentType : " + mediaType);
-						if (this.isText(mediaType)) {
-							String resp = body.string();
-							Logger.d( "responseBody\'s content : " + resp);
-							body = ResponseBody.create(mediaType, resp);
-							return response.newBuilder().body(body).build();
-						}
+    private Response logForResponse(Response response) {
+        try {
+            Logger.d("============================response\'log============================");
+            Builder e = response.newBuilder();
+            Response clone = e.build();
+            Logger.d("url : " + clone.request().url());
+            Logger.d("code : " + clone.code());
+            Logger.d("protocol : " + clone.protocol());
+            if (!TextUtils.isEmpty(clone.message())) {
+                Logger.d("message : " + clone.message());
+            }
+            if (this.showResponse) {
+                ResponseBody body = clone.body();
+                if (body != null) {
+                    MediaType mediaType = body.contentType();
+                    if (mediaType != null) {
+                        Logger.d("responseBody\'s contentType : " + mediaType);
+                        if (this.isText(mediaType)) {
+                            String resp = body.string();
+                            Logger.d("responseBody\'s content : " + resp);
+                            Map<String, Object> jsonMap = new Gson().fromJson(resp, new TypeToken<Map<String, Object>>() {
+                            }.getType());
+                            Object codeObject=jsonMap.get("code");
+                            if (codeObject!=null){
+                                String code=codeObject.toString();
+                                if (!code.equals("0")){
+                                    Object msgObject = jsonMap.get("msg");
+                                    if (msgObject != null) {
+                                        String msg = msgObject.toString();
+                                        ToastUtils.show(msg);
+                                    }
+                                }
+                            }
+                            body = ResponseBody.create(mediaType, resp);
+                            return response.newBuilder().body(body).build();
+                        }
 
-						Logger.d( "responseBody\'s content :  maybe [file part] , too large too print , ignored!");
-					}
-				}
-			}
+                        Logger.d("responseBody\'s content :  maybe [file part] , too large too print , ignored!");
+                    }
+                }
+            }
 
-			Logger.d( "============================response\'log============================end");
-		} catch (Exception var7) {
-			var7.printStackTrace();
-		}
+            Logger.d("============================response\'log============================end");
+        } catch (Exception var7) {
+            var7.printStackTrace();
+        }
 
-		return response;
-	}
+        return response;
+    }
 
-	private void logForRequest(Request request) {
-		try {
-			String e = request.url().toString();
-			Headers headers = request.headers();
-			Logger.d( "============================request\'log============================");
-			Logger.d( "method : " + request.method());
-			Logger.d( "url : " + e);
-			if (headers.size() > 0) {
-				Logger.d( "headers : " + headers.toString());
-			}
+    private void logForRequest(Request request) {
+        try {
+            String e = request.url().toString();
+            Headers headers = request.headers();
+            Logger.d("============================request\'log============================");
+            Logger.d("method : " + request.method());
+            Logger.d("url : " + e);
+            if (headers.size() > 0) {
+                Logger.d("headers : " + headers.toString());
+            }
 
-			RequestBody requestBody = request.body();
-			if (requestBody != null) {
-				MediaType mediaType = requestBody.contentType();
-				if (mediaType != null) {
-					Logger.d( "requestBody\'s contentType : " + mediaType.toString());
-					if (this.isText(mediaType)) {
-						Logger.d( "requestBody\'s content : " + this.bodyToString(request));
-					} else {
-						Logger.d( "requestBody\'s content :  maybe [file part] , too large too print , ignored!");
-					}
-				}
-			}
+            RequestBody requestBody = request.body();
+            if (requestBody != null) {
+                MediaType mediaType = requestBody.contentType();
+                if (mediaType != null) {
+                    Logger.d("requestBody\'s contentType : " + mediaType.toString());
+                    if (this.isText(mediaType)) {
+                        Logger.d("requestBody\'s content : " + this.bodyToString(request));
+                    } else {
+                        Logger.d("requestBody\'s content :  maybe [file part] , too large too print , ignored!");
+                    }
+                }
+            }
 
-			Logger.d("============================request\'log============================end");
-		} catch (Exception var6) {
-			var6.printStackTrace();
-		}
+            Logger.d("============================request\'log============================end");
+        } catch (Exception var6) {
+            var6.printStackTrace();
+        }
 
-	}
+    }
 
-	private boolean isText(MediaType mediaType) {
-		return mediaType.type().equals("text") || mediaType.subtype().equals("json") || mediaType.subtype().equals("xml") || mediaType.subtype().equals("html") || mediaType.subtype().equals("webviewhtml");
-	}
+    private boolean isText(MediaType mediaType) {
+        return mediaType.type().equals("text") || mediaType.subtype().equals("json") || mediaType.subtype().equals("xml") || mediaType.subtype().equals("html") || mediaType.subtype().equals("webviewhtml");
+    }
 
-	private String bodyToString(Request request) {
-		try {
-			Request e = request.newBuilder().build();
-			Buffer buffer = new Buffer();
-			assert e.body() != null;
-			e.body().writeTo(buffer);
-			return buffer.readUtf8();
-		} catch (IOException var4) {
-			return "something error when show requestBody.";
-		}
-	}
+    private String bodyToString(Request request) {
+        try {
+            Request e = request.newBuilder().build();
+            Buffer buffer = new Buffer();
+            assert e.body() != null;
+            e.body().writeTo(buffer);
+            return buffer.readUtf8();
+        } catch (IOException var4) {
+            return "something error when show requestBody.";
+        }
+    }
 }

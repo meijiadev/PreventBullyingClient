@@ -42,7 +42,9 @@ class MainActivity : BaseMvActivity<ActivityMainBinding, MainViewModel>() {
     override fun initParam() {
         val extras = intent.extras?.getString(JPushInterface.EXTRA_NOTIFICATION_ACTION_EXTRA)
         Logger.e("收到极光推送的报警recordId:$extras")
-        jPushExtraMessage = Gson().fromJson(extras, JPushExtraMessage::class.java)
+        if (extras!=null){
+            jPushExtraMessage = Gson().fromJson(extras, JPushExtraMessage::class.java)
+        }
         immersionBar {
             //深色字体
             statusBarDarkFont(true)
