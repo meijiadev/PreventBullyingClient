@@ -58,6 +58,7 @@ class MainActivity : BaseMvActivity<ActivityMainBinding, MainViewModel>() {
             MyApp.socketEventViewModel.initSocket(userId, registerId)
             // viewModel.getAllDeviceRecords()
         }
+
     }
 
     override fun initViewObservable() {

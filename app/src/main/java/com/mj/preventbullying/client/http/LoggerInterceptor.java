@@ -11,7 +11,9 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hjq.toast.ToastUtils;
+import com.mj.preventbullying.client.MyApp;
 import com.mj.preventbullying.client.http.request.BaseResponse;
+import com.mj.preventbullying.client.ui.login.LoginActivity;
 import com.orhanobut.logger.Logger;
 
 import java.io.IOException;
@@ -79,14 +81,18 @@ public class LoggerInterceptor implements Interceptor {
                             Logger.d("responseBody\'s content : " + resp);
                             Map<String, Object> jsonMap = new Gson().fromJson(resp, new TypeToken<Map<String, Object>>() {
                             }.getType());
-                            Object codeObject=jsonMap.get("code");
-                            if (codeObject!=null){
-                                String code=codeObject.toString();
-                                if (!code.equals("0")){
+                            Object codeObject = jsonMap.get("code");
+                            if (codeObject != null) {
+                                String code = codeObject.toString();
+                                if (!code.equals("0")) {
                                     Object msgObject = jsonMap.get("msg");
                                     if (msgObject != null) {
                                         String msg = msgObject.toString();
                                         ToastUtils.show(msg);
+                                    }
+                                    if (clone.code() == 424) {
+                                        // 令牌过期回到登录页
+                                        LoginActivity.Companion.toLoginActivity(MyApp.context);
                                     }
                                 }
                             }

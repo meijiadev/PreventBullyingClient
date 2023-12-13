@@ -1,10 +1,18 @@
 package com.blackview.base.http
 
+import android.app.Activity
+import android.app.Application
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
 import androidx.lifecycle.viewModelScope
+import com.mj.preventbullying.client.MyApp
+import com.mj.preventbullying.client.SpManager
 
 import com.mj.preventbullying.client.http.exception.AppException
 import com.mj.preventbullying.client.http.exception.ExceptionHandle
 import com.mj.preventbullying.client.http.request.BaseResponse
+import com.mj.preventbullying.client.ui.login.LoginActivity
 import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseViewModel
 import kotlinx.coroutines.*
@@ -59,7 +67,7 @@ fun <T> BaseViewModel.request(
                         //token 过期 重新登录
                         if (message.contains("unauthenticated")) {
                             // SpManager.putString(USER_TOKEN,"")
-                           // Constant.accessToken = null
+                            // Constant.accessToken = null
                             //App.instance.gotoAct<LoginActivity>()
                         }
 
@@ -181,14 +189,17 @@ fun <T> BaseViewModel.requestNoCheck(
             if (it is HttpException) {
                 it.response()?.errorBody()?.string()?.apply {
                     if (this.isNotEmpty()) {
-                        val code = JSONObject(this).optString("code")
-                        val message = JSONObject(this).optString("message")
-                        uiChangeLiveData.toastEvent.postValue(message)
-                        //token 过期 重新登录
-                        if (message.contains("unauthenticated")) {
-                            // App.instance.gotoAct<LoginActivity>()
-                            Logger.e("token 过期重新登录")
-                        }
+                        Logger.i("error:$this")
+//                        val code = JSONObject(this).optString("code")
+//                        val message = JSONObject(this).optString("message")
+//                        if (code=="424"){
+//                            MyApp.context.gotoAct<LoginActivity>()
+//                        }
+//                        //token 过期 重新登录
+//                        if (message.contains("unauthenticated")) {
+//                            // App.instance.gotoAct<LoginActivity>()
+//                            Logger.e("token 过期重新登录")
+//                        }
                     } else {
                         uiChangeLiveData.toastEvent.postValue(it.response()?.message())
                     }
@@ -307,4 +318,22 @@ fun <T> BaseViewModel.launch(
             error(it)
         }
     }
+}
+
+
+inline fun <reified T : Activity> Context.gotoAct() {
+    val intent = Intent(this, T::class.java)
+    if (this is Application) {
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+    }
+    startActivity(intent)
+}
+
+inline fun <reified T : Activity> Context.gotoAct(bundle: Bundle) {
+    val intent = Intent(this, T::class.java)
+    intent.putExtras(bundle)
+    if (this is Application) {
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+    }
+    startActivity(intent)
 }

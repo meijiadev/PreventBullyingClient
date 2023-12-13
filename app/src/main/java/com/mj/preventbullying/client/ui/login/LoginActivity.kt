@@ -1,6 +1,9 @@
 package com.mj.preventbullying.client.ui.login
 
 import android.annotation.SuppressLint
+import android.app.Application
+import android.content.Context
+import android.content.Intent
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Base64
@@ -41,6 +44,17 @@ class LoginActivity : BaseMvActivity<ActivityLoginBinding, LoginViewModel>() {
     private lateinit var loginViewModel: LoginViewModel
 
     private var randomStr: String? = null
+
+    companion object {
+
+        fun toLoginActivity(context: Context) {
+            val intent = Intent(context, LoginActivity::class.java)
+            if (context is Application) {
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+            context.startActivity(intent)
+        }
+    }
 
     override fun getViewBinding(): ActivityLoginBinding {
         return ActivityLoginBinding.inflate(layoutInflater)
@@ -142,6 +156,8 @@ class LoginActivity : BaseMvActivity<ActivityLoginBinding, LoginViewModel>() {
         loginViewModel.loginResult.observe(this) {
             SpManager.putString(Constant.ACCESS_TOKEN_KEY, it.access_token)
             SpManager.putString(Constant.FRESH_TOKEN_KEY, it.refresh_token)
+            SpManager.putString(Constant.EXPIRES_TIME_KEY, it.expires_in)
+            SpManager.putLong(Constant.LOGIN_OR_REFRESH_TIME_KEY, System.currentTimeMillis())
             SpManager.putString(Constant.USER_ID_KEY, it.user_id)
             JPushUPSManager.turnOnPush(this) {
                 Logger.i("打开极光推送服务：$it")

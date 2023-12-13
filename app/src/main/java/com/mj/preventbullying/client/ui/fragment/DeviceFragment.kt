@@ -3,12 +3,16 @@ package com.mj.preventbullying.client.ui.fragment
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.MyApp
 import com.mj.preventbullying.client.databinding.FragmentDeviceBinding
 import com.mj.preventbullying.client.ui.adapter.DeviceListAdapter
+import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseMvFragment
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * Create by MJ on 2023/12/11.
@@ -53,12 +57,20 @@ class DeviceFragment : BaseMvFragment<FragmentDeviceBinding, DeviceViewModel>() 
     }
 
     override fun initView() {
+        binding.smartRefreshLayout.let {
+            it.setReboundDuration(300)
+            it.setOnRefreshListener {
+            Logger.i("下拉刷新")
+            viewModel.getAllDevices()
+        }
+        }
 
     }
 
     override fun initListener() {
         viewModel.deviceResultEvent.observe(this) {
-            deviceListAdapter?.addAll(it.data.records)
+            binding.smartRefreshLayout.finishRefresh(1000)
+            deviceListAdapter?.submitList(it.data.records)
         }
 
     }

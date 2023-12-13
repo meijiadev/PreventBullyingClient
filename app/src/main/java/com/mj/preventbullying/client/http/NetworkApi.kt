@@ -5,7 +5,9 @@ import com.franmontiel.persistentcookiejar.PersistentCookieJar
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor
 import com.google.gson.GsonBuilder
+import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.MyApp
+import com.mj.preventbullying.client.SpManager
 import com.mj.preventbullying.client.http.service.ApiService
 import okhttp3.Cache
 import okhttp3.Interceptor
@@ -80,9 +82,9 @@ class NetworkApi : BaseNetworkApi() {
             builder.addHeader("key", "Accept-Language").build()
             builder.addHeader("value", "zh-TW").build()
             builder.addHeader("type", "text").build()
-//            if (MyApp.token.isNotEmpty()) {
-//                builder.addHeader("Authorization", "Bearer ${App.token}")
-//            }
+            if (SpManager.getString(Constant.ACCESS_TOKEN_KEY)?.isNotEmpty() == true) {
+                builder.addHeader("Authorization", "Bearer ${SpManager.getString(Constant.ACCESS_TOKEN_KEY)}")
+            }
             return chain.proceed(builder.build())
         }
 

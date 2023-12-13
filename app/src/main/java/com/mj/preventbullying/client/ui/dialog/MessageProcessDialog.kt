@@ -82,6 +82,7 @@ class MessageProcessDialog(context: Context) : CenterPopupView(context) {
             MyApp.timerViewModel.stopTimer()
             MyApp.socketEventViewModel.sendHangUp()
             dismiss()
+            messageDialogClick?.callFinish()
         }
         speakPhoneOnIv.setOnClickListener {
             if (audioManager?.isSpeakerphoneOn == true) {
@@ -144,6 +145,8 @@ class MessageProcessDialog(context: Context) : CenterPopupView(context) {
         fun toCall()
         fun playWarnAudio()
         fun ignore()
+
+        fun callFinish()
 
     }
 }

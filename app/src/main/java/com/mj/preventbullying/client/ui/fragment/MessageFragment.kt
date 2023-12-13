@@ -16,9 +16,11 @@ import com.mj.preventbullying.client.databinding.FragmentMessageBinding
 import com.mj.preventbullying.client.http.result.Record
 import com.mj.preventbullying.client.ui.adapter.MessageAdapter
 import com.mj.preventbullying.client.ui.adapter.PROCESSED_IGNORE
+import com.mj.preventbullying.client.ui.adapter.PROCESSED_STATUS
 import com.mj.preventbullying.client.ui.dialog.MessageProcessDialog
 import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseMvFragment
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
@@ -90,6 +92,15 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
                             )
                         }
                     }
+
+                    override fun callFinish() {
+                        recordId?.let {
+                            viewModel.recordProcess(
+                                it, "已拨打设备语音了解情况",
+                                PROCESSED_STATUS
+                            )
+                        }
+                    }
                 })
             XPopup.Builder(requireContext()).isViewMode(true).isDestroyOnDismiss(true)
                 .dismissOnBackPressed(true).dismissOnTouchOutside(false)
@@ -99,16 +110,18 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
     }
 
     override fun initView() {
-
+        binding.smartRefreshLayout.setOnRefreshListener {
+            Logger.i("下拉刷新")
+            it.setReboundDuration(300)
+            viewModel.getAllDeviceRecords()
+        }
     }
 
     override fun initListener() {
         viewModel.messageEvent.observe(this) {
+            binding.smartRefreshLayout.finishRefresh(1000, true, true)
             messageList = it?.data?.records
             messageAdapter?.submitList(it.data.records)
-        }
-        MyApp.socketEventViewModel.voiceCallEvent.observe(this) {
-
         }
     }
 }
