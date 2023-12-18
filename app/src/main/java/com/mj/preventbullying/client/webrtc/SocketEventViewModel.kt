@@ -53,7 +53,7 @@ class SocketEventViewModel : ViewModel(), HandlerAction {
             this.registerId = registerId
             kotlin.runCatching {
                 mSocket = IO.socket(
-                    "http://192.168.1.6:7099/spad-cloud?token=1231&clientType=anti_bullying_device&clientId=$sn"
+                    "http://cloud.zyq0407.com:8080/spad-cloud?token=1231&clientType=anti_bullying_device&clientId=$sn"
                 )
             }.onFailure {
                 Logger.e("${it.message}")

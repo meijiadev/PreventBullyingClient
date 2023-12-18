@@ -10,7 +10,7 @@ import java.net.URL
 
 /**
  * Create by MJ on 2023/12/13.
- * Describe :
+ * Describe : 在线播放pcm音频
  */
 
 object PcmPlayer {
@@ -48,9 +48,10 @@ object PcmPlayer {
                 }
                 dataInputStream.close()
                 Logger.i("pcm音频播放结束")
+                stop()
             }
         }.onFailure {
-            Logger.e("error:${it.message}")
+            Logger.e("error:${it}")
         }
     }
 

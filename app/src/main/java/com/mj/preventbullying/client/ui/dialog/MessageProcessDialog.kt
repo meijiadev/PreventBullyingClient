@@ -62,7 +62,7 @@ class MessageProcessDialog(context: Context) : CenterPopupView(context) {
         play.setOnClickListener {
             Logger.i("播放报警的语音")
             messageDialogClick?.playWarnAudio()
-            ToastUtils.show("暂未开放此功能")
+           // ToastUtils.show("暂未开放此功能")
             dismiss()
 
         }

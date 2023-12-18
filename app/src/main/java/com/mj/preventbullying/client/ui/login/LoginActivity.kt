@@ -128,9 +128,12 @@ class LoginActivity : BaseMvActivity<ActivityLoginBinding, LoginViewModel>() {
         )
         postDelayed({
             Logger.i("网络是否可以：${NetworkUtil.isAvailable()},IP:${NetworkUtil.getIPAddress(true)}")
+            if (!NetworkUtil.isAvailable()) {
+                toast("网络不可用！")
+            }
             randomStr = generateRandomString()
-            val url = "http://192.168.1.6:9999/code?randomStr=$randomStr"
-            binding.codeImage?.load(url)
+            val url = "http://cloud.zyq0407.com:8080/api/code?randomStr=$randomStr"
+            binding.codeImage.load(url)
             Logger.i("加载验证码：$url")
         }, 200)
     }
@@ -154,6 +157,7 @@ class LoginActivity : BaseMvActivity<ActivityLoginBinding, LoginViewModel>() {
         })
         // 登录返回值
         loginViewModel.loginResult.observe(this) {
+            toast("登陆成功！")
             SpManager.putString(Constant.ACCESS_TOKEN_KEY, it.access_token)
             SpManager.putString(Constant.FRESH_TOKEN_KEY, it.refresh_token)
             SpManager.putString(Constant.EXPIRES_TIME_KEY, it.expires_in)
@@ -174,7 +178,7 @@ class LoginActivity : BaseMvActivity<ActivityLoginBinding, LoginViewModel>() {
      */
     fun refresh(v: View) {
         randomStr = generateRandomString()
-        val url = "http://192.168.1.6:9999/code?randomStr=$randomStr"
+        val url = "http://cloud.zyq0407.com:8080/api/code?randomStr=$randomStr"
         //val url="https://login.sina.com.cn/cgi/pin.php?r=9967937&s=0&p=gz-d0dc363f6a4523cbd602a5a10f00c59b"
         binding.codeImage?.load(url) {
             error(R.drawable.ic_launcher_background)
