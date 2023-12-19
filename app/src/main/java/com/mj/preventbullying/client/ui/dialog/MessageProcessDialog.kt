@@ -38,6 +38,7 @@ class MessageProcessDialog(context: Context) : CenterPopupView(context) {
     private val speakPhoneOnIv: AppCompatImageView by lazy { findViewById(R.id.speak_phone_on_iv) }
 
     private val loadingTv: AppCompatTextView by lazy { findViewById(R.id.loading_tv) }
+    private val closeIv: AppCompatImageView by lazy { findViewById(R.id.close_iv) }
 
     private val callTimeTv: AppCompatTextView by lazy { findViewById(R.id.call_time_tv) }
 
@@ -53,16 +54,18 @@ class MessageProcessDialog(context: Context) : CenterPopupView(context) {
         super.onCreate()
         audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager?
         call.setOnClickListener {
+            MyApp.timerViewModel.stopTimer()
             Logger.i("拨打设备语音")
             messageDialogClick?.toCall()
             loadingTv.visibility = View.VISIBLE
+            closeIv.visibility = View.VISIBLE
             actionLayout.visibility = View.GONE
         }
 
         play.setOnClickListener {
             Logger.i("播放报警的语音")
             messageDialogClick?.playWarnAudio()
-           // ToastUtils.show("暂未开放此功能")
+            // ToastUtils.show("暂未开放此功能")
             dismiss()
 
         }
@@ -94,6 +97,13 @@ class MessageProcessDialog(context: Context) : CenterPopupView(context) {
             }
         }
 
+        closeIv.setOnClickListener {
+            MyApp.timerViewModel.stopTimer()
+            MyApp.socketEventViewModel.sendHangUp()
+            dismiss()
+
+        }
+
 
 
         MyApp.socketEventViewModel.voiceCallEvent.observe(this) {
@@ -104,6 +114,7 @@ class MessageProcessDialog(context: Context) : CenterPopupView(context) {
                         callLayout.visibility = View.VISIBLE
                         actionLayout.visibility = View.GONE
                         loadingTv.visibility = View.GONE
+                        closeIv.visibility = View.GONE
                         MyApp.timerViewModel.startTimer()
                     }
                 }
@@ -140,6 +151,11 @@ class MessageProcessDialog(context: Context) : CenterPopupView(context) {
         audioManager?.isSpeakerphoneOn = false
     }
 
+
+    override fun dismiss() {
+        super.dismiss()
+        Logger.i("退出")
+    }
 
     interface MessageDialogClick {
         fun toCall()

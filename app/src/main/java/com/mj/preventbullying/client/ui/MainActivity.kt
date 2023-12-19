@@ -71,6 +71,10 @@ class MainActivity : BaseMvActivity<ActivityMainBinding, MainViewModel>() {
     }
 
     override fun initListener() {
+        binding.addDeviceLl.setOnClickListener {
+            Logger.i("点击添加设备")
+
+        }
     }
 
 

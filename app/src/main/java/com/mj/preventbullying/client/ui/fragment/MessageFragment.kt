@@ -1,16 +1,19 @@
 package com.mj.preventbullying.client.ui.fragment
 
+import android.content.Context
+import android.graphics.PixelFormat
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.view.WindowManager
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chad.library.adapter4.BaseQuickAdapter
-import com.hjq.window.EasyWindow
 import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.enums.PopupAnimation
 import com.mj.preventbullying.client.MyApp
@@ -25,7 +28,10 @@ import com.mj.preventbullying.client.ui.dialog.MessageProcessDialog
 import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseMvFragment
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.Timer
+import java.util.TimerTask
 
 /**
  * Create by MJ on 2023/12/11.
@@ -36,6 +42,8 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
     private var messageAdapter: MessageAdapter? = null
     private var messageList: List<Record>? = null
     private var processPosition: Int? = null
+    private var currentRecordId: String? = null
+
 
     companion object {
         fun newInstance(): MessageFragment {
@@ -47,8 +55,7 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
     }
 
     override fun getViewBinding(
-        inflater: LayoutInflater,
-        parent: ViewGroup?
+        inflater: LayoutInflater, parent: ViewGroup?
     ): FragmentMessageBinding {
         return FragmentMessageBinding.inflate(inflater, parent, false)
     }
@@ -72,7 +79,7 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
         messageAdapter?.addOnItemChildClickListener(R.id.go_process_tv) { adapter, view, position ->
             processPosition = position
             val snCode = messageList?.get(position)?.snCode
-            val recordId = messageList?.get(position)?.recordId
+            currentRecordId = messageList?.get(position)?.recordId
             val fileId = messageList?.get(position)?.fileId
             Logger.i("去处理消息")
             val messageProcessDialog =
@@ -89,19 +96,17 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
                     }
 
                     override fun ignore() {
-                        recordId?.let {
+                        currentRecordId?.let {
                             viewModel.recordProcess(
-                                it, "直接忽略",
-                                PROCESSED_IGNORE
+                                it, "直接忽略", PROCESSED_IGNORE
                             )
                         }
                     }
 
                     override fun callFinish() {
-                        recordId?.let {
+                        currentRecordId?.let {
                             viewModel.recordProcess(
-                                it, "已拨打设备语音了解情况",
-                                PROCESSED_STATUS
+                                it, "已拨打设备语音了解情况", PROCESSED_STATUS
                             )
                         }
                     }
@@ -118,6 +123,7 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
             Logger.i("下拉刷新")
             it.setReboundDuration(300)
             viewModel.getAllDeviceRecords()
+
         }
         AudioPlayer.instance.addListener(this)
     }
@@ -153,62 +159,113 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
         }
     }
 
-    override fun onAudioPlayerStart() {
-        Logger.i("播放开始")
-        val seekBar: SeekBar =
-            EasyWindow.with(activity).setContentView(R.layout.dialog_audio_play)
-                .findViewById<ProgressBar>(R.id.seekbar) as SeekBar
-        val startTv = EasyWindow.with(activity).setContentView(R.layout.dialog_audio_play)
-            .findViewById<TextView>(R.id.tv_start) as TextView
-        val endTv = EasyWindow.with(activity).setContentView(R.layout.dialog_audio_play)
-            .findViewById<TextView>(R.id.tv_end) as TextView
-        seekBar.progress = 0
-        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
-                val duration = AudioPlayer.instance.getDuration() / 1000    // 获取音频总时长
-                val position = AudioPlayer.instance.getPosition()           // 获取当前播放的位置
-                startTv.text = calculateTime(position / 1000)
-                endTv.text = calculateTime(duration)
 
+    private var isPlaying = false
+    override fun onAudioPlayerStart(duration: Int) {
+        isPlaying = true
+        Logger.i("播放开始")
+        createFloatWindow()
+        startTv?.text = calculateTime(AudioPlayer.instance.getPosition() / 1000)
+        endTv?.text = calculateTime(duration / 1000)
+        seekBar?.max = duration
+        seekBar?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+                val position = AudioPlayer.instance.getPosition()           // 获取当前播放的位置
+                startTv?.text = calculateTime(position / 1000)
             }
 
             override fun onStartTrackingTouch(p0: SeekBar?) {
-
+                isSeekbarChaning = true
             }
 
             override fun onStopTrackingTouch(p0: SeekBar?) {
+                isSeekbarChaning = false
+                AudioPlayer.instance.seekTo(seekBar?.progress ?: 0)
 
             }
         })
-
-        EasyWindow.with(activity)
-            .setContentView(R.layout.dialog_audio_play)
-            .setOnClickListener(
-                R.id.close_iv,
-                EasyWindow.OnClickListener<AppCompatImageView?> { easyWindow: EasyWindow<*>, view: AppCompatImageView? ->
-                    easyWindow.cancel()
-                    AudioPlayer.instance.stop()
-                })
-            .setOnClickListener(
-                R.id.play_iv,
-                EasyWindow.OnClickListener { easyWindow: EasyWindow<*>, view: AppCompatImageView? ->
-                    // easyWindow.cancel()
-                    if (AudioPlayer.instance.isPlaying()) {
-                        AudioPlayer.instance.pause()
-                    } else {
-                        AudioPlayer.instance.start()
-                    }
+        lifecycleScope.launch(Dispatchers.IO) {
+            while (isPlaying) {
+                delay(1000)
+                launch(Dispatchers.Main) {
+                    if (!isSeekbarChaning) seekBar?.progress = AudioPlayer.instance.getPosition()
                 }
-            )
-            .show()
-
+            }
+        }
+//        val timer = Timer()
+//        timer.schedule(object : TimerTask() {
+//            override fun run() {
+//                if (!isSeekbarChaning) seekBar?.progress = AudioPlayer.instance.getPosition()
+//            }
+//        }, 0, 1000)
 
     }
 
     override fun onAudioPlayerStop() {
         Logger.i("播放结束")
+        isPlaying = false
         AudioPlayer.instance.stop()
-        EasyWindow.cancelAll()
+        windowManager?.removeView(floatRootView)
+        currentRecordId?.let {
+            viewModel.recordProcess(
+                it, "已查看报警现场音频", PROCESSED_STATUS
+            )
+        }
+
+    }
+
+    private var windowManager: WindowManager? = null
+    private var isSeekbarChaning = false
+    private var seekBar: SeekBar? = null
+    private var startTv: TextView? = null
+    private var endTv: TextView? = null
+    private var floatRootView: View? = null
+    private var playIv: AppCompatImageView? = null
+    private var closeIv: AppCompatImageView? = null
+
+    /**
+     * 创建悬浮窗
+     */
+    private fun createFloatWindow() {
+        //2、设置悬浮窗的初始位置和参数
+        val layoutParam = WindowManager.LayoutParams().apply {
+            //设置大小 自适应
+            width = WRAP_CONTENT
+            height = WRAP_CONTENT
+            flags =
+                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+            format = PixelFormat.RGBA_8888
+        }
+        floatRootView = LayoutInflater.from(context).inflate(R.layout.dialog_audio_play, null)
+        seekBar = floatRootView?.findViewById(R.id.seekbar)
+        startTv = floatRootView?.findViewById(R.id.tv_start)
+        endTv = floatRootView?.findViewById(R.id.tv_end)
+        playIv = floatRootView?.findViewById(R.id.play_iv)
+        closeIv = floatRootView?.findViewById(R.id.close_iv)
+        // 4. 获取WindowManager并将悬浮窗添加到窗口
+        windowManager = context?.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        windowManager?.addView(floatRootView, layoutParam)
+        playIv?.setOnClickListener {
+            Logger.i("当前是否在播放：${AudioPlayer.instance.isPlaying()}")
+            if (AudioPlayer.instance.isPlaying()) {
+                playIv?.setImageResource(R.mipmap.pause_icon)
+                AudioPlayer.instance.pause()
+            } else {
+                playIv?.setImageResource(R.mipmap.play_icon)
+                AudioPlayer.instance.start()
+            }
+        }
+
+        closeIv?.setOnClickListener {
+            isPlaying = false
+            AudioPlayer.instance.stop()
+            windowManager?.removeView(floatRootView)
+            currentRecordId?.let {
+                viewModel.recordProcess(
+                    it, "已查看报警现场音频", PROCESSED_STATUS
+                )
+            }
+        }
     }
 
     //计算播放时间

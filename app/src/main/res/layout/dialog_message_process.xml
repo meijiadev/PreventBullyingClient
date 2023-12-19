@@ -4,7 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <com.hjq.shape.layout.ShapeRelativeLayout
+     <com.hjq.shape.layout.ShapeRelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:shape_radius="20dp"
@@ -19,6 +19,14 @@
             android:textSize="18sp"
             android:textStyle="bold"
             android:visibility="gone" />
+         <androidx.appcompat.widget.AppCompatImageView
+             android:id="@+id/close_iv"
+             android:layout_width="40dp"
+             android:layout_height="40dp"
+             android:layout_alignEnd="@id/loading_tv"
+             android:src="@mipmap/exit_gray"
+             android:visibility="gone"
+             />
 
         <LinearLayout
             android:id="@+id/call_ll"

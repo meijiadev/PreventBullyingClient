@@ -11,7 +11,9 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hjq.toast.ToastUtils;
+import com.mj.preventbullying.client.Constant;
 import com.mj.preventbullying.client.MyApp;
+import com.mj.preventbullying.client.SpManager;
 import com.mj.preventbullying.client.http.request.BaseResponse;
 import com.mj.preventbullying.client.ui.login.LoginActivity;
 import com.orhanobut.logger.Logger;
@@ -92,6 +94,8 @@ public class LoggerInterceptor implements Interceptor {
                                     }
                                     if (clone.code() == 424) {
                                         // 令牌过期回到登录页
+                                        SpManager.Companion.putString(Constant.ACCESS_TOKEN_KEY, null);
+                                        SpManager.Companion.putString(Constant.FRESH_TOKEN_KEY, null);
                                         LoginActivity.Companion.toLoginActivity(MyApp.context);
                                     }
                                 }

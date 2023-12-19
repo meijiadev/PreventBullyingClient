@@ -183,7 +183,7 @@ class LoginActivity : BaseMvActivity<ActivityLoginBinding, LoginViewModel>() {
         binding.codeImage?.load(url) {
             error(R.drawable.ic_launcher_background)
         }
-        Logger.i("加载验证码：$url")
+        Logger.i("加载验证码：$url,$randomStr")
     }
 
     /**

@@ -26,7 +26,9 @@ import retrofit2.http.Query
 
 interface ApiService {
     companion object {
-        const val HTTP_URL = "http://cloud.zyq0407.com:8080/api/"
+        const val BASE_HTTP_URL = "http://cloud.zyq0407.com:8080/"
+        const val DEV_HTTP_URL = "http://192.168.1.6:8888/"
+        const val API = "api/"
     }
 
 
@@ -81,6 +83,13 @@ interface ApiService {
         @Query("fileId") fileId: String
         //@Header("Authorization") authorization: String = "Bearer ${SpManager.getString(Constant.ACCESS_TOKEN_KEY)}"
     ): PreviewAudioResult
+
+
+    //添加设备
+    @POST("anti-bullying/device")
+    suspend fun addDevice(
+        @Body params: ArrayMap<Any, Any>
+    )
 
 
 }

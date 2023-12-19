@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
 import com.kunminx.architecture.ui.callback.UnPeekLiveData
 import com.mj.preventbullying.client.MyApp
+import com.mj.preventbullying.client.http.service.ApiService
 import com.orhanobut.logger.Logger
 import com.sjb.base.action.HandlerAction
 import io.socket.client.IO
@@ -53,7 +54,7 @@ class SocketEventViewModel : ViewModel(), HandlerAction {
             this.registerId = registerId
             kotlin.runCatching {
                 mSocket = IO.socket(
-                    "http://cloud.zyq0407.com:8080/spad-cloud?token=1231&clientType=anti_bullying_device&clientId=$sn"
+                    "${ApiService.BASE_HTTP_URL}spad-cloud?token=1231&clientType=anti_bullying_device&clientId=$sn"
                 )
             }.onFailure {
                 Logger.e("${it.message}")

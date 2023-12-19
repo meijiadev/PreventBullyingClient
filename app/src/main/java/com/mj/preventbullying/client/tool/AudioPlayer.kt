@@ -18,6 +18,7 @@ class AudioPlayer private constructor(context: Context) : MediaPlayer.OnPrepared
     private val listeners: MutableList<AudioPlayerListener> = ArrayList()
     private val mediaPlayer: MediaPlayer
     private val context: Context
+    private val isPause = false
 
     init {
         this.context = context
@@ -45,26 +46,29 @@ class AudioPlayer private constructor(context: Context) : MediaPlayer.OnPrepared
     }
 
     fun stop() {
-        if (mediaPlayer.isPlaying()) {
-            mediaPlayer.stop()
-        }
+        // if (mediaPlayer.isPlaying) {
+        mediaPlayer.stop()
+        //  }
     }
 
     fun pause() {
-        if (mediaPlayer.isPlaying()) {
+        if (mediaPlayer.isPlaying) {
             mediaPlayer.pause()
         }
     }
 
 
     fun start() {
-        if (mediaPlayer.isPlaying()) {
+        if (!mediaPlayer.isPlaying)
             mediaPlayer.start()
-        }
     }
 
     fun getDuration(): Int {
         return mediaPlayer.duration
+    }
+
+    fun seekTo(position: Int) {
+        mediaPlayer.seekTo(position)
     }
 
     fun getPosition(): Int {
@@ -83,7 +87,7 @@ class AudioPlayer private constructor(context: Context) : MediaPlayer.OnPrepared
         mp.start()
         Logger.i("音频时长：${mp.duration}")
         for (listener in listeners) {
-            listener.onAudioPlayerStart()
+            listener.onAudioPlayerStart(mp.duration)
         }
     }
 
@@ -94,7 +98,7 @@ class AudioPlayer private constructor(context: Context) : MediaPlayer.OnPrepared
     }
 
     interface AudioPlayerListener {
-        fun onAudioPlayerStart()
+        fun onAudioPlayerStart(duration: Int)
         fun onAudioPlayerStop()
     }
 

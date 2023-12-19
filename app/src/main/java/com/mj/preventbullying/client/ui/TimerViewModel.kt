@@ -1,7 +1,12 @@
 package com.mj.preventbullying.client.ui
 
+import androidx.lifecycle.viewModelScope
 import com.kunminx.architecture.ui.callback.UnPeekLiveData
+import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.Timer
 import java.util.TimerTask
 
@@ -12,30 +17,33 @@ import java.util.TimerTask
 
 class TimerViewModel : BaseViewModel() {
 
-    private lateinit var timer: Timer
+
     private var currentSecond = 0L
 
     private var timeEvent = UnPeekLiveData<String>()
+    var isRunning = false
 
     fun getCurrentTime(): UnPeekLiveData<String> {
         return timeEvent
     }
 
     fun startTimer() {
-        timer = Timer()
+        isRunning = true
         currentSecond = 0
-        val timerTask = object : TimerTask() {
-            override fun run() {
+        viewModelScope.launch(Dispatchers.IO) {
+            while (isRunning) {
+                delay(1000)
                 currentSecond++
                 timeEvent.postValue(getTime(currentSecond))
             }
         }
-        timer.schedule(timerTask, 1000, 1000)
     }
 
-    fun stopTimer(){
-        timer.cancel()
+    fun stopTimer() {
+        currentSecond = 0
+        isRunning = false
     }
+
 
     /**
      * 把长整型转成时分秒
@@ -44,7 +52,7 @@ class TimerViewModel : BaseViewModel() {
         var sHour: String
         var sMinute: String
         var sSeconds: String
-        val seconds = (time  % 60).toInt()
+        val seconds = (time % 60).toInt()
         val minutes = ((time / 60) % 60).toInt()
         val hour = ((time / (60 * 60)) % 60).toInt()
         sHour = if (hour < 10) {
@@ -66,9 +74,8 @@ class TimerViewModel : BaseViewModel() {
     }
 
 
-
     override fun onCleared() {
         super.onCleared()
-        timer.cancel()
+        isRunning = false
     }
 }
