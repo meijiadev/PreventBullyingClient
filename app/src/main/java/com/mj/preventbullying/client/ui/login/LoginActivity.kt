@@ -23,6 +23,7 @@ import com.mj.preventbullying.client.NetworkUtil
 import com.mj.preventbullying.client.R
 import com.mj.preventbullying.client.SpManager
 import com.mj.preventbullying.client.databinding.ActivityLoginBinding
+import com.mj.preventbullying.client.http.service.ApiService
 import com.mj.preventbullying.client.ui.MainActivity
 import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseMvActivity
@@ -178,7 +179,7 @@ class LoginActivity : BaseMvActivity<ActivityLoginBinding, LoginViewModel>() {
      */
     fun refresh(v: View) {
         randomStr = generateRandomString()
-        val url = "http://cloud.zyq0407.com:8080/api/code?randomStr=$randomStr"
+        val url = "${ApiService.DEV_HTTP_URL}/api/code?randomStr=$randomStr"
         //val url="https://login.sina.com.cn/cgi/pin.php?r=9967937&s=0&p=gz-d0dc363f6a4523cbd602a5a10f00c59b"
         binding.codeImage?.load(url) {
             error(R.drawable.ic_launcher_background)

@@ -3,9 +3,11 @@ package com.mj.preventbullying.client.http.service
 import android.util.ArrayMap
 import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.SpManager
+import com.mj.preventbullying.client.http.result.DevTypeResult
 import com.mj.preventbullying.client.http.result.DeviceRecordResult
 import com.mj.preventbullying.client.http.result.DeviceResult
 import com.mj.preventbullying.client.http.result.LoginResult
+import com.mj.preventbullying.client.http.result.OrgTreeResult
 import com.mj.preventbullying.client.http.result.PreviewAudioResult
 import com.mj.preventbullying.client.http.result.RecordProcessResult
 import com.mj.preventbullying.client.http.result.RefreshTokenResult
@@ -27,7 +29,7 @@ import retrofit2.http.Query
 interface ApiService {
     companion object {
         const val BASE_HTTP_URL = "http://cloud.zyq0407.com:8080/"
-        const val DEV_HTTP_URL = "http://192.168.1.6:8888/"
+        const val DEV_HTTP_URL = "http://192.168.1.6:80/"
         const val API = "api/"
     }
 
@@ -90,6 +92,12 @@ interface ApiService {
     suspend fun addDevice(
         @Body params: ArrayMap<Any, Any>
     )
+
+    @GET("admin/org/tree")
+    suspend fun getOrgTree(): OrgTreeResult
+
+    @GET("admin/dict/type/anti_bullying_device_model")
+    suspend fun getDevType(): DevTypeResult
 
 
 }

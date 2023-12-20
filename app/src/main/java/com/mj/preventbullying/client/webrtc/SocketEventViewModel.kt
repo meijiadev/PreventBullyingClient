@@ -54,7 +54,7 @@ class SocketEventViewModel : ViewModel(), HandlerAction {
             this.registerId = registerId
             kotlin.runCatching {
                 mSocket = IO.socket(
-                    "${ApiService.BASE_HTTP_URL}spad-cloud?token=1231&clientType=anti_bullying_device&clientId=$sn"
+                    "http://192.168.1.6:7099/spad-cloud?token=1231&clientType=anti_bullying_device&clientId=$sn"
                 )
             }.onFailure {
                 Logger.e("${it.message}")
@@ -64,7 +64,7 @@ class SocketEventViewModel : ViewModel(), HandlerAction {
             webRtcManager = WebRtcManager(MyApp.context)
             // this.from = sn
             Logger.i("初始化socket:${mSocket?.isActive}")
-        }else{
+        } else {
             Logger.e("socket.io 已经连接")
         }
     }

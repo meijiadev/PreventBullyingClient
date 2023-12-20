@@ -56,7 +56,7 @@
             android:hint="@string/prompt_email"
             android:paddingStart="8dp"
             android:selectAllOnFocus="true"
-            android:text="qiaofeng"
+            android:text="admin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/login_text_tv"
@@ -88,7 +88,6 @@
             app:shape_radius="15dp"
             app:shape_strokeColor="@color/common_button_disable_color"
             app:shape_strokeWidth="1dp"
-
             />
 
         <com.hjq.shape.view.ShapeEditText

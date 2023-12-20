@@ -33,4 +33,26 @@ class MainViewModel : BaseViewModel() {
         })
     }
 
+    /**
+     * 获取组织列表
+     */
+    fun getOrgList() {
+        requestNoCheck({
+            apiService.getOrgTree()
+        }, {
+            Logger.i("组织树查询结果：$it")
+        })
+    }
+
+    /**
+     * 获取设备型号列表
+     */
+    fun getDevType() {
+        requestNoCheck({
+            apiService.getDevType()
+        }, {
+            Logger.i("获取设备型号列表：$it")
+        })
+    }
+
 }

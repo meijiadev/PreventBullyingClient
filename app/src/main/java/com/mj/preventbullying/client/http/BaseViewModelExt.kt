@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.viewModelScope
+import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.MyApp
 import com.mj.preventbullying.client.SpManager
 
@@ -170,6 +171,7 @@ fun <T> BaseViewModel.requestNoCheck(
     isShowDialog: Boolean = true,
     loadingMessage: String = "请求网络中..."
 ): Job {
+    Logger.i("access token:${SpManager.getString(Constant.ACCESS_TOKEN_KEY)}")
     //如果需要弹窗 通知Activity/fragment弹窗
     if (isShowDialog) uiChangeLiveData.showDialogEvent.postValue(loadingMessage)
     return viewModelScope.launch {
