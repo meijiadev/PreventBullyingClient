@@ -38,9 +38,9 @@ import javax.crypto.spec.SecretKeySpec
  * author:MJ
  */
 class LoginActivity : BaseMvActivity<ActivityLoginBinding, LoginViewModel>() {
-    private val nameTV by lazy { binding.username as ShapeEditText }
-    private val passwordTv by lazy { binding.password as ShapeEditText }
-    private val codeTv by lazy { binding.codeTv as ShapeEditText }
+    private val nameTV by lazy { binding.username }
+    private val passwordTv by lazy { binding.password }
+    private val codeTv by lazy { binding.codeTv }
     private val login by lazy { binding.login }
     private lateinit var loginViewModel: LoginViewModel
 

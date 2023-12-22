@@ -1,12 +1,16 @@
 package com.mj.preventbullying.client.ui
 
+import android.util.ArrayMap
 import cn.jpush.android.cache.Sp
 import com.blackview.base.http.requestNoCheck
 import com.kunminx.architecture.ui.callback.UnPeekLiveData
 import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.SpManager
 import com.mj.preventbullying.client.http.apiService
+import com.mj.preventbullying.client.http.result.DevType
+import com.mj.preventbullying.client.http.result.DevTypeResult
 import com.mj.preventbullying.client.http.result.DeviceResult
+import com.mj.preventbullying.client.http.result.OrgTreeResult
 import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseViewModel
 
@@ -15,8 +19,9 @@ import com.sjb.base.base.BaseViewModel
  * Describe : 主页的viewModel
  */
 class MainViewModel : BaseViewModel() {
-
-
+    var orgTreeEvent = UnPeekLiveData<OrgTreeResult>()
+    var devTypeEvent = UnPeekLiveData<DevTypeResult>()
+    val addDevEvent = UnPeekLiveData<Boolean>()
     fun refreshToken() {
         requestNoCheck({
             apiService.refreshToken()
@@ -33,6 +38,7 @@ class MainViewModel : BaseViewModel() {
         })
     }
 
+
     /**
      * 获取组织列表
      */
@@ -41,6 +47,7 @@ class MainViewModel : BaseViewModel() {
             apiService.getOrgTree()
         }, {
             Logger.i("组织树查询结果：$it")
+            orgTreeEvent.postValue(it)
         })
     }
 
@@ -52,6 +59,32 @@ class MainViewModel : BaseViewModel() {
             apiService.getDevType()
         }, {
             Logger.i("获取设备型号列表：$it")
+            devTypeEvent.postValue(it)
+        })
+    }
+
+    fun addDev(
+        sn: String,
+        name: String,
+        orgID: Long,
+        devType: String,
+        location: String,
+        des: String?
+    ) {
+        val params = ArrayMap<Any, Any>()
+        params["name"] = name
+        params["snCode"] = sn
+        params["orgId"] = orgID
+        params["location"] = location
+        params["modelCode"] = devType
+        params["description"] = des
+        requestNoCheck({
+            apiService.addDevice(params)
+        }, {
+            if (it.success) {
+                Logger.i("添加设备成功！")
+                addDevEvent.postValue(true)
+            }
         })
     }
 

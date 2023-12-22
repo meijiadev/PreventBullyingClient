@@ -5,20 +5,29 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import cn.jpush.android.api.JPushInterface
 import cn.jpush.android.ups.JPushUPSManager
-import cn.jpush.android.ups.TokenResult
-import cn.jpush.android.ups.UPSTurnCallBack
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.gyf.immersionbar.ktx.immersionBar
+import com.lxj.xpopup.XPopup
+import com.lxj.xpopup.enums.PopupAnimation
 import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.Constant.USER_ID_KEY
 import com.mj.preventbullying.client.MyApp
 import com.mj.preventbullying.client.R
 import com.mj.preventbullying.client.SpManager
 import com.mj.preventbullying.client.databinding.ActivityMainBinding
+import com.mj.preventbullying.client.foldtree.TreeModel
+import com.mj.preventbullying.client.http.result.DevType
 import com.mj.preventbullying.client.jpush.receive.JPushExtraMessage
+import com.mj.preventbullying.client.ui.dialog.AddDevDialog
+import com.mj.preventbullying.client.ui.dialog.MessageTipsDialog
 import com.mj.preventbullying.client.ui.fragment.DeviceFragment
 import com.mj.preventbullying.client.ui.fragment.MessageFragment
 import com.mj.preventbullying.client.ui.login.LoginActivity
+import com.mj.preventbullying.client.webrtc.LOGIN_STATUS_ANTHER
+import com.mj.preventbullying.client.webrtc.LOGIN_STATUS_FORCE_LOGOUT
+import com.mj.preventbullying.client.webrtc.SOCKET_IO_CONNECT
+import com.mj.preventbullying.client.webrtc.SOCKET_IO_DISCONNECTED
 import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseMvActivity
 
@@ -32,6 +41,8 @@ class MainActivity : BaseMvActivity<ActivityMainBinding, MainViewModel>() {
     private val deviceFragment by lazy { DeviceFragment.newInstance() }
 
     private var jPushExtraMessage: JPushExtraMessage? = null
+    private var treeList: MutableList<TreeModel>? = null
+    private var typeList: MutableList<DevType>? = null
 
 
     override fun getViewBinding(): ActivityMainBinding {
@@ -67,19 +78,128 @@ class MainActivity : BaseMvActivity<ActivityMainBinding, MainViewModel>() {
 
     override fun initView() {
         switchFragment(messageFragment)
+        if (MyApp.socketEventViewModel.isConnected) {
+            binding.devServerIv.setImageResource(R.mipmap.dev_connect)
+        } else {
+            binding.devServerIv.setImageResource(R.mipmap.dev_disconnect)
+        }
+        binding.devServerIv.setOnClickListener {
+            if (MyApp.socketEventViewModel.isConnected) {
+                toast("应用和设备服务器已连接成功")
+            } else {
+                toast("应用和设备服务器未连接，可能无法连接设备")
+            }
+        }
 
     }
 
     override fun initListener() {
+        viewModel.getOrgList()
+        viewModel.getDevType()
         binding.addDeviceLl.setOnClickListener {
             Logger.i("点击添加设备")
-            viewModel.getOrgList()
-            viewModel.getDevType()
+            showAddDialog()
         }
+        // 登录状态
+        MyApp.socketEventViewModel.loginStatusEvent.observe(this) {
+            when (it) {
+                LOGIN_STATUS_ANTHER -> {
+                    Logger.i("有其他人登录，是否强制退出")
+                    //MyApp.socketEventViewModel.confirmLogin(true)
+                    val tipsDialog =
+                        MessageTipsDialog(this).setTitle("发现账号有其他人登录，是否让其强制退出?")
+                            .setListener(object : MessageTipsDialog.OnListener {
+                                override fun onCancel() {
+                                    MyApp.socketEventViewModel.confirmLogin(false)
+                                    loginOut()
+                                }
+
+                                override fun onConfirm() {
+                                    MyApp.socketEventViewModel.confirmLogin(true)
+                                }
+                            })
+                    XPopup.Builder(this)
+                        .isViewMode(true)
+                        .isDestroyOnDismiss(true)
+                        .dismissOnBackPressed(false)
+                        .dismissOnTouchOutside(false)
+                        .popupAnimation(PopupAnimation.TranslateFromBottom)
+                        .asCustom(tipsDialog)
+                        .show()
+                }
+
+                LOGIN_STATUS_FORCE_LOGOUT -> {
+                    toast("账号已被其他人登录，你已被强制退出！")
+                    // Logger.i("有其他人登录，你也被强制退出")
+                    loginOut()
+                }
+
+                SOCKET_IO_CONNECT -> {
+                    binding.devServerIv.setImageResource(R.mipmap.dev_connect)
+                }
+
+                SOCKET_IO_DISCONNECTED -> {
+                    binding.devServerIv.setImageResource(R.mipmap.dev_disconnect)
+                }
+            }
+        }
+
+        viewModel.orgTreeEvent.observe(this) {
+            // 接收到组织树列表
+            val tree = it?.data
+            val gson = Gson()
+            val jsonStr = gson.toJson(tree)
+            treeList = gson.fromJson(jsonStr, object : TypeToken<List<TreeModel?>?>() {}.type)
+            Logger.i("转化之后的组织树：${treeList?.size}")
+            addDevDialog?.setOrgData(treeList)
+        }
+        viewModel.devTypeEvent.observe(this) {
+            typeList = it?.data as MutableList<DevType>?
+            addDevDialog?.setTypeData(typeList)
+        }
+
+
+    }
+
+    var addDevDialog: AddDevDialog? = null
+    private fun showAddDialog() {
+        addDevDialog = AddDevDialog(this).setOnListener(object : AddDevDialog.AddDevListener {
+
+            override fun onCancel() {
+
+            }
+
+            override fun onConfirm(
+                sn: String,
+                name: String,
+                orgId: Long,
+                location: String,
+                modelCode: String,
+                desc: String?
+            ) {
+                viewModel.addDev(sn, name, orgId, modelCode, location, desc)
+            }
+
+
+        }).setOrgData(treeList).setTypeData(typeList)
+        XPopup.Builder(this)
+            .isViewMode(true)
+            .dismissOnTouchOutside(false)
+            .dismissOnBackPressed(false)
+            .isDestroyOnDismiss(true)
+            .popupAnimation(PopupAnimation.TranslateFromBottom)
+            .asCustom(addDevDialog)
+            .show()
+
     }
 
 
     fun onExit(v: View) {
+        loginOut()
+    }
+
+    private fun loginOut() {
+        MyApp.socketEventViewModel.disconnect()
         SpManager.putString(Constant.ACCESS_TOKEN_KEY, null)
         SpManager.putString(Constant.FRESH_TOKEN_KEY, null)
         SpManager.putString(Constant.USER_ID_KEY, null)
@@ -112,11 +232,15 @@ class MainActivity : BaseMvActivity<ActivityMainBinding, MainViewModel>() {
         if (target != null && target != mFragment) {
             val transaction = supportFragmentManager.beginTransaction()
             if (target is MessageFragment) {
+                binding.messageIv.setImageResource(R.mipmap.message_icon_select)
+                binding.deviceManagerIv.setImageResource(R.mipmap.device_icon)
                 transaction.setCustomAnimations(
                     R.anim.action_left_enter,
                     R.anim.action_left_exit
                 )
             } else {
+                binding.messageIv.setImageResource(R.mipmap.message_icon)
+                binding.deviceManagerIv.setImageResource(R.mipmap.dev_manager_select)
                 transaction.setCustomAnimations(
                     R.anim.action_rigth_enter,
                     R.anim.action_rigth_exit

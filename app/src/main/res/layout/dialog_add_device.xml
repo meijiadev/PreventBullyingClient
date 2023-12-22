@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="30dp"
+    android:layout_marginEnd="30dp">
+
+    <com.hjq.shape.layout.ShapeRelativeLayout
+        android:id="@+id/add_dev_layout"
+        android:layout_width="match_parent"
+        android:layout_height="450dp"
+        app:shape_radius="18dp"
+        app:shape_solidColor="@color/white">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/title_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:text="添加设备"
+            android:textSize="15sp" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/sn_text_tv"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/title_tv"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center|right"
+            android:text="SN码" />
+
+        <com.hjq.shape.layout.ShapeLinearLayout
+            android:id="@+id/sn_ll"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_alignBottom="@id/sn_text_tv"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="15dp"
+            android:layout_toRightOf="@id/sn_text_tv"
+            android:orientation="horizontal"
+            app:shape_radius="10dp"
+            app:shape_strokeColor="@color/common_line_color"
+            app:shape_strokeWidth="1dp">
+
+            <com.hjq.shape.view.ShapeEditText
+                android:id="@+id/sn_et"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:hint="请输入SN码（必填）"
+                android:paddingStart="8dp"
+                android:textSize="15sp" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/scan_code_iv"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="3dp"
+                android:src="@mipmap/icon_scan_code" />
+        </com.hjq.shape.layout.ShapeLinearLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/name_text_tv"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/sn_ll"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center|right"
+            android:text="名称" />
+
+        <com.hjq.shape.view.ShapeEditText
+            android:id="@+id/name_et"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignBottom="@id/name_text_tv"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="15dp"
+            android:layout_toRightOf="@id/name_text_tv"
+            android:hint="请输入设备名称（必填）"
+            android:paddingStart="8dp"
+            android:textSize="15sp"
+            app:shape_radius="10dp"
+            app:shape_strokeColor="@color/common_line_color"
+            app:shape_strokeWidth="1dp" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/org_text_tv"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/name_et"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center|right"
+            android:text="所属组织" />
+
+        <com.hjq.shape.layout.ShapeLinearLayout
+            android:id="@+id/org_ll"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignBottom="@id/org_text_tv"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="15dp"
+            android:layout_toRightOf="@id/org_text_tv"
+            android:orientation="horizontal"
+            app:shape_radius="10dp"
+            app:shape_strokeColor="@color/common_line_color"
+            app:shape_strokeWidth="1dp">
+
+            <com.hjq.shape.view.ShapeTextView
+                android:id="@+id/org_list_tv"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_margin="2dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:hint="请选择组织（必填）"
+                android:paddingStart="8dp"
+                android:paddingEnd="18dp"
+                android:textSize="15sp" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/org_enter_iv"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:scaleType="center"
+                android:src="@mipmap/enter" />
+        </com.hjq.shape.layout.ShapeLinearLayout>
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/dev_type_text_tv"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/org_ll"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center|right"
+            android:text="设备型号" />
+        <com.hjq.shape.layout.ShapeLinearLayout
+            android:id="@+id/dev_type_ll"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignBottom="@id/dev_type_text_tv"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="15dp"
+            android:layout_toRightOf="@id/dev_type_text_tv"
+            android:orientation="horizontal"
+            app:shape_radius="10dp"
+            app:shape_strokeColor="@color/common_line_color"
+            app:shape_strokeWidth="1dp">
+            <com.hjq.shape.view.ShapeTextView
+                android:id="@+id/dev_type_tv"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:gravity="center_vertical"
+                android:hint="请选择设备型号（必填）"
+                android:paddingStart="8dp"
+                android:textSize="15sp"
+                android:layout_weight="1"
+               />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/type_enter_iv"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@mipmap/enter"
+                android:scaleType="center"
+                />
+        </com.hjq.shape.layout.ShapeLinearLayout>
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/location_text_tv"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/dev_type_ll"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center|right"
+            android:text="所属位置" />
+
+        <com.hjq.shape.view.ShapeEditText
+            android:id="@+id/location_et"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignBottom="@id/location_text_tv"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="15dp"
+            android:layout_toRightOf="@id/location_text_tv"
+            android:hint="请输入位置（必填）"
+            android:paddingStart="8dp"
+            android:textSize="15sp"
+            app:shape_radius="10dp"
+            app:shape_strokeColor="@color/common_line_color"
+            app:shape_strokeWidth="1dp" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/des_text_tv"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/location_et"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center|right"
+            android:text="描述" />
+
+        <com.hjq.shape.view.ShapeEditText
+            android:id="@+id/des_et"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignBottom="@id/des_text_tv"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="15dp"
+            android:layout_toRightOf="@id/des_text_tv"
+            android:hint="请输入描述(非必填)"
+            android:paddingStart="8dp"
+            android:textSize="15sp"
+            app:shape_radius="10dp"
+            app:shape_strokeColor="@color/common_line_color"
+            app:shape_strokeWidth="1dp" />
+
+        <com.hjq.shape.view.ShapeTextView
+            android:id="@+id/cancel_tv"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:layout_below="@id/des_et"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="10dp"
+            android:layout_toLeftOf="@id/confirm_tv"
+            android:gravity="center"
+            android:text="取消"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            app:shape_radius="8dp"
+            app:shape_strokeColor="@color/common_line_color"
+            app:shape_strokeWidth="1dp" />
+
+        <com.hjq.shape.view.ShapeTextView
+            android:id="@+id/confirm_tv"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:layout_below="@id/des_et"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:text="确定"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            app:shape_radius="8dp"
+            app:shape_solidColor="@color/green60" />
+
+        <com.hjq.shape.layout.ShapeLinearLayout
+            android:id="@+id/org_list_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/org_ll"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="9dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="18dp"
+            android:layout_toRightOf="@id/org_text_tv"
+            android:visibility="gone"
+            app:shape_radius="10dp"
+            app:shape_solidColor="@color/common_line_color">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/list_item_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:scrollbars="vertical"
+                android:scrollbarThumbVertical="@color/gray"
+                android:fadeScrollbars="false"
+                />
+        </com.hjq.shape.layout.ShapeLinearLayout>
+
+
+    </com.hjq.shape.layout.ShapeRelativeLayout>
+
+</FrameLayout>

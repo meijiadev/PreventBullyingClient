@@ -2,12 +2,12 @@ package com.mj.preventbullying.client.http.result
 
 data class DevTypeResult(
     val code: Int,
-    val `data`: List<Type>,
+    val `data`: List<DevType>,
     val msg: Any,
     val success: Boolean
 )
 
-data class Type(
+data class DevType(
     val createBy: String,
     val createTime: String,
     val delFlag: String,

@@ -11,7 +11,7 @@ data class OrgTreeResult(
 )
 
 data class Children(
-    val children: List<Children>,
+    val children: List<Children>?,
     val id: String,
     val localFlag: Boolean,
     val name: String,
@@ -19,3 +19,4 @@ data class Children(
     val type: String,
     val weight: Int
 )
+

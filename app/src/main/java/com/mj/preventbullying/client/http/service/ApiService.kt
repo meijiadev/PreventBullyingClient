@@ -3,6 +3,7 @@ package com.mj.preventbullying.client.http.service
 import android.util.ArrayMap
 import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.SpManager
+import com.mj.preventbullying.client.http.result.BaseResult
 import com.mj.preventbullying.client.http.result.DevTypeResult
 import com.mj.preventbullying.client.http.result.DeviceRecordResult
 import com.mj.preventbullying.client.http.result.DeviceResult
@@ -13,11 +14,14 @@ import com.mj.preventbullying.client.http.result.RecordProcessResult
 import com.mj.preventbullying.client.http.result.RefreshTokenResult
 import okhttp3.RequestBody
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 
@@ -91,7 +95,11 @@ interface ApiService {
     @POST("anti-bullying/device")
     suspend fun addDevice(
         @Body params: ArrayMap<Any, Any>
-    )
+    ): BaseResult
+
+
+    @HTTP(method = "DELETE", path = "anti-bullying/device/{deviceId}", hasBody = false)
+    suspend fun deleteDev(@Path("deviceId") deviceId: Long): BaseResult
 
     @GET("admin/org/tree")
     suspend fun getOrgTree(): OrgTreeResult

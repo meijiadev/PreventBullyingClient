@@ -18,7 +18,7 @@ data class DeviceData(
     val optimizeCountSql: Boolean,
     val orders: List<Order>,
     val pages: Int,
-    val records: List<DeviceRecord>,
+    val records: MutableList<DeviceRecord>,
     val searchCount: Boolean,
     val size: Int,
     val total: Int
