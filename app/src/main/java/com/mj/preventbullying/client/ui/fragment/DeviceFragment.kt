@@ -5,14 +5,20 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.enums.PopupAnimation
 import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.MyApp
+import com.mj.preventbullying.client.R
 import com.mj.preventbullying.client.databinding.FragmentDeviceBinding
+import com.mj.preventbullying.client.foldtree.TreeModel
+import com.mj.preventbullying.client.http.result.DevType
 import com.mj.preventbullying.client.http.result.DeviceRecord
 import com.mj.preventbullying.client.ui.MainViewModel
 import com.mj.preventbullying.client.ui.adapter.DeviceListAdapter
+import com.mj.preventbullying.client.ui.dialog.DevInfoDialog
 import com.mj.preventbullying.client.ui.dialog.MessageTipsDialog
 import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseMvFragment
@@ -29,6 +35,8 @@ class DeviceFragment : BaseMvFragment<FragmentDeviceBinding, DeviceViewModel>() 
     private var deviceList: MutableList<DeviceRecord>? = null
 
     private var mainViewModel: MainViewModel? = null
+    private var treeList: MutableList<TreeModel>? = null
+    private var typeList: MutableList<DevType>? = null
 
     companion object {
         fun newInstance(): DeviceFragment {
@@ -62,7 +70,7 @@ class DeviceFragment : BaseMvFragment<FragmentDeviceBinding, DeviceViewModel>() 
     }
 
     override fun initViewObservable() {
-        deviceListAdapter?.setOnItemLongClickListener { adapter, view, position ->
+        deviceListAdapter?.addOnItemChildClickListener(R.id.delete_iv) { adapter, view, position ->
             val tipsDialog = MessageTipsDialog(requireContext()).setTitle("是否确定删除该设备？")
                 .setListener(object : MessageTipsDialog.OnListener {
                     override fun onCancel() {
@@ -84,10 +92,58 @@ class DeviceFragment : BaseMvFragment<FragmentDeviceBinding, DeviceViewModel>() 
                 })
             XPopup.Builder(requireContext()).isViewMode(true)
                 .popupAnimation(PopupAnimation.TranslateFromBottom).asCustom(tipsDialog).show()
-            true
+
+        }
+        deviceListAdapter?.addOnItemChildClickListener(R.id.amend_iv) { adapter, view, position ->
+            val devMsg = deviceList?.get(position)
+            showDialogInfo(devMsg)
         }
 
     }
+
+    private fun getDevInfoList() {
+        mainViewModel?.getOrgList()
+        mainViewModel?.getDevType()
+    }
+
+    private var amendDevDialog: DevInfoDialog? = null
+    private fun showDialogInfo(dev: DeviceRecord?) {
+        getDevInfoList()
+        amendDevDialog =
+            DevInfoDialog(requireContext()).setOnListener(object : DevInfoDialog.AddDevListener {
+
+                override fun onCancel() {
+
+                }
+
+                override fun onConfirm(
+                    sn: String,
+                    name: String,
+                    orgId: Long,
+                    location: String,
+                    modelCode: String,
+                    desc: String?
+                ) {
+
+                }
+
+
+            })
+                .setOrgData(treeList)
+                .setTypeData(typeList)
+                .setTitleMsg("修改设备信息")
+                .setAmendData(dev)
+        XPopup.Builder(requireContext())
+            .isViewMode(true)
+            .dismissOnTouchOutside(false)
+            .dismissOnBackPressed(false)
+            .isDestroyOnDismiss(true)
+            .popupAnimation(PopupAnimation.TranslateFromBottom)
+            .asCustom(amendDevDialog)
+            .show()
+
+    }
+
 
     override fun initView() {
         binding.smartRefreshLayout.let {
@@ -117,6 +173,20 @@ class DeviceFragment : BaseMvFragment<FragmentDeviceBinding, DeviceViewModel>() 
                 viewModel.getAllDevices()
             }
 
+        }
+
+        mainViewModel?.orgTreeEvent?.observe(this) {
+            // 接收到组织树列表
+            val tree = it?.data
+            val gson = Gson()
+            val jsonStr = gson.toJson(tree)
+            treeList = gson.fromJson(jsonStr, object : TypeToken<List<TreeModel?>?>() {}.type)
+            Logger.i("转化之后的组织树：${treeList?.size}")
+            amendDevDialog?.setOrgData(treeList)
+        }
+        mainViewModel?.devTypeEvent?.observe(this) {
+            typeList = it?.data as MutableList<DevType>?
+            amendDevDialog?.setTypeData(typeList)
         }
     }
 }

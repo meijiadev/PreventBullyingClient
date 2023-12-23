@@ -67,7 +67,7 @@ class SocketEventViewModel : ViewModel(), HandlerAction {
             this.registerId = registerId
             val token = SpManager.getString(Constant.ACCESS_TOKEN_KEY)
             val url =
-                "${ApiService.DEV_HTTP_URL}spad-cloud?token=$token&clientType=anti_bullying_device&clientId=$sn"
+                "${ApiService.BASE_HTTP_URL}spad-cloud?token=$token&clientType=anti_bullying_device&clientId=$sn"
             kotlin.runCatching {
                 mSocket = IO.socket(
                     url

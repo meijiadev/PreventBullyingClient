@@ -19,7 +19,7 @@ import com.mj.preventbullying.client.databinding.ActivityMainBinding
 import com.mj.preventbullying.client.foldtree.TreeModel
 import com.mj.preventbullying.client.http.result.DevType
 import com.mj.preventbullying.client.jpush.receive.JPushExtraMessage
-import com.mj.preventbullying.client.ui.dialog.AddDevDialog
+import com.mj.preventbullying.client.ui.dialog.DevInfoDialog
 import com.mj.preventbullying.client.ui.dialog.MessageTipsDialog
 import com.mj.preventbullying.client.ui.fragment.DeviceFragment
 import com.mj.preventbullying.client.ui.fragment.MessageFragment
@@ -93,10 +93,14 @@ class MainActivity : BaseMvActivity<ActivityMainBinding, MainViewModel>() {
 
     }
 
-    override fun initListener() {
+    private fun getDevInfoList() {
         viewModel.getOrgList()
         viewModel.getDevType()
+    }
+
+    override fun initListener() {
         binding.addDeviceLl.setOnClickListener {
+            getDevInfoList()
             Logger.i("点击添加设备")
             showAddDialog()
         }
@@ -157,13 +161,15 @@ class MainActivity : BaseMvActivity<ActivityMainBinding, MainViewModel>() {
             typeList = it?.data as MutableList<DevType>?
             addDevDialog?.setTypeData(typeList)
         }
-
+        viewModel.addDevEvent.observe(this) {
+            toast("设备添加成功！")
+        }
 
     }
 
-    var addDevDialog: AddDevDialog? = null
+    var addDevDialog: DevInfoDialog? = null
     private fun showAddDialog() {
-        addDevDialog = AddDevDialog(this).setOnListener(object : AddDevDialog.AddDevListener {
+        addDevDialog = DevInfoDialog(this).setOnListener(object : DevInfoDialog.AddDevListener {
 
             override fun onCancel() {
 

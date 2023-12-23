@@ -22,8 +22,10 @@ import com.mj.preventbullying.client.databinding.FragmentMessageBinding
 import com.mj.preventbullying.client.http.result.Record
 import com.mj.preventbullying.client.tool.AudioPlayer
 import com.mj.preventbullying.client.ui.adapter.MessageAdapter
+import com.mj.preventbullying.client.ui.adapter.PENDING_STATUS
 import com.mj.preventbullying.client.ui.adapter.PROCESSED_IGNORE
 import com.mj.preventbullying.client.ui.adapter.PROCESSED_STATUS
+import com.mj.preventbullying.client.ui.adapter.PROCESSING_STATUS
 import com.mj.preventbullying.client.ui.dialog.MessageProcessDialog
 import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseMvFragment
@@ -43,6 +45,7 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
     private var messageList: List<Record>? = null
     private var processPosition: Int? = null
     private var currentRecordId: String? = null
+    private var curShowType = "null"
 
 
     companion object {
@@ -116,6 +119,79 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
                 .popupAnimation(PopupAnimation.TranslateFromBottom).asCustom(messageProcessDialog)
                 .show()
         }
+        binding.allMessageTv.setOnClickListener {
+            resetMessageBt()
+            binding.allMessageTv.shapeDrawableBuilder.setSolidColor(requireContext().getColor(com.sjb.base.R.color.gold))
+                .intoBackground()
+            filtrationMsgTp("null")
+
+        }
+
+        binding.pendingTv.setOnClickListener {
+            resetMessageBt()
+            binding.pendingTv.shapeDrawableBuilder.setSolidColor(requireContext().getColor(com.sjb.base.R.color.gold))
+                .intoBackground()
+            filtrationMsgTp(PENDING_STATUS)
+        }
+
+        binding.processedTv.setOnClickListener {
+            resetMessageBt()
+            binding.processedTv.shapeDrawableBuilder.setSolidColor(requireContext().getColor(com.sjb.base.R.color.gold))
+                .intoBackground()
+            filtrationMsgTp(PROCESSED_STATUS)
+        }
+
+        binding.ignoreTv.setOnClickListener {
+            resetMessageBt()
+            binding.ignoreTv.shapeDrawableBuilder.setSolidColor(requireContext().getColor(com.sjb.base.R.color.gold))
+                .intoBackground()
+            filtrationMsgTp(PROCESSED_IGNORE)
+
+        }
+
+        binding.processingTv.setOnClickListener {
+            resetMessageBt()
+            binding.processingTv.shapeDrawableBuilder.setSolidColor(requireContext().getColor(com.sjb.base.R.color.gold))
+                .intoBackground()
+            filtrationMsgTp(PROCESSING_STATUS)
+        }
+    }
+
+    private fun resetMessageBt() {
+        binding.apply {
+            allMessageTv.shapeDrawableBuilder.setSolidColor(requireContext().getColor(R.color.white))
+                .intoBackground()
+            pendingTv.shapeDrawableBuilder.setSolidColor(requireContext().getColor(R.color.white))
+                .intoBackground()
+            processedTv.shapeDrawableBuilder.setSolidColor(requireContext().getColor(R.color.white))
+                .intoBackground()
+            ignoreTv.shapeDrawableBuilder.setSolidColor(requireContext().getColor(R.color.white))
+                .intoBackground()
+            processingTv.shapeDrawableBuilder.setSolidColor(requireContext().getColor(R.color.white))
+                .intoBackground()
+        }
+    }
+
+    /**
+     * 按照类型过滤
+     */
+    private fun filtrationMsgTp(type: String) {
+        curShowType = type
+        if (type == "null") {
+            messageAdapter?.submitList(messageList)
+            messageAdapter?.notifyDataSetChanged()
+            return
+        }
+        val list = mutableListOf<Record>()
+        messageList?.let {
+            for (record in it) {
+                if (record.state == type) {
+                    list.add(record)
+                }
+            }
+            messageAdapter?.submitList(list)
+            messageAdapter?.notifyDataSetChanged()
+        }
     }
 
     override fun initView() {
@@ -123,7 +199,6 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
             Logger.i("下拉刷新")
             it.setReboundDuration(300)
             viewModel.getAllDeviceRecords()
-
         }
         AudioPlayer.instance.addListener(this)
     }
@@ -139,7 +214,7 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
         viewModel.messageEvent.observe(this) {
             binding.smartRefreshLayout.finishRefresh(1000, true, true)
             messageList = it?.data?.records
-            messageAdapter?.submitList(it.data.records)
+            filtrationMsgTp(curShowType)
         }
 
         viewModel.getPreVieUrlEvent.observe(this) {

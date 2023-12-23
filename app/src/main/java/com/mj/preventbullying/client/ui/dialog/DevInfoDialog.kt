@@ -2,10 +2,14 @@ package com.mj.preventbullying.client.ui.dialog
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
 import android.view.MotionEvent
 import android.view.View
+import android.widget.EditText
 import android.widget.RelativeLayout
+import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hjq.shape.layout.ShapeLinearLayout
@@ -18,6 +22,8 @@ import com.mj.preventbullying.client.R
 import com.mj.preventbullying.client.foldtree.TreeListAdapter
 import com.mj.preventbullying.client.foldtree.TreeModel
 import com.mj.preventbullying.client.http.result.DevType
+import com.mj.preventbullying.client.http.result.DeviceRecord
+import com.mj.preventbullying.client.http.result.RecordData
 import com.mj.preventbullying.client.ui.adapter.DevTypeAdapter
 import com.orhanobut.logger.Logger
 
@@ -26,11 +32,13 @@ import com.orhanobut.logger.Logger
  * Describe : 添加设备的弹窗
  */
 
-class AddDevDialog(context: Context) : CenterPopupView(context) {
+class DevInfoDialog(context: Context) : CenterPopupView(context) {
 
     private val addDevLayout: ShapeRelativeLayout by lazy { findViewById(R.id.add_dev_layout) }
+    private val titleTv: AppCompatTextView by lazy { findViewById(R.id.title_tv) }
+    private val snLl: ShapeLinearLayout by lazy { findViewById(R.id.sn_ll) }
     private val nameEt: ShapeEditText by lazy { findViewById(R.id.name_et) }
-    private val snEt: ShapeEditText by lazy { findViewById(R.id.sn_et) }
+    private val snEt: EditText by lazy { findViewById(R.id.sn_et) }
     private val devTypeTv: ShapeTextView by lazy { findViewById(R.id.dev_type_tv) }
     private val orgListTv: ShapeTextView by lazy { findViewById(R.id.org_list_tv) }
     private val locationEt: ShapeEditText by lazy { findViewById(R.id.location_et) }
@@ -53,6 +61,9 @@ class AddDevDialog(context: Context) : CenterPopupView(context) {
     private var typeData: MutableList<DevType>? = null
     private var devTypeAdapter: DevTypeAdapter? = null
     private var curOrgId: Long = 0
+    private var titleMsg: String? = null
+
+    private var devData: DeviceRecord? = null
 
     init {
         this.context = context
@@ -61,9 +72,27 @@ class AddDevDialog(context: Context) : CenterPopupView(context) {
     override fun getImplLayoutId(): Int = R.layout.dialog_add_device
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate() {
         super.onCreate()
+        titleTv.text = titleMsg
+        if (titleMsg == "修改设备信息") {
+            Logger.i("将sn码编辑框设置成不可点击")
+            snEt.isEnabled = false
+            snLl.isClickable = false
+            snLl.shapeDrawableBuilder.setSolidColor(context.getColor(com.sjb.base.R.color.common_line_color))
+                .intoBackground()
+        }
+        devData?.let {
+            snEt.setText(it.snCode)
+            nameEt.setText(it.name)
+            curOrgId = it.org.id.toLong()
+            orgListTv.text = it.org.name
+            devTypeTv.text = it.modelCode
+            locationEt.setText(it.location)
+            desEt.setText(it.description)
+        }
         treeAdapter = TreeListAdapter()
         devTypeAdapter = DevTypeAdapter()
         val layoutManager = LinearLayoutManager(context)
@@ -92,10 +121,10 @@ class AddDevDialog(context: Context) : CenterPopupView(context) {
                 layoutParams.addRule(RelativeLayout.BELOW, R.id.dev_type_ll)
                 orgListLl.layoutParams = layoutParams
 
-                orgEnterIv.rotation = 90f
+                typeEnterIv.rotation = 90f
                 orgListLl.visibility = View.VISIBLE
             } else {
-                orgEnterIv.rotation = 0f
+                typeEnterIv.rotation = 0f
                 orgListLl.visibility = View.GONE
             }
         }
@@ -175,18 +204,31 @@ class AddDevDialog(context: Context) : CenterPopupView(context) {
     }
 
 
-    fun setOnListener(listener: AddDevListener): AddDevDialog = apply {
+    fun setOnListener(listener: AddDevListener): DevInfoDialog = apply {
         this.listener = listener
     }
 
-    fun setOrgData(data: MutableList<TreeModel>?): AddDevDialog = apply {
+    fun setOrgData(data: MutableList<TreeModel>?): DevInfoDialog = apply {
         Logger.i("列表：${data?.size}")
         this.orgData = data
     }
 
-    fun setTypeData(data: MutableList<DevType>?): AddDevDialog = apply {
+    fun setTypeData(data: MutableList<DevType>?): DevInfoDialog = apply {
         this.typeData = data
     }
+
+    fun setTitleMsg(msg: String): DevInfoDialog = apply {
+        this.titleMsg = msg
+    }
+
+    /**
+     * 设置修改的数据
+     */
+    fun setAmendData(deviceRecord: DeviceRecord?): DevInfoDialog = apply {
+        this.devData = deviceRecord
+
+    }
+
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         when (event?.action) {

@@ -45,14 +45,16 @@
             app:shape_strokeColor="@color/common_line_color"
             app:shape_strokeWidth="1dp">
 
-            <com.hjq.shape.view.ShapeEditText
+            <EditText
                 android:id="@+id/sn_et"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"
                 android:hint="请输入SN码（必填）"
                 android:paddingStart="8dp"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                android:background="@null"
+                />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/scan_code_iv"

@@ -1,14 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/message_type_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        >
+        <com.hjq.shape.view.ShapeTextView
+            android:id="@+id/all_message_tv"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:text="全部"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:shape_radius="10dp"
+            app:shape_solidColor="@color/gold"
+            android:gravity="center"
+            android:layout_weight="1"
+            />
+        <com.hjq.shape.view.ShapeTextView
+            android:id="@+id/pending_tv"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:text="待处理"
+            android:layout_toRightOf="@id/all_message_tv"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:layout_marginStart="8dp"
+            app:shape_radius="10dp"
+            app:shape_solidColor="@color/white"
+            android:gravity="center"
+            android:layout_weight="1"
+            />
+        <com.hjq.shape.view.ShapeTextView
+            android:id="@+id/processed_tv"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:text="已处理"
+            android:textStyle="bold"
+            android:layout_toRightOf="@id/pending_tv"
+            android:textSize="15sp"
+            android:layout_marginStart="8dp"
+            app:shape_radius="10dp"
+            app:shape_solidColor="@color/white"
+            android:gravity="center"
+            android:layout_weight="1"
+            />
+        <com.hjq.shape.view.ShapeTextView
+            android:id="@+id/ignore_tv"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:text="已忽略"
+            android:textStyle="bold"
+            android:layout_toRightOf="@id/processed_tv"
+            android:textSize="15sp"
+            android:layout_marginStart="8dp"
+            app:shape_radius="10dp"
+            app:shape_solidColor="@color/white"
+            android:gravity="center"
+            android:layout_weight="1"
+            />
+        <com.hjq.shape.view.ShapeTextView
+            android:id="@+id/processing_tv"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:text="处理中"
+            android:textStyle="bold"
+            android:layout_toRightOf="@id/ignore_tv"
+            android:textSize="15sp"
+            android:layout_marginStart="8dp"
+            app:shape_radius="10dp"
+            app:shape_solidColor="@color/white"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:layout_marginEnd="10dp"
+            />
+    </LinearLayout>
+
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/smart_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="8dp">
+        android:layout_below="@id/message_type_ll"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/message_list"
@@ -16,4 +100,4 @@
             android:layout_height="match_parent"
             android:background="@color/common_line_color" />
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

@@ -81,7 +81,30 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/device_type_tv"
             app:layout_constraintWidth_percent="0.65"
+            />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/amend_iv"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:layout_constraintEnd_toStartOf="@id/delete_iv"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="8dp"
+            android:src="@mipmap/amend_icon"
+            android:scaleType="center"
 
+            />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/delete_iv"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:src="@mipmap/delete_icon"
+            android:scaleType="center"
             />
 
     </com.hjq.shape.layout.ShapeConstraintLayout>

@@ -1,9 +1,12 @@
 package com.mj.preventbullying.client.ui.fragment
 
+import android.util.ArrayMap
 import com.blackview.base.http.requestNoCheck
 import com.hjq.toast.ToastUtils
 import com.kunminx.architecture.ui.callback.UnPeekLiveData
 import com.mj.preventbullying.client.http.apiService
+import com.mj.preventbullying.client.http.result.DeviceData
+import com.mj.preventbullying.client.http.result.DeviceRecord
 import com.mj.preventbullying.client.http.result.DeviceResult
 import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseViewModel
@@ -35,6 +38,22 @@ class DeviceViewModel : BaseViewModel() {
             if (it.success) {
                 deleteDevEvent.postValue(true)
             }
+
+        })
+    }
+
+    fun amendDev(devData: DeviceRecord) {
+        val params = ArrayMap<Any, Any>()
+        params["deviceId"] = devData.deviceId
+        params["snCode"] = devData.snCode
+        params["name"] = devData.name
+        params["orgId"] = devData.org
+        params["location"] = devData.location
+        params["modelCode"] = devData.modelCode
+        params["description"] = devData.description
+        requestNoCheck({
+            apiService.amendDev(params)
+        }, {
 
         })
     }
