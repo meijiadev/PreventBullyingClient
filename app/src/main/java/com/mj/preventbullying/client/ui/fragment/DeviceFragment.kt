@@ -16,6 +16,7 @@ import com.mj.preventbullying.client.databinding.FragmentDeviceBinding
 import com.mj.preventbullying.client.foldtree.TreeModel
 import com.mj.preventbullying.client.http.result.DevType
 import com.mj.preventbullying.client.http.result.DeviceRecord
+import com.mj.preventbullying.client.http.result.Org
 import com.mj.preventbullying.client.ui.MainViewModel
 import com.mj.preventbullying.client.ui.adapter.DeviceListAdapter
 import com.mj.preventbullying.client.ui.dialog.DevInfoDialog
@@ -120,11 +121,14 @@ class DeviceFragment : BaseMvFragment<FragmentDeviceBinding, DeviceViewModel>() 
                     sn: String,
                     name: String,
                     orgId: Long,
+                    orgName: String,
                     location: String,
                     modelCode: String,
                     desc: String?
                 ) {
-
+                    dev?.let {
+                        viewModel.amendDev(dev.deviceId, sn, name, orgId, modelCode, location, desc)
+                    }
                 }
 
 

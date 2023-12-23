@@ -100,7 +100,7 @@ interface ApiService {
 
 
     @PUT("anti-bullying/device")
-    suspend fun amendDev(@Body params: ArrayMap<Any, Any>)
+    suspend fun amendDev(@Body params: ArrayMap<Any, Any>):BaseResult
 
     @HTTP(method = "DELETE", path = "anti-bullying/device/{deviceId}", hasBody = false)
     suspend fun deleteDev(@Path("deviceId") deviceId: Long): BaseResult

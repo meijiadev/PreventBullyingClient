@@ -35,7 +35,7 @@ data class Org(
 )
 
 data class DeviceRecord(
-    val description: String,
+    val description: String?,
     val deviceId: String,
     val ip: Any,
     val lastUpdateTime: String,

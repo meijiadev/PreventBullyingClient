@@ -42,19 +42,27 @@ class DeviceViewModel : BaseViewModel() {
         })
     }
 
-    fun amendDev(devData: DeviceRecord) {
+    fun amendDev(
+        deviceId: String,
+        sn: String,
+        name: String,
+        orgID: Long,
+        devType: String,
+        location: String,
+        des: String?
+    ) {
         val params = ArrayMap<Any, Any>()
-        params["deviceId"] = devData.deviceId
-        params["snCode"] = devData.snCode
-        params["name"] = devData.name
-        params["orgId"] = devData.org
-        params["location"] = devData.location
-        params["modelCode"] = devData.modelCode
-        params["description"] = devData.description
+        params["deviceId"] = deviceId
+        params["snCode"] = sn
+        params["name"] = name
+        params["orgId"] = orgID
+        params["location"] = location
+        params["modelCode"] = devType
+        params["description"] = des
         requestNoCheck({
             apiService.amendDev(params)
         }, {
-
+            Logger.i("修改成功:${it.success}")
         })
     }
 }

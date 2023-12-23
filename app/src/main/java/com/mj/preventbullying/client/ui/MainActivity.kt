@@ -179,6 +179,7 @@ class MainActivity : BaseMvActivity<ActivityMainBinding, MainViewModel>() {
                 sn: String,
                 name: String,
                 orgId: Long,
+                orgName: String,
                 location: String,
                 modelCode: String,
                 desc: String?

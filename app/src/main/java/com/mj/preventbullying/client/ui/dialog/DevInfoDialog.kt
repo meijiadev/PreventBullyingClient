@@ -170,7 +170,7 @@ class DevInfoDialog(context: Context) : CenterPopupView(context) {
             if (sn.isEmpty() || name.isEmpty() || orgMsg.isEmpty() || devType.isEmpty() || location.isEmpty()) {
                 ToastUtils.show("请按照指示填写必填信息")
             } else {
-                listener?.onConfirm(sn, name, curOrgId, location, devType, desc)
+                listener?.onConfirm(sn, name, curOrgId,orgMsg, location, devType, desc)
                 dismiss()
             }
         }
@@ -251,6 +251,7 @@ class DevInfoDialog(context: Context) : CenterPopupView(context) {
             sn: String,
             name: String,
             orgId: Long,
+            orgName:String,
             location: String,
             modelCode: String,
             desc: String?
