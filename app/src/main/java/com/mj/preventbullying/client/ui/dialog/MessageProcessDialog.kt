@@ -9,11 +9,15 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.lifecycle.lifecycleScope
 import com.hjq.toast.ToastUtils
 import com.lxj.xpopup.core.CenterPopupView
+import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.MyApp
 import com.mj.preventbullying.client.R
+import com.mj.preventbullying.client.SpManager
 import com.mj.preventbullying.client.webrtc.CALLED_STATUS
 import com.mj.preventbullying.client.webrtc.CALL_FAILURE
 import com.mj.preventbullying.client.webrtc.CALL_HANG_UP
+import com.mj.preventbullying.client.webrtc.RESTART_CALL
+import com.mj.preventbullying.client.webrtc.getUUID
 import com.orhanobut.logger.Logger
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -46,16 +50,20 @@ class MessageProcessDialog(context: Context) : CenterPopupView(context) {
     private var messageDialogClick: MessageDialogClick? = null
 
     private var audioManager: AudioManager? = null
+    private var isRestartCall = false
+    private var toId: String? = null
 
     override fun getImplLayoutId(): Int = R.layout.dialog_message_process
 
     override
     fun onCreate() {
         super.onCreate()
+//        MyApp.webrtcSocketManager.createWebrtcSc(SpManager.getString(Constant.USER_ID_KEY),"0987654321")
         audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager?
         call.setOnClickListener {
             MyApp.timerViewModel.stopTimer()
             Logger.i("拨打设备语音")
+            isRestartCall = false
             messageDialogClick?.toCall()
             loadingTv.visibility = View.VISIBLE
             closeIv.visibility = View.VISIBLE
@@ -83,7 +91,7 @@ class MessageProcessDialog(context: Context) : CenterPopupView(context) {
         hangUpIv.setOnClickListener {
             closeSpeaker()
             MyApp.timerViewModel.stopTimer()
-            MyApp.socketEventViewModel.sendHangUp()
+            MyApp.webrtcSocketManager.sendHangUp()
             dismiss()
             messageDialogClick?.callFinish()
         }
@@ -99,23 +107,25 @@ class MessageProcessDialog(context: Context) : CenterPopupView(context) {
 
         closeIv.setOnClickListener {
             MyApp.timerViewModel.stopTimer()
-            MyApp.socketEventViewModel.sendHangUp()
+            MyApp.webrtcSocketManager.sendHangUp()
             dismiss()
 
         }
 
 
 
-        MyApp.socketEventViewModel.voiceCallEvent.observe(this) {
+        MyApp.webrtcSocketManager.voiceCallEvent.observe(this) {
             when (it) {
                 CALLED_STATUS -> {
                     lifecycleScope.launch {
-                        openSpeaker()
-                        callLayout.visibility = View.VISIBLE
-                        actionLayout.visibility = View.GONE
-                        loadingTv.visibility = View.GONE
-                        closeIv.visibility = View.GONE
-                        MyApp.timerViewModel.startTimer()
+                        if (!isRestartCall) {
+                            openSpeaker()
+                            callLayout.visibility = View.VISIBLE
+                            actionLayout.visibility = View.GONE
+                            loadingTv.visibility = View.GONE
+                            closeIv.visibility = View.GONE
+                            MyApp.timerViewModel.startTimer()
+                        }
                     }
                 }
 
@@ -130,6 +140,15 @@ class MessageProcessDialog(context: Context) : CenterPopupView(context) {
                     dismiss()
                     MyApp.timerViewModel.stopTimer()
                 }
+                // 重新连接
+                RESTART_CALL -> {
+                    isRestartCall = true
+                    MyApp.webrtcSocketManager.createWebrtcSc(
+                        SpManager.getString(Constant.USER_ID_KEY),
+                        toId,
+                        getUUID()
+                    )
+                }
 
             }
         }
@@ -141,6 +160,10 @@ class MessageProcessDialog(context: Context) : CenterPopupView(context) {
     fun setClickListener(listener: MessageDialogClick): MessageProcessDialog = apply {
         messageDialogClick = listener
 
+    }
+
+    fun setToId(id: String?): MessageProcessDialog = apply {
+        this.toId = id
     }
 
     fun openSpeaker() {
@@ -165,4 +188,5 @@ class MessageProcessDialog(context: Context) : CenterPopupView(context) {
         fun callFinish()
 
     }
+
 }

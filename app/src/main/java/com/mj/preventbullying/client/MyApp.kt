@@ -14,6 +14,7 @@ import com.hjq.toast.ToastUtils
 import com.hjq.toast.style.WhiteToastStyle
 import com.mj.preventbullying.client.ui.TimerViewModel
 import com.mj.preventbullying.client.webrtc.SocketEventViewModel
+import com.mj.preventbullying.client.webrtc.WebrtcSocketManager
 
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
@@ -26,6 +27,7 @@ class MyApp : Application(), ViewModelStoreOwner {
         lateinit var context: Context
         lateinit var socketEventViewModel: SocketEventViewModel
         lateinit var timerViewModel: TimerViewModel
+        lateinit var webrtcSocketManager: WebrtcSocketManager
     }
 
     private lateinit var mAppViewModelStore: ViewModelStore
@@ -50,6 +52,7 @@ class MyApp : Application(), ViewModelStoreOwner {
         mApplicationProvider = ViewModelProvider(this)
         timerViewModel = getApplicationViewModel(TimerViewModel::class.java)
         socketEventViewModel = getApplicationViewModel(SocketEventViewModel::class.java)
+        webrtcSocketManager = getApplicationViewModel(WebrtcSocketManager::class.java)
         initJGPush()
     }
 

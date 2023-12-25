@@ -172,12 +172,21 @@ class DeviceFragment : BaseMvFragment<FragmentDeviceBinding, DeviceViewModel>() 
                 viewModel.getAllDevices()
             }
         }
+
+        viewModel.amendDevEvent.observe(this) {
+            if (it) {
+                viewModel.getAllDevices()
+            } else {
+                toast("设备修改失败，请重试")
+            }
+        }
         mainViewModel?.addDevEvent?.observe(this) {
             if (it) {
                 viewModel.getAllDevices()
             }
 
         }
+
 
         mainViewModel?.orgTreeEvent?.observe(this) {
             // 接收到组织树列表

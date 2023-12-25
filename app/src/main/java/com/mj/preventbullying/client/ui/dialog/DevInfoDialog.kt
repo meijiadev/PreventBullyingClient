@@ -209,7 +209,7 @@ class DevInfoDialog(context: Context) : CenterPopupView(context) {
     }
 
     fun setOrgData(data: MutableList<TreeModel>?): DevInfoDialog = apply {
-        Logger.i("列表：${data?.size}")
+       // Logger.i("列表：${data?.size}")
         this.orgData = data
     }
 
@@ -226,18 +226,18 @@ class DevInfoDialog(context: Context) : CenterPopupView(context) {
      */
     fun setAmendData(deviceRecord: DeviceRecord?): DevInfoDialog = apply {
         this.devData = deviceRecord
-
+        Logger.i("需要修改的数据：$deviceRecord")
     }
 
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         when (event?.action) {
             MotionEvent.ACTION_DOWN -> {
-                Logger.i("点击事件:按下")
+               // Logger.i("点击事件:按下")
             }
 
             MotionEvent.ACTION_UP -> {
-                Logger.i("点击事件:抬起")
+                //Logger.i("点击事件:抬起")
                 orgListLl.visibility = View.GONE
             }
         }

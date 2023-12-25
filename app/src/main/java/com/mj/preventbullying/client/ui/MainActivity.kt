@@ -70,6 +70,7 @@ class MainActivity : BaseMvActivity<ActivityMainBinding, MainViewModel>() {
             // viewModel.getAllDeviceRecords()
         }
 
+
     }
 
     override fun initViewObservable() {
@@ -154,7 +155,7 @@ class MainActivity : BaseMvActivity<ActivityMainBinding, MainViewModel>() {
             val gson = Gson()
             val jsonStr = gson.toJson(tree)
             treeList = gson.fromJson(jsonStr, object : TypeToken<List<TreeModel?>?>() {}.type)
-            Logger.i("转化之后的组织树：${treeList?.size}")
+            Logger.d("转化之后的组织树：${treeList?.size}")
             addDevDialog?.setOrgData(treeList)
         }
         viewModel.devTypeEvent.observe(this) {
@@ -188,7 +189,7 @@ class MainActivity : BaseMvActivity<ActivityMainBinding, MainViewModel>() {
             }
 
 
-        }).setOrgData(treeList).setTypeData(typeList)
+        }).setOrgData(treeList).setTypeData(typeList).setTitleMsg("添加设备")
         XPopup.Builder(this)
             .isViewMode(true)
             .dismissOnTouchOutside(false)
@@ -200,12 +201,20 @@ class MainActivity : BaseMvActivity<ActivityMainBinding, MainViewModel>() {
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        MyApp.webrtcSocketManager.sendHangUp()
+        MyApp.webrtcSocketManager.disconnect()
+        MyApp.socketEventViewModel.disconnect()
+    }
 
     fun onExit(v: View) {
         loginOut()
     }
 
     private fun loginOut() {
+        MyApp.webrtcSocketManager.sendHangUp()
+        MyApp.webrtcSocketManager.disconnect()
         MyApp.socketEventViewModel.disconnect()
         SpManager.putString(Constant.ACCESS_TOKEN_KEY, null)
         SpManager.putString(Constant.FRESH_TOKEN_KEY, null)

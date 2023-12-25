@@ -33,7 +33,8 @@ import retrofit2.http.Query
 
 interface ApiService {
     companion object {
-        const val BASE_HTTP_URL = "http://cloud.zyq0407.com:8080/"
+        //const val BASE_HTTP_URL = "http://cloud.zyq0407.com:8080/"
+        const val DEV_SOCKET_IO_URL = "http://192.168.1.6:80/app?"
         const val DEV_HTTP_URL = "http://192.168.1.6:80/"
         const val API = "api/"
     }
@@ -100,7 +101,7 @@ interface ApiService {
 
 
     @PUT("anti-bullying/device")
-    suspend fun amendDev(@Body params: ArrayMap<Any, Any>):BaseResult
+    suspend fun amendDev(@Body params: ArrayMap<Any, Any>): BaseResult
 
     @HTTP(method = "DELETE", path = "anti-bullying/device/{deviceId}", hasBody = false)
     suspend fun deleteDev(@Path("deviceId") deviceId: Long): BaseResult

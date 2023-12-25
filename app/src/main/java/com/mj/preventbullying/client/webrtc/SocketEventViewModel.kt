@@ -1,7 +1,9 @@
 package com.mj.preventbullying.client.webrtc
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
+import com.hjq.toast.ToastUtils
 import com.kunminx.architecture.ui.callback.UnPeekLiveData
 import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.MyApp
@@ -12,6 +14,9 @@ import com.sjb.base.action.HandlerAction
 import io.socket.client.Ack
 import io.socket.client.IO
 import io.socket.client.Socket
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.webrtc.IceCandidate
 import org.webrtc.SessionDescription
 
@@ -27,19 +32,24 @@ const val CALL_FAILURE = 3
 // 已挂断
 const val CALL_HANG_UP = 4
 
+// 重新拨打一次
+const val RESTART_CALL = 5 // 重新发起通话
+
 // 有其他人登录
 const val LOGIN_STATUS_ANTHER = 1
 const val LOGIN_STATUS_FORCE_LOGOUT = 2
 const val SOCKET_IO_CONNECT = 3
 const val SOCKET_IO_DISCONNECTED = 4
-
+const val OPPOSITE_OFF_LINE = "offline"
+const val OPPOSITE_BUSY = "busy"
+var isAnswer: Boolean = false       // 是否有回复
 
 class SocketEventViewModel : ViewModel(), HandlerAction {
-
-
-    // 被呼叫或者呼叫别人
-    var callEvent = UnPeekLiveData<Boolean>()
-
+//
+//
+//    // 被呼叫或者呼叫别人
+//    var callEvent = UnPeekLiveData<Boolean>()
+//
     /**
      * 语音电话当前状态
      */
@@ -50,7 +60,6 @@ class SocketEventViewModel : ViewModel(), HandlerAction {
 
     var toId: String = "SN012345678901"
     private var mSocket: Socket? = null
-    private var webRtcManager: WebRtcManager? = null
 
     private var userId: String? = null
 
@@ -67,7 +76,7 @@ class SocketEventViewModel : ViewModel(), HandlerAction {
             this.registerId = registerId
             val token = SpManager.getString(Constant.ACCESS_TOKEN_KEY)
             val url =
-                "${ApiService.BASE_HTTP_URL}spad-cloud?token=$token&clientType=anti_bullying_device&clientId=$sn"
+                "${ApiService.DEV_SOCKET_IO_URL}token=$token&clientType=anti_bullying_device&clientId=$sn"
             kotlin.runCatching {
                 mSocket = IO.socket(
                     url
@@ -77,7 +86,6 @@ class SocketEventViewModel : ViewModel(), HandlerAction {
             }
             mSocket?.connect()
             receiveMessage()
-            webRtcManager = WebRtcManager(MyApp.context)
             // this.from = sn
             Logger.i("初始化socket:${mSocket?.isActive},url:$url")
         } else {
@@ -109,93 +117,50 @@ class SocketEventViewModel : ViewModel(), HandlerAction {
         mSocket?.emit("confirmLogin", userId, isLogin)
     }
 
-    fun call(toId: String?) {
+    /**
+     * 拨打设备语音
+     */
+    fun call(toId: String?, uuid: String?) {
         Logger.i("call ,toId:$toId")
         toId?.let {
             this.toId = toId
-            val message = Message("call", userId, toId, null)
-            mSocket?.emit("message", Gson().toJson(message), Ack { ack ->
+            val message = Message("call", userId, toId, null, uuid)
+            mSocket?.emit("call", Gson().toJson(message), Ack { ack ->
                 if (ack?.isEmpty() == true) {
                     Logger.i("ack为空")
                 } else {
                     Logger.i("接收ack:${ack[0].toString()}")
+                    val status = ack[0].toString()
+                    if (status == OPPOSITE_OFF_LINE) {
+                        Logger.i("设备已掉线无法拨通")
+                        MyApp.webrtcSocketManager.sendHangUp(false)
+                        ToastUtils.show("设备已掉线，无法拨通！")
+                    } else if (status == OPPOSITE_BUSY) {
+                        MyApp.webrtcSocketManager.sendHangUp(false)
+                        ToastUtils.show("设备已占线，其他用户正在连线！")
+                        Logger.i("设备已占线，其他用户在连线")
+                    } else {
+                        voiceCallEvent.postValue(CALLING_STATUS)
+                        viewModelScope.launch(Dispatchers.IO) {
+                            isAnswer = false
+                            // 等待30s
+                            delay(30 * 1000)
+                            if (!isAnswer) {
+                                MyApp.webrtcSocketManager.sendHangUp()
+                                ToastUtils.show("语音连接无响应，请重试！")
+                            }
+                        }
+                    }
                 }
 
             })
-            voiceCallEvent.postValue(CALLING_STATUS)
         }
     }
 
 
-    /**
-     * 收到对方语音请求，同意语音通话发送called
-     */
-    fun sendCalled() {
-        val message = Message("called", userId, toId, null)
-        mSocket?.emit("message", Gson().toJson(message), Ack { ack ->
-            if (ack?.isEmpty() == true) {
-                Logger.i("ack为空")
-            } else {
-                Logger.i("接收ack:${ack[0].toString()}")
-            }
-
-        })
-    }
-
-
-    fun sendHangUp() {
-        val message = Message("hangUp", userId, toId, null)
-        mSocket?.emit("message", Gson().toJson(message), Ack { ack ->
-            if (ack?.isEmpty() == true) {
-                Logger.i("ack为空")
-            } else {
-                Logger.i("接收ack:${ack[0].toString()}")
-            }
-
-        })
-        webRtcManager?.release()
-        voiceCallEvent.postValue(CALL_HANG_UP)
-    }
-
-    fun icecandidate(iceCandidate: IceCandidate) {
-        val message = Message("icecandidate", userId, toId, Gson().toJson(iceCandidate))
-        mSocket?.emit("message", Gson().toJson(message), Ack { ack ->
-            if (ack?.isEmpty() == true) {
-                Logger.i("ack为空")
-            } else {
-                Logger.i("接收ack:${ack[0].toString()}")
-            }
-
-        })
-    }
-
-    fun sendOffer(offer: SessionDescription) {
-        val message = Message("offer", userId, toId, offer.description)
-        mSocket?.emit("message", Gson().toJson(message), Ack { ack ->
-            if (ack?.isEmpty() == true) {
-                Logger.i("ack为空")
-            } else {
-                Logger.i("接收ack:${ack[0].toString()}")
-            }
-
-        })
-    }
-
-    fun sendAnswer(answer: SessionDescription) {
-        val message = Message("answer", userId, toId, answer.description)
-        mSocket?.emit("message", Gson().toJson(message), Ack { ack ->
-            if (ack?.isEmpty() == true) {
-                Logger.i("ack为空")
-            } else {
-                Logger.i("接收ack:${ack[0].toString()}")
-            }
-
-        })
-    }
-
     private fun receiveMessage() {
-        mSocket?.on("message") {
-            mSocket?.emit("ack", "success")
+        mSocket?.on("call") {
+            // mSocket?.emit("ack", "success")
             val message = Gson().fromJson(it[0].toString(), Message::class.java)
             Logger.e(message.msgType)
             when (message.msgType) {
@@ -205,54 +170,6 @@ class SocketEventViewModel : ViewModel(), HandlerAction {
                     // 对方发送的参数 snCodeId toId
                     toId = message?.sendFrom.toString()
 //                    Logger.i("来电了：snCode:${it[1]},to:${it[1]}")
-                    postDelayed({
-                        sendCalled()
-                    }, 100)
-                }
-
-                "called" -> {
-                    Logger.i("on called ${it[0]}")
-                    //此处发送offer
-                    webRtcManager?.createPeerConnect()
-                    webRtcManager?.isOffer = true
-                    webRtcManager?.createLocalStream()
-                    webRtcManager?.addLocalStream()
-                    webRtcManager?.createOffer()
-                }
-
-                "offer" -> {
-                    val sdp =
-                        SessionDescription(SessionDescription.Type.OFFER, message.data.toString())
-                    Logger.i("接收到的sdp:${sdp.description}")
-                    //  发送answer 并设置remote sdp
-                    webRtcManager?.isOffer = false
-                    webRtcManager?.createPeerConnect()
-                    webRtcManager?.createLocalStream()
-                    webRtcManager?.addLocalStream()
-                    webRtcManager?.setRemoteDescription(sdp)
-//                    sendAnswer(sdp)
-                    webRtcManager?.createAnswer()
-                    voiceCallEvent.postValue(CALLED_STATUS)
-                }
-
-                "answer" -> {
-                    // 设置 remote sdp
-                    Logger.i("receive answer:${message.data}")
-                    val sdp =
-                        SessionDescription(SessionDescription.Type.ANSWER, message.data.toString())
-                    //  发送answer 并设置remote sdp
-                    webRtcManager?.setRemoteDescription(sdp)
-                    voiceCallEvent.postValue(CALLED_STATUS)
-                }
-
-                "hangUp" -> {
-                    webRtcManager?.release()
-                }
-
-                "icecandidate" -> {
-                    Logger.d("ice:${message.data}")
-                    val ice = Gson().fromJson(message.data.toString(), IceCandidate::class.java)
-                    webRtcManager?.addIce(ice)
                 }
             }
         }
@@ -260,20 +177,20 @@ class SocketEventViewModel : ViewModel(), HandlerAction {
 // ice:{adapterType=UNKNOWN, sdp=candidate:842163049 1 udp 1686052607 116.17.147.180 13175 typ srflx raddr 192.168.1.29 rport 54022 generation 0 ufrag wlhQ network-id 1, sdpMLineIndex=0.0, sdpMid=audio, serverUrl=stun:39.108.177.117:3478}
 
         mSocket?.on(Socket.EVENT_CONNECT) {
-            Logger.i("socket.io 连接成功")
+            Logger.i("全局socket.io 连接成功")
             loginStatusEvent.postValue(SOCKET_IO_CONNECT)
             isConnected = true
             login()
         }
 
         mSocket?.on(Socket.EVENT_DISCONNECT) {
-            Logger.i("socket.io 断开连接")
+            Logger.i("全局socket.io 断开连接")
             isConnected = false
             loginStatusEvent.postValue(SOCKET_IO_DISCONNECTED)
         }
 
         mSocket?.on(Socket.EVENT_CONNECT_ERROR) {
-            Logger.i("socket.io 连接错误！${it[0].toString()}")
+            Logger.i("全局socket.io 连接错误！${it[0].toString()}")
             isConnected = false
             loginStatusEvent.postValue(SOCKET_IO_DISCONNECTED)
         }

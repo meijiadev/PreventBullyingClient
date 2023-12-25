@@ -13,11 +13,14 @@ import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import cn.jpush.android.cache.Sp
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.enums.PopupAnimation
+import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.MyApp
 import com.mj.preventbullying.client.R
+import com.mj.preventbullying.client.SpManager
 import com.mj.preventbullying.client.databinding.FragmentMessageBinding
 import com.mj.preventbullying.client.http.result.Record
 import com.mj.preventbullying.client.tool.AudioPlayer
@@ -27,6 +30,7 @@ import com.mj.preventbullying.client.ui.adapter.PROCESSED_IGNORE
 import com.mj.preventbullying.client.ui.adapter.PROCESSED_STATUS
 import com.mj.preventbullying.client.ui.adapter.PROCESSING_STATUS
 import com.mj.preventbullying.client.ui.dialog.MessageProcessDialog
+import com.mj.preventbullying.client.webrtc.getUUID
 import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseMvFragment
 import kotlinx.coroutines.Dispatchers
@@ -45,7 +49,7 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
     private var messageList: List<Record>? = null
     private var processPosition: Int? = null
     private var currentRecordId: String? = null
-    private var curShowType = "null"
+    private var curShowType = PENDING_STATUS
 
 
     companion object {
@@ -86,34 +90,41 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
             val fileId = messageList?.get(position)?.fileId
             Logger.i("去处理消息")
             val messageProcessDialog =
-                MessageProcessDialog(requireContext()).setClickListener(object :
-                    MessageProcessDialog.MessageDialogClick {
-                    override fun toCall() {
-                        MyApp.socketEventViewModel.call(snCode)
-                    }
-
-                    override fun playWarnAudio() {
-                        fileId?.let {
-                            viewModel.getAudioPreUrl(fileId)
+                MessageProcessDialog(requireContext())
+                    .setToId(snCode)
+                    .setClickListener(object :
+                        MessageProcessDialog.MessageDialogClick {
+                        override fun toCall() {
+                            lifecycleScope.launch(Dispatchers.Main) {
+                                MyApp.webrtcSocketManager.createWebrtcSc(
+                                    SpManager.getString(Constant.USER_ID_KEY),
+                                    snCode, getUUID()
+                                )
+                            }
                         }
-                    }
 
-                    override fun ignore() {
-                        currentRecordId?.let {
-                            viewModel.recordProcess(
-                                it, "直接忽略", PROCESSED_IGNORE
-                            )
+                        override fun playWarnAudio() {
+                            fileId?.let {
+                                viewModel.getAudioPreUrl(fileId)
+                            }
                         }
-                    }
 
-                    override fun callFinish() {
-                        currentRecordId?.let {
-                            viewModel.recordProcess(
-                                it, "已拨打设备语音了解情况", PROCESSED_STATUS
-                            )
+                        override fun ignore() {
+                            currentRecordId?.let {
+                                viewModel.recordProcess(
+                                    it, "直接忽略", PROCESSED_IGNORE
+                                )
+                            }
                         }
-                    }
-                })
+
+                        override fun callFinish() {
+                            currentRecordId?.let {
+                                viewModel.recordProcess(
+                                    it, "已拨打设备语音了解情况", PROCESSED_STATUS
+                                )
+                            }
+                        }
+                    })
             XPopup.Builder(requireContext()).isViewMode(true).isDestroyOnDismiss(true)
                 .dismissOnBackPressed(true).dismissOnTouchOutside(false)
                 .popupAnimation(PopupAnimation.TranslateFromBottom).asCustom(messageProcessDialog)

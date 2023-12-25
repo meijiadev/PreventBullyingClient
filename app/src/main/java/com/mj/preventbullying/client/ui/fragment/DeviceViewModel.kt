@@ -19,6 +19,7 @@ import com.sjb.base.base.BaseViewModel
 class DeviceViewModel : BaseViewModel() {
     val deviceResultEvent = UnPeekLiveData<DeviceResult>()
     val deleteDevEvent = UnPeekLiveData<Boolean>()
+    val amendDevEvent = UnPeekLiveData<Boolean>()
 
     fun getAllDevices() {
         requestNoCheck({
@@ -63,6 +64,11 @@ class DeviceViewModel : BaseViewModel() {
             apiService.amendDev(params)
         }, {
             Logger.i("修改成功:${it.success}")
+            if (it.success) {
+                amendDevEvent.postValue(true)
+            } else {
+                amendDevEvent.postValue(false)
+            }
         })
     }
 }
