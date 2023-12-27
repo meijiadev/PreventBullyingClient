@@ -5,19 +5,19 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="@dimen/dp_30"
         android:textColor="@color/black"
         android:id="@+id/dev_type_tv"
-        android:textSize="13sp"
-        android:paddingStart="10dp"
+        android:textSize="@dimen/sp_13"
+        android:paddingStart="@dimen/dp_10"
         />
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/dp_1"
         android:background="@color/common_line_color"
         android:layout_below="@id/dev_type_tv"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginStart="@dimen/dp_10"
+        android:layout_marginEnd="@dimen/dp_10"
         />
 
 </RelativeLayout>

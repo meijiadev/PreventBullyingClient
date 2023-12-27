@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/common_line_color">
+
+    <RelativeLayout
+        android:id="@+id/title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_70"
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/dp_15"
+            android:text="设置"
+            android:textSize="@dimen/sp_15" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/back_iv"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_30"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginBottom="@dimen/dp_15"
+            android:scaleType="center"
+            android:src="@mipmap/back_icon" />
+
+    </RelativeLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/title_layout">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/update_app_ly"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_50"
+                android:layout_marginTop="@dimen/dp_10"
+                android:background="@color/white">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/dp_15"
+                    android:layout_marginEnd="@dimen/dp_20"
+                    android:drawableRight="@mipmap/enter_right"
+                    android:gravity="center_vertical"
+                    android:text="检查更新"
+                    android:textSize="@dimen/sp_15" />
+
+                <com.hjq.shape.view.ShapeTextView
+                    android:id="@+id/tv_new_version"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/dp_40"
+                    android:padding="@dimen/dp_5"
+                    android:text="有新版本"
+                    android:visibility="gone"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_10"
+                    app:shape_radius="@dimen/dp_20"
+                    app:shape_solidColor="@color/red" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/phone_number_ly"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_50"
+                android:layout_marginTop="@dimen/dp_10"
+                android:background="@color/white">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/dp_15"
+                    android:layout_marginEnd="@dimen/dp_20"
+                    android:drawableRight="@mipmap/enter_right"
+                    android:gravity="center_vertical"
+                    android:text="修改手机"
+                    android:textSize="@dimen/sp_15" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/phone_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/dp_40"
+                    android:text="137****7708"
+                    android:textSize="@dimen/sp_15" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_0_1"
+                android:background="@color/common_line_color" />
+
+            <RelativeLayout
+                android:id="@+id/password_ly"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_50"
+                android:background="@color/white">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/dp_15"
+                    android:layout_marginEnd="@dimen/dp_20"
+                    android:drawableRight="@mipmap/enter_right"
+                    android:gravity="center_vertical"
+                    android:text="修改密码"
+                    android:textSize="@dimen/sp_15" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/location_ip_ly"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_50"
+                android:layout_marginTop="@dimen/dp_10"
+                android:background="@color/white">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/dp_15"
+                    android:layout_marginEnd="@dimen/dp_20"
+                    android:gravity="center_vertical"
+                    android:text="本地IP"
+                    android:textSize="@dimen/sp_15" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/ip_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="@dimen/dp_25"
+                    android:gravity="center_vertical"
+                    android:text="192.168.1.30"
+                    android:textSize="@dimen/sp_15" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/about_ly"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_60"
+                android:layout_marginTop="@dimen/dp_10"
+                android:background="@color/white">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/dp_15"
+                    android:layout_marginEnd="@dimen/dp_20"
+                    android:drawableRight="@mipmap/enter_right"
+                    android:gravity="center_vertical"
+                    android:text="关于我们"
+                    android:textSize="@dimen/sp_15" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/auto_login_ly"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_50"
+                android:layout_marginTop="@dimen/dp_10"
+                android:background="@color/white">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/dp_15"
+                    android:layout_marginEnd="@dimen/dp_20"
+                    android:gravity="center_vertical"
+                    android:text="自动登录"
+                    android:textSize="@dimen/sp_15" />
+
+                <com.sjb.base.view.SwitchButton
+                    android:id="@+id/auto_login_bt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/dp_25" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/logout_ly"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_50"
+                android:layout_marginTop="@dimen/dp_10"
+                android:background="@color/white">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/dp_15"
+                    android:layout_marginEnd="@dimen/dp_20"
+                    android:gravity="center_vertical"
+                    android:text="退出登录"
+                    android:textColor="@color/red"
+                    android:textSize="@dimen/sp_15" />
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

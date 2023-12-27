@@ -12,17 +12,14 @@ import com.lxj.xpopup.core.CenterPopupView
 import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.MyApp
 import com.mj.preventbullying.client.R
-import com.mj.preventbullying.client.SpManager
+import com.mj.preventbullying.client.tool.SpManager
 import com.mj.preventbullying.client.webrtc.CALLED_STATUS
 import com.mj.preventbullying.client.webrtc.CALL_FAILURE
 import com.mj.preventbullying.client.webrtc.CALL_HANG_UP
 import com.mj.preventbullying.client.webrtc.RESTART_CALL
 import com.mj.preventbullying.client.webrtc.getUUID
 import com.orhanobut.logger.Logger
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.Timer
-import java.util.TimerTask
 
 /**
  * Create by MJ on 2023/12/11.

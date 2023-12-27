@@ -23,6 +23,7 @@ import java.util.UUID
  */
 // webrtc 需要使用的socket.io 连接
 const val DEV_WEBRTC_URL = "http://192.168.1.6:80/webrtc?"
+const val BASE_WEBRTC_URL = "http://cloud.hdvsiot.com:8080/webrtc?"
 fun getUUID(): String {
     return UUID.randomUUID().toString()
 }
@@ -53,7 +54,7 @@ class WebrtcSocketManager : BaseViewModel() {
         this.toId = toId
         this.uuid = uuid
         val url =
-            "${DEV_WEBRTC_URL}token=1231&clientType=anti_bullying_device&clientId=$snCode"
+            "${BASE_WEBRTC_URL}token=1231&clientType=anti_bullying_device&clientId=$snCode"
         kotlin.runCatching {
             webrtcSocket = IO.socket(
                 url
@@ -87,7 +88,7 @@ class WebrtcSocketManager : BaseViewModel() {
 
 
     fun icecandidate(iceCandidate: IceCandidate) {
-        val message = Message("icecandidate", snCode, toId, Gson().toJson(iceCandidate),uuid)
+        val message = Message("icecandidate", snCode, toId, Gson().toJson(iceCandidate), uuid)
         webrtcSocket?.emit("message", Gson().toJson(message), Ack { ack ->
             if (ack?.isEmpty() == true) {
                 Logger.i("ack为空")
@@ -99,7 +100,7 @@ class WebrtcSocketManager : BaseViewModel() {
     }
 
     fun sendOffer(offer: SessionDescription) {
-        val message = Message("offer", snCode, toId, offer.description,uuid)
+        val message = Message("offer", snCode, toId, offer.description, uuid)
         webrtcSocket?.emit("message", Gson().toJson(message), Ack { ack ->
             if (ack?.isEmpty() == true) {
                 Logger.i("ack为空")
@@ -110,7 +111,7 @@ class WebrtcSocketManager : BaseViewModel() {
     }
 
     fun sendAnswer(answer: SessionDescription) {
-        val message = Message("answer", snCode, toId, answer.description,uuid)
+        val message = Message("answer", snCode, toId, answer.description, uuid)
         webrtcSocket?.emit("message", Gson().toJson(message), Ack { ack ->
             if (ack?.isEmpty() == true) {
                 Logger.i("ack为空")
@@ -124,7 +125,7 @@ class WebrtcSocketManager : BaseViewModel() {
 
     fun sendHangUp(isSendHanUp: Boolean = true) {
         if (isSendHanUp) {
-            val message = Message("hangUp", snCode, toId, null,uuid)
+            val message = Message("hangup", snCode, toId, null, uuid)
             webrtcSocket?.emit("message", Gson().toJson(message), Ack { ack ->
                 if (ack?.isEmpty() == true) {
                     Logger.i("ack为空")
@@ -134,9 +135,15 @@ class WebrtcSocketManager : BaseViewModel() {
 
             })
         }
-        webRtcManager?.release()
-        disconnect()
+        release()
         voiceCallEvent.postValue(CALL_HANG_UP)
+    }
+
+    fun release() {
+        webRtcManager?.release()
+        webRtcManager = null
+        webrtcSocket?.disconnect()
+        webrtcSocket = null
     }
 
     /**
@@ -192,7 +199,7 @@ class WebrtcSocketManager : BaseViewModel() {
                     webRtcManager?.setRemoteDescription(sdp)
                 }
 
-                "hangUp" -> {
+                "hangup" -> {
                     webRtcManager?.release()
                     webrtcSocket?.disconnect()
                     webrtcSocket = null
@@ -219,7 +226,7 @@ class WebrtcSocketManager : BaseViewModel() {
             webRtcManager = WebRtcManager(MyApp.context)
             viewModelScope.launch {
                 delay(100)
-                MyApp.socketEventViewModel.call(toId,uuid)
+                MyApp.socketEventViewModel.call(toId, uuid)
             }
         }
 

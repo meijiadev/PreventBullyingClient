@@ -2,7 +2,7 @@ package com.mj.preventbullying.client.http.service
 
 import android.util.ArrayMap
 import com.mj.preventbullying.client.Constant
-import com.mj.preventbullying.client.SpManager
+import com.mj.preventbullying.client.tool.SpManager
 import com.mj.preventbullying.client.http.result.BaseResult
 import com.mj.preventbullying.client.http.result.DevTypeResult
 import com.mj.preventbullying.client.http.result.DeviceRecordResult
@@ -12,9 +12,7 @@ import com.mj.preventbullying.client.http.result.OrgTreeResult
 import com.mj.preventbullying.client.http.result.PreviewAudioResult
 import com.mj.preventbullying.client.http.result.RecordProcessResult
 import com.mj.preventbullying.client.http.result.RefreshTokenResult
-import okhttp3.RequestBody
 import retrofit2.http.Body
-import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -34,6 +32,8 @@ import retrofit2.http.Query
 interface ApiService {
     companion object {
         //const val BASE_HTTP_URL = "http://cloud.zyq0407.com:8080/"
+        const val BASE_SOCKET_IO_URL = "http://cloud.hdvsiot.com:8080/app?"
+        const val BASE_HTTP_URL = "http://cloud.hdvsiot.com:8080/"
         const val DEV_SOCKET_IO_URL = "http://192.168.1.6:80/app?"
         const val DEV_HTTP_URL = "http://192.168.1.6:80/"
         const val API = "api/"
@@ -55,7 +55,18 @@ interface ApiService {
         @Header("Authorization") authorization: String = "Basic YXBwOmFwcA=="
     ): LoginResult
 
+    // /user/password
 
+    /**
+     * 修改密码
+     */
+    @PUT("admin/user/password")
+    suspend fun amendPs(@Body params: ArrayMap<Any, Any>): BaseResult
+
+
+    /**
+     * 刷新token
+     */
     @POST("auth/oauth2/token")
     suspend fun refreshToken(
         @Query("grant_type") grant_type: String = "refresh_token",
@@ -64,6 +75,9 @@ interface ApiService {
     ): RefreshTokenResult
 
 
+    /**
+     * 获取 1-100条设备记录
+     */
     @GET("anti-bullying/record/page")
     suspend fun getAllRecords(
         @Query("current") current: Int = 1,
@@ -72,6 +86,9 @@ interface ApiService {
     ): DeviceRecordResult
 
 
+    /**
+     * 获取1-100条设备信息
+     */
     @GET("anti-bullying/device/page")
     suspend fun getAllDevices(
         @Query("current") current: Int = 1,
@@ -79,6 +96,9 @@ interface ApiService {
         // @Header("Authorization") authorization: String = "Bearer ${SpManager.getString(Constant.ACCESS_TOKEN_KEY)}"
     ): DeviceResult
 
+    /**
+     * 处理设备记录
+     */
     @POST("anti-bullying/record/process")
     suspend fun recordProcess(
         @Body params: ArrayMap<Any, Any>

@@ -3,28 +3,23 @@ package com.mj.preventbullying.client.ui.fragment
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.enums.PopupAnimation
-import com.mj.preventbullying.client.Constant
-import com.mj.preventbullying.client.MyApp
 import com.mj.preventbullying.client.R
 import com.mj.preventbullying.client.databinding.FragmentDeviceBinding
 import com.mj.preventbullying.client.foldtree.TreeModel
 import com.mj.preventbullying.client.http.result.DevType
 import com.mj.preventbullying.client.http.result.DeviceRecord
-import com.mj.preventbullying.client.http.result.Org
-import com.mj.preventbullying.client.ui.MainViewModel
+import com.mj.preventbullying.client.ui.viewmodel.MainViewModel
 import com.mj.preventbullying.client.ui.adapter.DeviceListAdapter
 import com.mj.preventbullying.client.ui.dialog.DevInfoDialog
 import com.mj.preventbullying.client.ui.dialog.MessageTipsDialog
+import com.mj.preventbullying.client.ui.viewmodel.DeviceViewModel
 import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseMvFragment
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 /**
  * Create by MJ on 2023/12/11.

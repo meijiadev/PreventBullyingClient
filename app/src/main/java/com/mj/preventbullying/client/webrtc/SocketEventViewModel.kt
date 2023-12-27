@@ -7,7 +7,7 @@ import com.hjq.toast.ToastUtils
 import com.kunminx.architecture.ui.callback.UnPeekLiveData
 import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.MyApp
-import com.mj.preventbullying.client.SpManager
+import com.mj.preventbullying.client.tool.SpManager
 import com.mj.preventbullying.client.http.service.ApiService
 import com.orhanobut.logger.Logger
 import com.sjb.base.action.HandlerAction
@@ -17,8 +17,6 @@ import io.socket.client.Socket
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.webrtc.IceCandidate
-import org.webrtc.SessionDescription
 
 //正在拨打中
 const val CALLING_STATUS = 1
@@ -76,7 +74,7 @@ class SocketEventViewModel : ViewModel(), HandlerAction {
             this.registerId = registerId
             val token = SpManager.getString(Constant.ACCESS_TOKEN_KEY)
             val url =
-                "${ApiService.DEV_SOCKET_IO_URL}token=$token&clientType=anti_bullying_device&clientId=$sn"
+                "${ApiService.BASE_SOCKET_IO_URL}token=$token&clientType=anti_bullying_device&clientId=$sn"
             kotlin.runCatching {
                 mSocket = IO.socket(
                     url
@@ -100,6 +98,14 @@ class SocketEventViewModel : ViewModel(), HandlerAction {
     fun login() {
         Logger.i("login:$userId,registerId:$registerId")
         mSocket?.emit("login", userId, registerId)
+    }
+
+    /**
+     * 取消登录
+     */
+    fun logout() {
+        Logger.i("退出登录：$userId,registerId:$registerId")
+        mSocket?.emit("logout", userId, registerId)
     }
 
     fun disconnect() {

@@ -12,12 +12,16 @@ import cn.jpush.android.ups.JPushUPSManager
 import com.hjq.toast.ToastLogInterceptor
 import com.hjq.toast.ToastUtils
 import com.hjq.toast.style.WhiteToastStyle
-import com.mj.preventbullying.client.ui.TimerViewModel
+import com.mj.preventbullying.client.tool.ActivityManager
+import com.mj.preventbullying.client.tool.SpManager
+import com.mj.preventbullying.client.ui.viewmodel.JPushEventViewModel
+import com.mj.preventbullying.client.ui.viewmodel.TimerViewModel
 import com.mj.preventbullying.client.webrtc.SocketEventViewModel
 import com.mj.preventbullying.client.webrtc.WebrtcSocketManager
 
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
+import com.orhanobut.logger.PrettyFormatStrategy
 
 
 class MyApp : Application(), ViewModelStoreOwner {
@@ -28,6 +32,7 @@ class MyApp : Application(), ViewModelStoreOwner {
         lateinit var socketEventViewModel: SocketEventViewModel
         lateinit var timerViewModel: TimerViewModel
         lateinit var webrtcSocketManager: WebrtcSocketManager
+        lateinit var jPushEventViewModel: JPushEventViewModel
     }
 
     private lateinit var mAppViewModelStore: ViewModelStore
@@ -39,13 +44,18 @@ class MyApp : Application(), ViewModelStoreOwner {
     override fun onCreate() {
         super.onCreate()
         context = this
-        Logger.addLogAdapter(AndroidLogAdapter())
+        val formatStrategy = PrettyFormatStrategy
+            .newBuilder()
+            .showThreadInfo(false)
+            .methodCount(2)
+            .tag("MJ-prevent")
+            .build()
+        Logger.addLogAdapter(AndroidLogAdapter(formatStrategy))
         SpManager.init(this)
         // 初始化吐司
         ToastUtils.init(this, WhiteToastStyle())
+        ActivityManager.getInstance().init(this)
         // 设置调试模式
-        // ToastUtils.setDebugMode(isDebug())
-//        ToastUtils.setStyle(WhiteToastStyle())
         // 设置 Toast 拦截器
         ToastUtils.setInterceptor(ToastLogInterceptor())
         mAppViewModelStore = ViewModelStore()
@@ -53,7 +63,9 @@ class MyApp : Application(), ViewModelStoreOwner {
         timerViewModel = getApplicationViewModel(TimerViewModel::class.java)
         socketEventViewModel = getApplicationViewModel(SocketEventViewModel::class.java)
         webrtcSocketManager = getApplicationViewModel(WebrtcSocketManager::class.java)
+        jPushEventViewModel = getApplicationViewModel(JPushEventViewModel::class.java)
         initJGPush()
+
     }
 
     /**

@@ -9,22 +9,19 @@ import android.text.TextWatcher
 import android.util.Base64
 import android.view.View
 import androidx.lifecycle.Observer
-import cn.jpush.android.cache.Sp
 import cn.jpush.android.ups.JPushUPSManager
 import coil.load
-import com.gyf.immersionbar.ImmersionBar
-import com.gyf.immersionbar.ktx.immersionBar
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
 import com.hjq.shape.view.ShapeEditText
 import com.mj.preventbullying.client.Constant
-import com.mj.preventbullying.client.NetworkUtil
+import com.mj.preventbullying.client.tool.NetworkUtil
 import com.mj.preventbullying.client.R
-import com.mj.preventbullying.client.SpManager
+import com.mj.preventbullying.client.tool.SpManager
 import com.mj.preventbullying.client.databinding.ActivityLoginBinding
 import com.mj.preventbullying.client.http.service.ApiService
-import com.mj.preventbullying.client.ui.MainActivity
+import com.mj.preventbullying.client.ui.activity.MainActivity
 import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseMvActivity
 import java.util.Random
@@ -133,7 +130,7 @@ class LoginActivity : BaseMvActivity<ActivityLoginBinding, LoginViewModel>() {
                 toast("网络不可用！")
             }
             randomStr = generateRandomString()
-            val url = "${ApiService.DEV_HTTP_URL}/api/code?randomStr=$randomStr"
+            val url = "${ApiService.BASE_HTTP_URL}/api/code?randomStr=$randomStr"
             binding.codeImage.load(url)
             Logger.i("加载验证码：$url")
         }, 200)
@@ -164,6 +161,7 @@ class LoginActivity : BaseMvActivity<ActivityLoginBinding, LoginViewModel>() {
             SpManager.putString(Constant.EXPIRES_TIME_KEY, it.expires_in)
             SpManager.putLong(Constant.LOGIN_OR_REFRESH_TIME_KEY, System.currentTimeMillis())
             SpManager.putString(Constant.USER_ID_KEY, it.user_id)
+            SpManager.putString(Constant.ACCOUNT_KEY, it.username)
             JPushUPSManager.turnOnPush(this) {
                 Logger.i("打开极光推送服务：$it")
             }
@@ -179,7 +177,7 @@ class LoginActivity : BaseMvActivity<ActivityLoginBinding, LoginViewModel>() {
      */
     fun refresh(v: View) {
         randomStr = generateRandomString()
-        val url = "${ApiService.DEV_HTTP_URL}/api/code?randomStr=$randomStr"
+        val url = "${ApiService.BASE_HTTP_URL}/api/code?randomStr=$randomStr"
         //val url="https://login.sina.com.cn/cgi/pin.php?r=9967937&s=0&p=gz-d0dc363f6a4523cbd602a5a10f00c59b"
         binding.codeImage?.load(url) {
             error(R.drawable.ic_launcher_background)

@@ -6,38 +6,51 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/common_line_color"
-    tools:context=".ui.MainActivity">
+    tools:context=".ui.activity.MainActivity">
 
-    <com.hjq.shape.view.ShapeTextView
-        android:id="@+id/title_tv"
+    <RelativeLayout
+        android:id="@+id/title_ly"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:gravity="center"
-        android:text="设备管理"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:shape_solidColor="@color/white70" />
+        android:layout_height="@dimen/dp_80"
+        android:background="@color/white"
+        android:orientation="horizontal">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/exit_iv"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="20dp"
-        android:onClick="onExit"
-        android:scaleType="centerCrop"
-        android:src="@mipmap/exit_app" />
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/dev_server_iv"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_toLeftOf="@id/exit_iv"
-        android:src="@mipmap/dev_disconnect"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="10dp"
+        <com.hjq.shape.view.ShapeTextView
+            android:id="@+id/title_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:gravity="center"
+            android:text="设备管理"
+            android:textSize="@dimen/sp_18"
+            android:textStyle="bold"
+            app:shape_solidColor="@color/white70" />
 
-        />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/exit_iv"
+            android:layout_width="@dimen/dp_25"
+            android:layout_height="@dimen/dp_25"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:layout_marginEnd="@dimen/dp_20"
+            android:onClick="onExit"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/setting_icon" />
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/dev_server_iv"
+            android:layout_width="@dimen/dp_20"
+            android:layout_height="@dimen/dp_20"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:layout_toLeftOf="@id/exit_iv"
+            android:src="@mipmap/dev_disconnect" />
+    </RelativeLayout>
 
 
     <FrameLayout
@@ -45,22 +58,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/layout_bottom"
-        android:layout_below="@id/title_tv" />
+        android:layout_below="@id/title_ly" />
 
     <com.hjq.shape.layout.ShapeRelativeLayout
         android:id="@+id/layout_bottom"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="@dimen/dp_60"
         android:layout_alignParentBottom="true"
         app:shape_solidColor="@color/white70"
-        app:shape_topLeftRadius="20dp"
-        app:shape_topRightRadius="20dp">
+        app:shape_topLeftRadius="@dimen/dp_20"
+        app:shape_topRightRadius="@dimen/dp_20">
 
         <LinearLayout
             android:id="@+id/message_ll"
-            android:layout_width="60dp"
+            android:layout_width="@dimen/dp_60"
             android:layout_height="match_parent"
-            android:layout_marginEnd="80dp"
+            android:layout_marginEnd="@dimen/dp_80"
             android:layout_toLeftOf="@id/add_device_ll"
             android:onClick="onMessage"
             android:orientation="vertical">
@@ -68,8 +81,8 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/message_iv"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_marginTop="10dp"
+                android:layout_height="@dimen/dp_30"
+                android:layout_marginTop="@dimen/dp_10"
                 android:src="@mipmap/message_icon" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -81,7 +94,7 @@
 
         <LinearLayout
             android:id="@+id/add_device_ll"
-            android:layout_width="60dp"
+            android:layout_width="@dimen/dp_60"
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
 
@@ -90,14 +103,14 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/add_dev_iv"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_marginTop="10dp"
+                android:layout_height="@dimen/dp_30"
+                android:layout_marginTop="@dimen/dp_10"
                 android:src="@mipmap/add_icon" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="@dimen/dp_2"
                 android:gravity="center"
                 android:text="添加设备" />
         </LinearLayout>
@@ -105,9 +118,9 @@
 
         <LinearLayout
             android:id="@+id/device_ll"
-            android:layout_width="60dp"
+            android:layout_width="@dimen/dp_60"
             android:layout_height="match_parent"
-            android:layout_marginStart="80dp"
+            android:layout_marginStart="@dimen/dp_80"
             android:layout_toRightOf="@id/add_device_ll"
             android:onClick="onDevice"
             android:orientation="vertical">
@@ -115,8 +128,8 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/device_manager_iv"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_marginTop="10dp"
+                android:layout_height="@dimen/dp_30"
+                android:layout_marginTop="@dimen/dp_10"
                 android:src="@mipmap/device_icon" />
 
             <androidx.appcompat.widget.AppCompatTextView

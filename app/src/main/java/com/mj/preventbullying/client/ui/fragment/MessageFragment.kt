@@ -13,14 +13,13 @@ import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import cn.jpush.android.cache.Sp
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.enums.PopupAnimation
 import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.MyApp
 import com.mj.preventbullying.client.R
-import com.mj.preventbullying.client.SpManager
+import com.mj.preventbullying.client.tool.SpManager
 import com.mj.preventbullying.client.databinding.FragmentMessageBinding
 import com.mj.preventbullying.client.http.result.Record
 import com.mj.preventbullying.client.tool.AudioPlayer
@@ -30,14 +29,13 @@ import com.mj.preventbullying.client.ui.adapter.PROCESSED_IGNORE
 import com.mj.preventbullying.client.ui.adapter.PROCESSED_STATUS
 import com.mj.preventbullying.client.ui.adapter.PROCESSING_STATUS
 import com.mj.preventbullying.client.ui.dialog.MessageProcessDialog
+import com.mj.preventbullying.client.ui.viewmodel.MessageViewModel
 import com.mj.preventbullying.client.webrtc.getUUID
 import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseMvFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.Timer
-import java.util.TimerTask
 
 /**
  * Create by MJ on 2023/12/11.
@@ -125,9 +123,12 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
                             }
                         }
                     })
-            XPopup.Builder(requireContext()).isViewMode(true).isDestroyOnDismiss(true)
-                .dismissOnBackPressed(true).dismissOnTouchOutside(false)
-                .popupAnimation(PopupAnimation.TranslateFromBottom).asCustom(messageProcessDialog)
+            XPopup.Builder(requireContext()).isViewMode(true)
+                .isDestroyOnDismiss(true)
+                .dismissOnBackPressed(false)
+                .dismissOnTouchOutside(false)
+                .popupAnimation(PopupAnimation.TranslateFromBottom)
+                .asCustom(messageProcessDialog)
                 .show()
         }
         binding.allMessageTv.setOnClickListener {
@@ -215,15 +216,26 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
     }
 
 
+    override fun onResume() {
+        super.onResume()
+
+    }
+
     override fun onStop() {
         super.onStop()
+        AudioPlayer.instance.pause()
+        playIv?.setImageResource(R.mipmap.pause_icon)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
         AudioPlayer.instance.removeListener(this)
         AudioPlayer.instance.stop()
     }
 
     override fun initListener() {
         viewModel.messageEvent.observe(this) {
-            binding.smartRefreshLayout.finishRefresh(1000, true, true)
+            binding.smartRefreshLayout.finishRefresh(1000)
             messageList = it?.data?.records
             filtrationMsgTp(curShowType)
         }
@@ -242,6 +254,11 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
                     }
                 }
             }
+        }
+        // 收到极光通知
+        MyApp.jPushEventViewModel.notifyMsgEvent.observe(this) {
+            viewModel.getAllDeviceRecords()
+            toast("收到报警推送")
         }
     }
 
@@ -278,12 +295,6 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
                 }
             }
         }
-//        val timer = Timer()
-//        timer.schedule(object : TimerTask() {
-//            override fun run() {
-//                if (!isSeekbarChaning) seekBar?.progress = AudioPlayer.instance.getPosition()
-//            }
-//        }, 0, 1000)
 
     }
 

@@ -1,7 +1,7 @@
 package com.mj.preventbullying.client.http
 
 
-import com.mj.preventbullying.client.NetworkUtil
+import com.mj.preventbullying.client.tool.NetworkUtil
 import okhttp3.CacheControl
 import okhttp3.Interceptor
 import okhttp3.Response

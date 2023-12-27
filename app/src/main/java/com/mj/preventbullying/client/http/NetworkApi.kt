@@ -7,7 +7,7 @@ import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersisto
 import com.google.gson.GsonBuilder
 import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.MyApp
-import com.mj.preventbullying.client.SpManager
+import com.mj.preventbullying.client.tool.SpManager
 import com.mj.preventbullying.client.http.service.ApiService
 import okhttp3.Cache
 import okhttp3.Interceptor
@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit
 
 //双重校验锁式-单例 封装NetApiService 方便直接快速调用简单的接口
 val apiService: ApiService by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED){
-    NetworkApi.INSTANCE.getApi(ApiService::class.java, ApiService.DEV_HTTP_URL+ApiService.API)
+    NetworkApi.INSTANCE.getApi(ApiService::class.java, ApiService.BASE_HTTP_URL+ApiService.API)
 }
 class NetworkApi : BaseNetworkApi() {
 

@@ -8,7 +8,9 @@ import cn.jpush.android.api.JPushInterface
 import cn.jpush.android.api.NotificationMessage
 
 import cn.jpush.android.service.JPushMessageService
-import com.mj.preventbullying.client.ui.MainActivity
+import com.mj.preventbullying.client.MyApp
+import com.mj.preventbullying.client.tool.ActivityManager
+import com.mj.preventbullying.client.ui.activity.MainActivity
 import com.orhanobut.logger.Logger
 
 /**
@@ -22,16 +24,30 @@ class JPushReceive : JPushMessageService() {
     }
 
     override fun onNotifyMessageOpened(p0: Context?, p1: NotificationMessage?) {
-        Logger.i("点击通知----onNotifyMessageOpened:${p1}")
+        Logger.i(
+            "点击通知----onNotifyMessageOpened:${p1},${
+                ActivityManager.getInstance().getResumedActivity()
+            }"
+        )
         kotlin.runCatching {
-            val intent = Intent(p0, MainActivity::class.java)
-            val bundle = Bundle()
-            bundle.putString(JPushInterface.EXTRA_NOTIFICATION_TITLE, p1?.notificationTitle)
-            bundle.putString(JPushInterface.EXTRA_ALERT, p1?.notificationContent)
-            bundle.putString(JPushInterface.EXTRA_NOTIFICATION_ACTION_EXTRA,p1?.notificationExtras)
-            intent.putExtras(bundle)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-            p0?.startActivity(intent)
+            ActivityManager.getInstance()
+            if (ActivityManager.getInstance().getResumedActivity() !is MainActivity) {
+                val intent = Intent(p0, MainActivity::class.java)
+                val bundle = Bundle()
+                bundle.putString(JPushInterface.EXTRA_NOTIFICATION_TITLE, p1?.notificationTitle)
+                bundle.putString(JPushInterface.EXTRA_ALERT, p1?.notificationContent)
+                bundle.putString(
+                    JPushInterface.EXTRA_NOTIFICATION_ACTION_EXTRA,
+                    p1?.notificationExtras
+                )
+                intent.putExtras(bundle)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                p0?.startActivity(intent)
+            } else {
+                Logger.i("当前activity正在前台")
+                MyApp.jPushEventViewModel.notifyMsgEvent.postValue(p1)
+
+            }
         }.onFailure {
             Logger.e("错误：${it.message}")
         }

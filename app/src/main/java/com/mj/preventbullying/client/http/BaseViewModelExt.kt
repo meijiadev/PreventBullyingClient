@@ -7,13 +7,11 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.viewModelScope
 import com.mj.preventbullying.client.Constant
-import com.mj.preventbullying.client.MyApp
-import com.mj.preventbullying.client.SpManager
+import com.mj.preventbullying.client.tool.SpManager
 
 import com.mj.preventbullying.client.http.exception.AppException
 import com.mj.preventbullying.client.http.exception.ExceptionHandle
 import com.mj.preventbullying.client.http.request.BaseResponse
-import com.mj.preventbullying.client.ui.login.LoginActivity
 import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseViewModel
 import kotlinx.coroutines.*

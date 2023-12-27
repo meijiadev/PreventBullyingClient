@@ -13,14 +13,12 @@ import com.google.gson.reflect.TypeToken;
 import com.hjq.toast.ToastUtils;
 import com.mj.preventbullying.client.Constant;
 import com.mj.preventbullying.client.MyApp;
-import com.mj.preventbullying.client.SpManager;
-import com.mj.preventbullying.client.http.request.BaseResponse;
+import com.mj.preventbullying.client.tool.SpManager;
 import com.mj.preventbullying.client.ui.login.LoginActivity;
 import com.orhanobut.logger.Logger;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.Objects;
 
 import okhttp3.Headers;
 import okhttp3.Interceptor;

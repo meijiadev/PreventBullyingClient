@@ -8,79 +8,79 @@
         android:id="@+id/message_type_ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        >
+        android:layout_marginStart="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_10"
+        android:orientation="horizontal">
+
         <com.hjq.shape.view.ShapeTextView
             android:id="@+id/all_message_tv"
             android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:text="全部"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            app:shape_radius="10dp"
-            app:shape_solidColor="@color/white"
-            android:gravity="center"
+            android:layout_height="@dimen/dp_25"
             android:layout_weight="1"
-            />
+            android:gravity="center"
+            android:text="全部"
+            android:textSize="@dimen/sp_15"
+            android:textStyle="bold"
+            app:shape_radius="@dimen/dp_10"
+            app:shape_solidColor="@color/white" />
+
         <com.hjq.shape.view.ShapeTextView
             android:id="@+id/pending_tv"
             android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:text="待处理"
+            android:layout_height="@dimen/dp_25"
+            android:layout_marginStart="8dp"
             android:layout_toRightOf="@id/all_message_tv"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:layout_marginStart="8dp"
-            app:shape_radius="10dp"
-            app:shape_solidColor="@color/gold"
-            android:gravity="center"
             android:layout_weight="1"
-            />
-        <com.hjq.shape.view.ShapeTextView
-            android:id="@+id/processed_tv"
-            android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:text="已处理"
-            android:textStyle="bold"
-            android:layout_toRightOf="@id/pending_tv"
-            android:textSize="15sp"
-            android:layout_marginStart="8dp"
-            app:shape_radius="10dp"
-            app:shape_solidColor="@color/white"
             android:gravity="center"
-            android:layout_weight="1"
-            />
-        <com.hjq.shape.view.ShapeTextView
-            android:id="@+id/ignore_tv"
-            android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:text="已忽略"
+            android:text="待处理"
+            android:textSize="@dimen/sp_15"
             android:textStyle="bold"
-            android:layout_toRightOf="@id/processed_tv"
-            android:textSize="15sp"
-            android:layout_marginStart="8dp"
-            app:shape_radius="10dp"
-            app:shape_solidColor="@color/white"
-            android:gravity="center"
-            android:layout_weight="1"
-            />
+            app:shape_radius="@dimen/dp_10"
+
+            app:shape_solidColor="@color/gold" />
         <com.hjq.shape.view.ShapeTextView
             android:id="@+id/processing_tv"
             android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:text="处理中"
-            android:textStyle="bold"
-            android:layout_toRightOf="@id/ignore_tv"
-            android:textSize="15sp"
+            android:layout_height="@dimen/dp_25"
             android:layout_marginStart="8dp"
-            app:shape_radius="10dp"
-            app:shape_solidColor="@color/white"
-            android:gravity="center"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:layout_toRightOf="@id/ignore_tv"
             android:layout_weight="1"
-            android:layout_marginEnd="10dp"
-            />
+            android:gravity="center"
+            android:text="处理中"
+            android:textSize="@dimen/sp_15"
+            android:textStyle="bold"
+            app:shape_radius="@dimen/dp_10"
+            app:shape_solidColor="@color/white" />
+
+        <com.hjq.shape.view.ShapeTextView
+            android:id="@+id/processed_tv"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_25"
+            android:layout_marginStart="8dp"
+            android:layout_toRightOf="@id/pending_tv"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="已处理"
+            android:textSize="@dimen/sp_15"
+            android:textStyle="bold"
+            app:shape_radius="@dimen/dp_10"
+            app:shape_solidColor="@color/white" />
+
+        <com.hjq.shape.view.ShapeTextView
+            android:id="@+id/ignore_tv"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_25"
+            android:layout_marginStart="8dp"
+            android:layout_toRightOf="@id/processed_tv"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="已忽略"
+            android:textSize="@dimen/sp_15"
+            android:textStyle="bold"
+            app:shape_radius="@dimen/dp_10"
+            app:shape_solidColor="@color/white" />
+
     </LinearLayout>
 
 
@@ -89,10 +89,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/message_type_ll"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="@dimen/dp_8"
+        android:layout_marginTop="@dimen/dp_8"
+        android:layout_marginEnd="@dimen/dp_8"
+        android:layout_marginBottom="@dimen/dp_8"
         app:srlAccentColor="#7c7c7c"
         app:srlPrimaryColor="#d4d4d4">
 

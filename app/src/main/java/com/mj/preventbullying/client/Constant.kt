@@ -14,6 +14,8 @@ object Constant {
     const val REGISTER_ID_KEY = "register_id_key"
     const val EXPIRES_TIME_KEY = "expires_in_key"   // 过期时间
     const val LOGIN_OR_REFRESH_TIME_KEY = "last_login_or_fresh_time_key"  // 上次刷新或者登录时间
+    const val ACCOUNT_KEY = "account_key"           // 用户名
+    const val AUTO_LOGIN_KEY = "auto_login_key"    // 是否是自动登录 默认true
 
 
 }
