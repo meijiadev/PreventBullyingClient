@@ -1,5 +1,6 @@
 package com.mj.preventbullying.client.ui.fragment
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.PixelFormat
 import android.os.Bundle
@@ -28,6 +29,7 @@ import com.mj.preventbullying.client.ui.adapter.PENDING_STATUS
 import com.mj.preventbullying.client.ui.adapter.PROCESSED_IGNORE
 import com.mj.preventbullying.client.ui.adapter.PROCESSED_STATUS
 import com.mj.preventbullying.client.ui.adapter.PROCESSING_STATUS
+import com.mj.preventbullying.client.ui.dialog.AudioPlayDialog
 import com.mj.preventbullying.client.ui.dialog.MessageProcessDialog
 import com.mj.preventbullying.client.ui.viewmodel.MessageViewModel
 import com.mj.preventbullying.client.webrtc.getUUID
@@ -41,8 +43,7 @@ import kotlinx.coroutines.launch
  * Create by MJ on 2023/12/11.
  * Describe :
  */
-class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>(),
-    AudioPlayer.AudioPlayerListener {
+class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>() {
     private var messageAdapter: MessageAdapter? = null
     private var messageList: List<Record>? = null
     private var processPosition: Int? = null
@@ -187,6 +188,7 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
     /**
      * 按照类型过滤
      */
+    @SuppressLint("NotifyDataSetChanged")
     private fun filtrationMsgTp(type: String) {
         curShowType = type
         if (type == "null") {
@@ -212,7 +214,7 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
             it.setReboundDuration(300)
             viewModel.getAllDeviceRecords()
         }
-        AudioPlayer.instance.addListener(this)
+        //  AudioPlayer.instance.addListener(this)
     }
 
 
@@ -224,12 +226,11 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
     override fun onStop() {
         super.onStop()
         AudioPlayer.instance.pause()
-        playIv?.setImageResource(R.mipmap.pause_icon)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        AudioPlayer.instance.removeListener(this)
+        //  AudioPlayer.instance.removeListener(this)
         AudioPlayer.instance.stop()
     }
 
@@ -244,10 +245,23 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
             it?.let { it1 ->
                 it1.data?.let { data ->
                     lifecycleScope.launch(Dispatchers.IO) {
-                        //PcmPlayer.play(data.url)
-                        // VlcMusicPlayer.instance.playNet(Uri.parse(data.url))
                         kotlin.runCatching {
-                            AudioPlayer.instance.play(data.url)
+                            val audioPlayDialog = AudioPlayDialog(requireContext()).setPlayUrl(data.url)
+                                .setAudioPLayerEndListener {
+                                    currentRecordId?.let { recordId ->
+                                        viewModel.recordProcess(
+                                            recordId, "已查看报警现场音频", PROCESSED_STATUS
+                                        )
+                                    }
+                                }
+                            XPopup.Builder(requireContext())
+                                .isViewMode(true)
+                                .dismissOnBackPressed(false)
+                                .dismissOnTouchOutside(false)
+                                .isDestroyOnDismiss(true)
+                                .popupAnimation(PopupAnimation.TranslateFromBottom)
+                                .asCustom(audioPlayDialog)
+                                .show()
                         }.onFailure {
                             Logger.e("error:${it}")
                         }
@@ -262,141 +276,5 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
         }
     }
 
-
-    private var isPlaying = false
-    override fun onAudioPlayerStart(duration: Int) {
-        isPlaying = true
-        Logger.i("播放开始")
-        createFloatWindow()
-        startTv?.text = calculateTime(AudioPlayer.instance.getPosition() / 1000)
-        endTv?.text = calculateTime(duration / 1000)
-        seekBar?.max = duration
-        seekBar?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
-                val position = AudioPlayer.instance.getPosition()           // 获取当前播放的位置
-                startTv?.text = calculateTime(position / 1000)
-            }
-
-            override fun onStartTrackingTouch(p0: SeekBar?) {
-                isSeekbarChaning = true
-            }
-
-            override fun onStopTrackingTouch(p0: SeekBar?) {
-                isSeekbarChaning = false
-                AudioPlayer.instance.seekTo(seekBar?.progress ?: 0)
-
-            }
-        })
-        lifecycleScope.launch(Dispatchers.IO) {
-            while (isPlaying) {
-                delay(1000)
-                launch(Dispatchers.Main) {
-                    if (!isSeekbarChaning) seekBar?.progress = AudioPlayer.instance.getPosition()
-                }
-            }
-        }
-
-    }
-
-    override fun onAudioPlayerStop() {
-        Logger.i("播放结束")
-        isPlaying = false
-        AudioPlayer.instance.stop()
-        windowManager?.removeView(floatRootView)
-        currentRecordId?.let {
-            viewModel.recordProcess(
-                it, "已查看报警现场音频", PROCESSED_STATUS
-            )
-        }
-
-    }
-
-    private var windowManager: WindowManager? = null
-    private var isSeekbarChaning = false
-    private var seekBar: SeekBar? = null
-    private var startTv: TextView? = null
-    private var endTv: TextView? = null
-    private var floatRootView: View? = null
-    private var playIv: AppCompatImageView? = null
-    private var closeIv: AppCompatImageView? = null
-
-    /**
-     * 创建悬浮窗
-     */
-    private fun createFloatWindow() {
-        //2、设置悬浮窗的初始位置和参数
-        val layoutParam = WindowManager.LayoutParams().apply {
-            //设置大小 自适应
-            width = WRAP_CONTENT
-            height = WRAP_CONTENT
-            flags =
-                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-            format = PixelFormat.RGBA_8888
-        }
-        floatRootView = LayoutInflater.from(context).inflate(R.layout.dialog_audio_play, null)
-        seekBar = floatRootView?.findViewById(R.id.seekbar)
-        startTv = floatRootView?.findViewById(R.id.tv_start)
-        endTv = floatRootView?.findViewById(R.id.tv_end)
-        playIv = floatRootView?.findViewById(R.id.play_iv)
-        closeIv = floatRootView?.findViewById(R.id.close_iv)
-        // 4. 获取WindowManager并将悬浮窗添加到窗口
-        windowManager = context?.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        windowManager?.addView(floatRootView, layoutParam)
-        playIv?.setOnClickListener {
-            Logger.i("当前是否在播放：${AudioPlayer.instance.isPlaying()}")
-            if (AudioPlayer.instance.isPlaying()) {
-                playIv?.setImageResource(R.mipmap.pause_icon)
-                AudioPlayer.instance.pause()
-            } else {
-                playIv?.setImageResource(R.mipmap.play_icon)
-                AudioPlayer.instance.start()
-            }
-        }
-
-        closeIv?.setOnClickListener {
-            isPlaying = false
-            AudioPlayer.instance.stop()
-            windowManager?.removeView(floatRootView)
-            currentRecordId?.let {
-                viewModel.recordProcess(
-                    it, "已查看报警现场音频", PROCESSED_STATUS
-                )
-            }
-        }
-    }
-
-    //计算播放时间
-    fun calculateTime(time: Int): String? {
-        val minute: Int
-        val second: Int
-        if (time > 60) {
-            minute = time / 60
-            second = time % 60
-            //分钟再0~9
-            return if (minute >= 0 && minute < 10) {
-                //判断秒
-                if (second >= 0 && second < 10) {
-                    "0$minute:0$second"
-                } else {
-                    "0$minute:$second"
-                }
-            } else {
-                //分钟大于10再判断秒
-                if (second >= 0 && second < 10) {
-                    "$minute:0$second"
-                } else {
-                    "$minute:$second"
-                }
-            }
-        } else if (time < 60) {
-            second = time
-            return if (second >= 0 && second < 10) {
-                "00:0$second"
-            } else {
-                "00:$second"
-            }
-        }
-        return null
-    }
 
 }

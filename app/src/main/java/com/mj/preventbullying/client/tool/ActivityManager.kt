@@ -174,23 +174,23 @@ class ActivityManager private constructor() : ActivityLifecycleCallbacks {
     }
 
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-        Logger.i("%s - onCreate", activity.javaClass.simpleName)
+        Logger.d("%s - onCreate", activity.javaClass.simpleName)
         if (activitySet.size == 0) {
             for (callback: ApplicationLifecycleCallback? in lifecycleCallbacks) {
                 callback?.onApplicationCreate(activity)
             }
-            Logger.i("%s - onApplicationCreate", activity.javaClass.simpleName)
+            Logger.d("%s - onApplicationCreate", activity.javaClass.simpleName)
         }
         activitySet[getObjectTag(activity)] = activity
         topActivity = activity
     }
 
     override fun onActivityStarted(activity: Activity) {
-        Logger.i("%s - onStart", activity.javaClass.simpleName)
+        Logger.d("%s - onStart", activity.javaClass.simpleName)
     }
 
     override fun onActivityResumed(activity: Activity) {
-        Logger.i("%s - onResume", activity.javaClass.simpleName)
+        Logger.d("%s - onResume", activity.javaClass.simpleName)
         if (topActivity === activity && resumedActivity == null) {
             for (callback: ApplicationLifecycleCallback in lifecycleCallbacks) {
                 callback.onApplicationForeground(activity)
@@ -202,11 +202,11 @@ class ActivityManager private constructor() : ActivityLifecycleCallbacks {
     }
 
     override fun onActivityPaused(activity: Activity) {
-        Logger.i("%s - onPause", activity.javaClass.simpleName)
+        Logger.d("%s - onPause", activity.javaClass.simpleName)
     }
 
     override fun onActivityStopped(activity: Activity) {
-        Logger.i("%s - onStop", activity.javaClass.simpleName)
+        Logger.d("%s - onStop", activity.javaClass.simpleName)
         if (resumedActivity === activity) {
             resumedActivity = null
         }
@@ -214,16 +214,16 @@ class ActivityManager private constructor() : ActivityLifecycleCallbacks {
             for (callback: ApplicationLifecycleCallback in lifecycleCallbacks) {
                 callback.onApplicationBackground(activity)
             }
-            Logger.i("%s - onApplicationBackground", activity.javaClass.simpleName)
+            Logger.d("%s - onApplicationBackground", activity.javaClass.simpleName)
         }
     }
 
     override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
-        Logger.i("%s - onSaveInstanceState", activity.javaClass.simpleName)
+        Logger.d("%s - onSaveInstanceState", activity.javaClass.simpleName)
     }
 
     override fun onActivityDestroyed(activity: Activity) {
-        Logger.i("%s - onDestroy", activity.javaClass.simpleName)
+        Logger.d("%s - onDestroy", activity.javaClass.simpleName)
         activitySet.remove(getObjectTag(activity))
         if (topActivity === activity) {
             topActivity = null
@@ -232,7 +232,7 @@ class ActivityManager private constructor() : ActivityLifecycleCallbacks {
             for (callback: ApplicationLifecycleCallback in lifecycleCallbacks) {
                 callback.onApplicationDestroy(activity)
             }
-            Logger.i("%s - onApplicationDestroy", activity.javaClass.simpleName)
+            Logger.d("%s - onApplicationDestroy", activity.javaClass.simpleName)
         }
     }
 

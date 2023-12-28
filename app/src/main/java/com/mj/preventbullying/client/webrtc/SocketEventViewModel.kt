@@ -17,6 +17,7 @@ import io.socket.client.Socket
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.net.URI
 
 //正在拨打中
 const val CALLING_STATUS = 1
@@ -75,9 +76,15 @@ class SocketEventViewModel : ViewModel(), HandlerAction {
             val token = SpManager.getString(Constant.ACCESS_TOKEN_KEY)
             val url =
                 "${ApiService.BASE_SOCKET_IO_URL}token=$token&clientType=anti_bullying_device&clientId=$sn"
+            val uri = URI.create(url)
+            val websocket = arrayOf("websocket")
+            val options = IO.Options.builder()
+                .setReconnectionDelay(3000)
+                .setTransports(websocket)
+                .build()
             kotlin.runCatching {
                 mSocket = IO.socket(
-                    url
+                    uri, options
                 )
             }.onFailure {
                 Logger.e("${it.message}")

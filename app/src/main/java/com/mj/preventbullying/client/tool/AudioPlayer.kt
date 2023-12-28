@@ -54,13 +54,21 @@ class AudioPlayer private constructor(context: Context) : MediaPlayer.OnPrepared
     fun pause() {
         if (mediaPlayer.isPlaying) {
             mediaPlayer.pause()
+            for (listener in listeners) {
+                listener.onAudioPause()
+            }
         }
     }
 
 
     fun start() {
-        if (!mediaPlayer.isPlaying)
+        if (!mediaPlayer.isPlaying){
             mediaPlayer.start()
+            for (listener in listeners) {
+                listener.onAudioRestart()
+            }
+        }
+
     }
 
     fun getDuration(): Int {
@@ -100,6 +108,10 @@ class AudioPlayer private constructor(context: Context) : MediaPlayer.OnPrepared
     interface AudioPlayerListener {
         fun onAudioPlayerStart(duration: Int)
         fun onAudioPlayerStop()
+
+        fun onAudioPause()
+
+        fun onAudioRestart()
     }
 
     companion object {

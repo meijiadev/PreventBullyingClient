@@ -21,48 +21,53 @@ import kotlinx.coroutines.launch
 
 class AudioPlayDialog(context: Context) : CenterPopupView(context),
     AudioPlayer.AudioPlayerListener {
-    private val seekBar: SeekBar by lazy { findViewById(R.id.seekbar) }
-    private val startTv: TextView by lazy { findViewById(R.id.tv_start) }
-    private val endTv: TextView by lazy { findViewById(R.id.tv_end) }
-    private val playIv: AppCompatImageView by lazy { findViewById(R.id.play_iv) }
-    private val closeIv: AppCompatImageView by lazy { findViewById(R.id.close_iv) }
-    private val duration: Int = 0
+    private val seekBar: SeekBar? by lazy { findViewById(R.id.seekbar) }
+    private val startTv: TextView? by lazy { findViewById(R.id.tv_start) }
+    private val endTv: TextView? by lazy { findViewById(R.id.tv_end) }
+    private val playIv: AppCompatImageView? by lazy { findViewById(R.id.play_iv) }
+    private val closeIv: AppCompatImageView? by lazy { findViewById(R.id.close_iv) }
+
+    private var duration: Int = 0
     private var isPlaying = false
     private var isSeekbarChaning = false
+    private var audioUrl: String? = null
+
+    //    private var
     override fun getImplLayoutId(): Int = R.layout.dialog_audio_play
 
 
     override fun onCreate() {
         super.onCreate()
-        playIv.setOnClickListener {
+        AudioPlayer.instance.addListener(this)
+        AudioPlayer.instance.play(audioUrl)
+        isPlaying = true
+        playIv?.setOnClickListener {
             Logger.i("当前是否在播放：${AudioPlayer.instance.isPlaying()}")
             if (AudioPlayer.instance.isPlaying()) {
-                playIv.setImageResource(R.mipmap.pause_icon)
+                playIv?.setImageResource(R.mipmap.pause_icon)
                 AudioPlayer.instance.pause()
             } else {
-                playIv.setImageResource(R.mipmap.play_icon)
+                isPlaying = true
+                playIv?.setImageResource(R.mipmap.play_icon)
                 AudioPlayer.instance.start()
             }
         }
 
-        closeIv.setOnClickListener {
-            //isPlaying = false
+        closeIv?.setOnClickListener {
             AudioPlayer.instance.stop()
-            //windowManager?.removeView(floatRootView)
-            //currentRecordId?.let {
-            //  viewModel.recordProcess(
-            //it, "已查看报警现场音频", PROCESSED_STATUS
-            //)
+            dismiss()
+
         }
 
 
-        startTv.text = calculateTime(AudioPlayer.instance.getPosition() / 1000)
-        endTv.text = calculateTime(duration / 1000)
-        seekBar.max = duration
-        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        startTv?.text = calculateTime(AudioPlayer.instance.getPosition() / 1000)
+        endTv?.text = calculateTime(duration / 1000)
+        Logger.i("最大值：$duration")
+        seekBar?.max = duration
+        seekBar?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
                 val position = AudioPlayer.instance.getPosition()           // 获取当前播放的位置
-                startTv.text = calculateTime(position / 1000)
+                startTv?.text = calculateTime(position / 1000)
             }
 
             override fun onStartTrackingTouch(p0: SeekBar?) {
@@ -71,22 +76,38 @@ class AudioPlayDialog(context: Context) : CenterPopupView(context),
 
             override fun onStopTrackingTouch(p0: SeekBar?) {
                 isSeekbarChaning = false
-                AudioPlayer.instance.seekTo(seekBar.progress)
+                AudioPlayer.instance.seekTo(seekBar?.progress ?: 0)
 
             }
         })
+        initDuration()
+    }
+
+    private fun initDuration() {
         lifecycleScope.launch(Dispatchers.IO) {
             while (isPlaying) {
-                delay(1000)
-                launch(Dispatchers.Main) {
-                    if (!isSeekbarChaning) seekBar.progress = AudioPlayer.instance.getPosition()
+                delay(800)
+                if (isPlaying) {
+                    launch(Dispatchers.Main) {
+                        val progress = AudioPlayer.instance.getPosition()
+                        if (!isSeekbarChaning) {
+                            seekBar?.progress = progress
+                        }
+                        Logger.i("设置播放进度：$progress")
+                    }
+
                 }
             }
         }
+
     }
 
-    fun setMsg(): AudioPlayDialog = apply {
 
+    /**
+     * 设置播放的地址
+     */
+    fun setPlayUrl(url: String): AudioPlayDialog = apply {
+        this.audioUrl = url
     }
 
     //计算播放时间
@@ -123,17 +144,47 @@ class AudioPlayDialog(context: Context) : CenterPopupView(context),
         return null
     }
 
-    override fun onAudioPlayerStart(duration: Int) {
+    override fun onDismiss() {
+        super.onDismiss()
+        AudioPlayer.instance.removeListener(this)
+    }
 
+
+    override fun onDestroy() {
+        super.onDestroy()
+        AudioPlayer.instance.removeListener(this)
+    }
+
+    override fun onAudioPlayerStart(duration: Int) {
+        this.duration = duration
+        endTv?.text = calculateTime(duration / 1000)
+        seekBar?.max = duration
     }
 
     override fun onAudioPlayerStop() {
         isPlaying = false
         AudioPlayer.instance.stop()
-//        currentRecordId?.let {
-//            viewModel.recordProcess(
-//                it, "已查看报警现场音频", PROCESSED_STATUS
-//            )
-//        }
+        mAudioPlayerEndListener?.invoke()
+        dismiss()
+    }
+
+    override fun onAudioPause() {
+        isPlaying = false
+        playIv?.setImageResource(R.mipmap.pause_icon)
+        Logger.i("音频暂停")
+    }
+
+    override fun onAudioRestart() {
+        isPlaying = true
+        playIv?.setImageResource(R.mipmap.play_icon)
+        Logger.i("音频继续播放")
+        initDuration()
+    }
+
+
+    private var mAudioPlayerEndListener: (() -> Unit)? = null
+
+    fun setAudioPLayerEndListener(listener: (() -> Unit)): AudioPlayDialog = apply {
+        this.mAudioPlayerEndListener = listener
     }
 }
