@@ -45,7 +45,7 @@ class JPushReceive : JPushMessageService() {
                 p0?.startActivity(intent)
             } else {
                 Logger.i("当前activity正在前台")
-                MyApp.jPushEventViewModel.notifyMsgEvent.postValue(p1)
+                MyApp.globalEventViewModel.notifyMsgEvent.postValue(p1)
 
             }
         }.onFailure {

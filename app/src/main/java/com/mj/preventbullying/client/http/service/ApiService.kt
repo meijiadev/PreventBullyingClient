@@ -12,6 +12,7 @@ import com.mj.preventbullying.client.http.result.OrgTreeResult
 import com.mj.preventbullying.client.http.result.PreviewAudioResult
 import com.mj.preventbullying.client.http.result.RecordProcessResult
 import com.mj.preventbullying.client.http.result.RefreshTokenResult
+import com.mj.preventbullying.client.http.result.UpdateAppResult
 import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -132,5 +133,12 @@ interface ApiService {
     @GET("admin/dict/type/anti_bullying_device_model")
     suspend fun getDevType(): DevTypeResult
 
-
+    /**
+     * 获取最新版本的app
+     */
+    @GET("anti-bullying/version/latest")
+    suspend fun getNewApp(
+        @Query("type") type: String = "app",
+        @Query("model") model: String = "app"
+    ): UpdateAppResult
 }

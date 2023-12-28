@@ -2,6 +2,7 @@ package com.mj.preventbullying.client.ui.viewmodel
 
 import cn.jpush.android.api.NotificationMessage
 import com.kunminx.architecture.ui.callback.UnPeekLiveData
+import com.mj.preventbullying.client.http.result.UpdateAppResult
 import com.sjb.base.base.BaseViewModel
 
 /**
@@ -9,7 +10,12 @@ import com.sjb.base.base.BaseViewModel
  * Describe : 推送消息
  */
 
-class JPushEventViewModel : BaseViewModel() {
+class GlobalEventViewModel : BaseViewModel() {
 
     var notifyMsgEvent = UnPeekLiveData<NotificationMessage>()
+
+    /**
+     * App更新事件
+     */
+    var updateAppEvent = UnPeekLiveData<UpdateAppResult>()
 }

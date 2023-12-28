@@ -14,7 +14,7 @@ import com.hjq.toast.ToastUtils
 import com.hjq.toast.style.WhiteToastStyle
 import com.mj.preventbullying.client.tool.ActivityManager
 import com.mj.preventbullying.client.tool.SpManager
-import com.mj.preventbullying.client.ui.viewmodel.JPushEventViewModel
+import com.mj.preventbullying.client.ui.viewmodel.GlobalEventViewModel
 import com.mj.preventbullying.client.ui.viewmodel.TimerViewModel
 import com.mj.preventbullying.client.webrtc.SocketEventViewModel
 import com.mj.preventbullying.client.webrtc.WebrtcSocketManager
@@ -32,7 +32,7 @@ class MyApp : Application(), ViewModelStoreOwner {
         lateinit var socketEventViewModel: SocketEventViewModel
         lateinit var timerViewModel: TimerViewModel
         lateinit var webrtcSocketManager: WebrtcSocketManager
-        lateinit var jPushEventViewModel: JPushEventViewModel
+        lateinit var globalEventViewModel: GlobalEventViewModel
     }
 
     private lateinit var mAppViewModelStore: ViewModelStore
@@ -63,7 +63,7 @@ class MyApp : Application(), ViewModelStoreOwner {
         timerViewModel = getApplicationViewModel(TimerViewModel::class.java)
         socketEventViewModel = getApplicationViewModel(SocketEventViewModel::class.java)
         webrtcSocketManager = getApplicationViewModel(WebrtcSocketManager::class.java)
-        jPushEventViewModel = getApplicationViewModel(JPushEventViewModel::class.java)
+        globalEventViewModel = getApplicationViewModel(GlobalEventViewModel::class.java)
         initJGPush()
 
     }

@@ -85,4 +85,12 @@ class MainViewModel : BaseViewModel() {
         })
     }
 
+    fun getAppVersion(){
+        requestNoCheck({
+            apiService.getNewApp()
+        },{
+
+        })
+    }
+
 }

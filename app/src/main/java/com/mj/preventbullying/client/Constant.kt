@@ -17,7 +17,8 @@ object Constant {
     const val ACCOUNT_KEY = "account_key"           // 用户名
     const val AUTO_LOGIN_KEY = "auto_login_key"    // 是否是自动登录 默认true
 
-
+    var isNewAppVersion = true           // 是否有新版本app
+    var newAppVersion: Int = 10            // 1.0
 }
 
 

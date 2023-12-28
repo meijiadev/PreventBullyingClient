@@ -1,17 +1,9 @@
 package com.mj.preventbullying.client.ui.fragment
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.graphics.PixelFormat
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.view.WindowManager
-import android.widget.SeekBar
-import android.widget.TextView
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chad.library.adapter4.BaseQuickAdapter
@@ -36,7 +28,6 @@ import com.mj.preventbullying.client.webrtc.getUUID
 import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseMvFragment
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
@@ -270,7 +261,7 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
             }
         }
         // 收到极光通知
-        MyApp.jPushEventViewModel.notifyMsgEvent.observe(this) {
+        MyApp.globalEventViewModel.notifyMsgEvent.observe(this) {
             viewModel.getAllDeviceRecords()
             toast("收到报警推送")
         }

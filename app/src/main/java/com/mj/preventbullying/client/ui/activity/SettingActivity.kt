@@ -1,16 +1,23 @@
 package com.mj.preventbullying.client.ui.activity
 
+import android.graphics.Color
+import android.view.View
 import cn.jpush.android.ups.JPushUPSManager
+import com.azhon.appupdate.manager.DownloadManager
 import com.gyf.immersionbar.ktx.immersionBar
 import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.enums.PopupAnimation
+import com.mj.preventbullying.client.BuildConfig
 import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.MyApp
+import com.mj.preventbullying.client.R
 import com.mj.preventbullying.client.databinding.ActivitySettingBinding
+import com.mj.preventbullying.client.http.result.UpdateAppResult
 import com.mj.preventbullying.client.tool.ActivityManager
 import com.mj.preventbullying.client.tool.NetworkUtil
 import com.mj.preventbullying.client.tool.SpManager
 import com.mj.preventbullying.client.ui.dialog.AmendPasswordDialog
+import com.mj.preventbullying.client.ui.dialog.UpdateAppDialog
 import com.mj.preventbullying.client.ui.login.LoginActivity
 import com.mj.preventbullying.client.ui.viewmodel.SettingViewModel
 import com.orhanobut.logger.Logger
@@ -24,6 +31,7 @@ import com.sjb.base.view.SwitchButton
  */
 
 class SettingActivity : BaseMvActivity<ActivitySettingBinding, SettingViewModel>() {
+    private var appUpdateResult: UpdateAppResult? = null
     override fun getViewBinding(): ActivitySettingBinding {
         return ActivitySettingBinding.inflate(layoutInflater)
     }
@@ -40,7 +48,13 @@ class SettingActivity : BaseMvActivity<ActivitySettingBinding, SettingViewModel>
         binding.ipTv.text = NetworkUtil.getIPAddress(true)
         val isAutoLogin = SpManager.getBoolean(Constant.AUTO_LOGIN_KEY, true)
         binding.autoLoginBt.setChecked(isAutoLogin)
+        binding.tvNewVersion.visibility = if (Constant.isNewAppVersion) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
 
+        viewModel.getAppVersion()
     }
 
     override fun initViewObservable() {
@@ -69,6 +83,54 @@ class SettingActivity : BaseMvActivity<ActivitySettingBinding, SettingViewModel>
             }
         })
 
+        binding.updateAppLy.setOnClickListener {
+            if (Constant.isNewAppVersion) {
+                appUpdateResult?.data?.let {
+                    val version = it.versionNo
+                    val versionNo = version.replace("v", "")
+                    Constant.newAppVersion = versionNo.replace(".", "").toInt()
+                    val curVersion = BuildConfig.VERSION_NAME.replace(".", "").toInt()
+                    if (curVersion < Constant.newAppVersion) {
+                        val apkSize = "${it.fileSize.toLong() / 1024 / 1024}MB"
+                        val manager = DownloadManager.Builder(this).run {
+                            apkUrl(it.fileUrl)
+                            apkName(it.fileName)
+                            apkVersionCode(2)
+                            smallIcon(R.mipmap.app_icon)
+                            showNewerToast(true)
+                            apkVersionName(version)
+                            apkSize(apkSize)
+                            apkDescription("修复bug\n优化用户体验")
+                            enableLog(true)
+                            jumpInstallPage(true)
+                            dialogButtonTextColor(Color.WHITE)
+                            showNotification(true)
+                            showBgdToast(false)
+                            forcedUpgrade(false)
+                            build()
+                        }
+                        manager.download()
+                    }
+                }
+            } else {
+                toast("暂无新版本")
+            }
+        }
+
+    }
+
+    /**
+     * 显示dialog
+     */
+    private fun showUpdateDialog(version: String) {
+        val updateAppDialog = UpdateAppDialog(this).setUpdateMsg(version)
+        XPopup.Builder(this)
+            .isViewMode(true)
+            .popupAnimation(PopupAnimation.TranslateFromBottom)
+            .dismissOnTouchOutside(false)
+            .dismissOnBackPressed(false)
+            .asCustom(updateAppDialog)
+            .show()
     }
 
     /**
@@ -94,6 +156,8 @@ class SettingActivity : BaseMvActivity<ActivitySettingBinding, SettingViewModel>
     }
 
     override fun initListener() {
-
+        MyApp.globalEventViewModel.updateAppEvent.observe(this) {
+            appUpdateResult = it
+        }
     }
 }

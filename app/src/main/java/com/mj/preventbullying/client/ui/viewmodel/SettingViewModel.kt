@@ -3,6 +3,7 @@ package com.mj.preventbullying.client.ui.viewmodel
 import android.util.ArrayMap
 import com.blackview.base.http.requestNoCheck
 import com.mj.preventbullying.client.Constant
+import com.mj.preventbullying.client.MyApp
 import com.mj.preventbullying.client.http.apiService
 import com.mj.preventbullying.client.tool.SpManager
 import com.orhanobut.logger.Logger
@@ -29,6 +30,15 @@ class SettingViewModel : BaseViewModel() {
             apiService.amendPs(params)
         }, {
 
+        })
+    }
+
+    fun getAppVersion() {
+        requestNoCheck({
+            apiService.getNewApp()
+        }, {
+            Logger.i("获取的最新app版本信息：$it")
+            MyApp.globalEventViewModel.updateAppEvent.postValue(it)
         })
     }
 }

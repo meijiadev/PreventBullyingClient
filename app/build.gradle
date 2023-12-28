@@ -145,4 +145,6 @@ dependencies {
    // implementation 'org.videolan.android:libvlc-all:3.1.12'
     // 悬浮窗框架：https://github.com/getActivity/EasyWindow
 //    implementation 'com.github.getActivity:EasyWindow:10.6'
+    //
+    implementation 'io.github.azhon:appupdate:4.3.2'
 }
