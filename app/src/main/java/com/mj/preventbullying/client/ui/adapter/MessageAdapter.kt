@@ -11,6 +11,7 @@ import com.mj.preventbullying.client.MyApp
 import com.mj.preventbullying.client.R
 import com.mj.preventbullying.client.databinding.ItemDeviceListBinding
 import com.mj.preventbullying.client.databinding.ItemMessageRecordBinding
+import com.mj.preventbullying.client.databinding.ItemMessageRecordNewBinding
 import com.mj.preventbullying.client.http.result.Record
 
 /**
@@ -25,7 +26,7 @@ const val PROCESSED_IGNORE = "3"
 class MessageAdapter : BaseQuickAdapter<Record, MessageAdapter.VH>() {
     class VH(
         parent: ViewGroup,
-        val binding: ItemMessageRecordBinding = ItemMessageRecordBinding.inflate(
+        val binding: ItemMessageRecordNewBinding = ItemMessageRecordNewBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         ),
     ) : RecyclerView.ViewHolder(binding.root)
@@ -34,38 +35,48 @@ class MessageAdapter : BaseQuickAdapter<Record, MessageAdapter.VH>() {
     override fun onBindViewHolder(holder: VH, position: Int, item: Record?) {
         //设置item数据
         holder.binding.apply {
-            deviceSnTv.text = "SN码：${item?.snCode}"
-            deviceOrgTv.text = "所属组织：${item?.org?.name}"
-            keywordTv.text = "关键字：${item?.keyword}"
-            deviceLocationTv.text = "位置：${item?.location}"
-            waringTimeTv.text = "报警时间：${item?.waringTime}"
+            snTv.text = "SN-${item?.snCode}"
+            locationTv.text = "${item?.org?.name} ${item?.location}"
+            keywordTv.text = item?.keyword
+            waringTimeTv.text = item?.waringTime
             val resource = when (item?.state) {
                 // 待处理
                 PENDING_STATUS -> {
-                    goProcessTv.visibility = View.VISIBLE
-                    R.mipmap.pending_icon
+                    processTv.text = "待处理"
+                    processTv.shapeDrawableBuilder.setSolidColor(context.getColor(com.sjb.base.R.color.red))
+                        .intoBackground()
+                    //R.mipmap.pending_icon
                 }
                 // 处理中
                 PROCESSING_STATUS -> {
-                    goProcessTv.visibility = View.GONE
-                    R.mipmap.processing_icon
+                    processTv.text = "处理中"
+                    processTv.shapeDrawableBuilder.setSolidColor(context.getColor(com.sjb.base.R.color.yellow))
+                        .intoBackground()
+                    //goProcessTv.visibility = View.GONE
+                    //R.mipmap.processing_icon
                 }
                 // 已处理
                 PROCESSED_STATUS -> {
-                    goProcessTv.visibility = View.GONE
-                    R.mipmap.processed_icon
+                    processTv.text = "已处理"
+                    processTv.shapeDrawableBuilder.setSolidColor(context.getColor(com.sjb.base.R.color.green))
+                        .intoBackground()
+                    //goProcessTv.visibility = View.GONE
+                    //R.mipmap.processed_icon
                 }
                 // 已忽略
                 PROCESSED_IGNORE -> {
-                    goProcessTv.visibility = View.GONE
-                    R.mipmap.ignore_icon
+                    processTv.text = "已忽略"
+                    processTv.shapeDrawableBuilder.setSolidColor(context.getColor(com.sjb.base.R.color.gray))
+                        .intoBackground()
+                    // goProcessTv.visibility = View.GONE
+                    //R.mipmap.ignore_icon
                 }
 
                 else -> null
             }
-            resource?.let {
-                statusIv.setImageResource(it)
-            }
+//            resource?.let {
+//                statusIv.setImageResource(it)
+//            }
 
         }
     }

@@ -27,12 +27,8 @@ import kotlinx.coroutines.launch
  */
 
 class MessageProcessDialog(context: Context) : CenterPopupView(context) {
-    private val call: AppCompatTextView by lazy { findViewById(R.id.go_call_tv) }
-    private val play: AppCompatTextView by lazy { findViewById(R.id.play_waring_tv) }
-    private val ignore: AppCompatTextView by lazy { findViewById(R.id.ignore_tv) }
-    private val cancel: AppCompatTextView by lazy { findViewById(R.id.cancel_tv) }
+
     private val callLayout: LinearLayout by lazy { findViewById(R.id.call_ll) }          // 拨打语言的布局
-    private val actionLayout: LinearLayout by lazy { findViewById(R.id.action_ll) }      // 功能列表布局
 
     private val hangUpIv: AppCompatImageView by lazy { findViewById(R.id.hang_up_iv) }
 
@@ -44,7 +40,7 @@ class MessageProcessDialog(context: Context) : CenterPopupView(context) {
     private val callTimeTv: AppCompatTextView by lazy { findViewById(R.id.call_time_tv) }
 
 
-    private var messageDialogClick: MessageDialogClick? = null
+    //private var messageDialogClick: MessageDialogClick? = null
 
     private var audioManager: AudioManager? = null
     private var isRestartCall = false
@@ -55,42 +51,13 @@ class MessageProcessDialog(context: Context) : CenterPopupView(context) {
     override
     fun onCreate() {
         super.onCreate()
-//        MyApp.webrtcSocketManager.createWebrtcSc(SpManager.getString(Constant.USER_ID_KEY),"0987654321")
         audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager?
-        call.setOnClickListener {
-            MyApp.timerViewModel.stopTimer()
-            Logger.i("拨打设备语音")
-            isRestartCall = false
-            messageDialogClick?.toCall()
-            loadingTv.visibility = View.VISIBLE
-            closeIv.visibility = View.VISIBLE
-            actionLayout.visibility = View.GONE
-        }
-
-        play.setOnClickListener {
-            Logger.i("播放报警的语音")
-            messageDialogClick?.playWarnAudio()
-            // ToastUtils.show("暂未开放此功能")
-            dismiss()
-
-        }
-
-        ignore.setOnClickListener {
-            messageDialogClick?.ignore()
-            dismiss()
-        }
-
-        cancel.setOnClickListener {
-            dismiss()
-        }
-
-
         hangUpIv.setOnClickListener {
             closeSpeaker()
             MyApp.timerViewModel.stopTimer()
             MyApp.webrtcSocketManager.sendHangUp()
             dismiss()
-            messageDialogClick?.callFinish()
+            //messageDialogClick?.callFinish()
         }
         speakPhoneOnIv.setOnClickListener {
             if (audioManager?.isSpeakerphoneOn == true) {
@@ -118,7 +85,6 @@ class MessageProcessDialog(context: Context) : CenterPopupView(context) {
                         if (!isRestartCall) {
                             openSpeaker()
                             callLayout.visibility = View.VISIBLE
-                            actionLayout.visibility = View.GONE
                             loadingTv.visibility = View.GONE
                             closeIv.visibility = View.GONE
                             MyApp.timerViewModel.startTimer()
@@ -154,10 +120,10 @@ class MessageProcessDialog(context: Context) : CenterPopupView(context) {
         }
     }
 
-    fun setClickListener(listener: MessageDialogClick): MessageProcessDialog = apply {
-        messageDialogClick = listener
-
-    }
+//    fun setClickListener(listener: MessageDialogClick): MessageProcessDialog = apply {
+//        messageDialogClick = listener
+//
+//    }
 
     fun setToId(id: String?): MessageProcessDialog = apply {
         this.toId = id
@@ -176,14 +142,14 @@ class MessageProcessDialog(context: Context) : CenterPopupView(context) {
         super.dismiss()
         Logger.i("退出")
     }
-
-    interface MessageDialogClick {
-        fun toCall()
-        fun playWarnAudio()
-        fun ignore()
-
-        fun callFinish()
-
-    }
+//
+//    interface MessageDialogClick {
+//        fun toCall()
+//        fun playWarnAudio()
+//        fun ignore()
+//
+//        fun callFinish()
+//
+//    }
 
 }

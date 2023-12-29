@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dp_10"
         android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginEnd="@dimen/dp_10"
         android:orientation="horizontal">
 
         <com.hjq.shape.view.ShapeTextView
@@ -38,12 +39,13 @@
             app:shape_radius="@dimen/dp_10"
 
             app:shape_solidColor="@color/gold" />
+
         <com.hjq.shape.view.ShapeTextView
             android:id="@+id/processing_tv"
             android:layout_width="0dp"
             android:layout_height="@dimen/dp_25"
             android:layout_marginStart="8dp"
-            android:layout_marginEnd="@dimen/dp_10"
+
             android:layout_toRightOf="@id/ignore_tv"
             android:layout_weight="1"
             android:gravity="center"
@@ -92,7 +94,6 @@
         android:layout_marginStart="@dimen/dp_8"
         android:layout_marginTop="@dimen/dp_8"
         android:layout_marginEnd="@dimen/dp_8"
-        android:layout_marginBottom="@dimen/dp_8"
         app:srlAccentColor="#7c7c7c"
         app:srlPrimaryColor="#d4d4d4">
 

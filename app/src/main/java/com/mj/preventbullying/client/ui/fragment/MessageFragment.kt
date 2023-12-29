@@ -73,48 +73,21 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
     }
 
     override fun initViewObservable() {
-        messageAdapter?.addOnItemChildClickListener(R.id.go_process_tv) { adapter, view, position ->
+        messageAdapter?.addOnItemChildClickListener(R.id.call_tv) { adapter, view, position ->
             processPosition = position
             val snCode = messageList?.get(position)?.snCode
             currentRecordId = messageList?.get(position)?.recordId
-            val fileId = messageList?.get(position)?.fileId
+            //val fileId = messageList?.get(position)?.fileId
             Logger.i("去处理消息")
+            lifecycleScope.launch(Dispatchers.Main) {
+                MyApp.webrtcSocketManager.createWebrtcSc(
+                    SpManager.getString(Constant.USER_ID_KEY),
+                    snCode, getUUID()
+                )
+            }
             val messageProcessDialog =
                 MessageProcessDialog(requireContext())
                     .setToId(snCode)
-                    .setClickListener(object :
-                        MessageProcessDialog.MessageDialogClick {
-                        override fun toCall() {
-                            lifecycleScope.launch(Dispatchers.Main) {
-                                MyApp.webrtcSocketManager.createWebrtcSc(
-                                    SpManager.getString(Constant.USER_ID_KEY),
-                                    snCode, getUUID()
-                                )
-                            }
-                        }
-
-                        override fun playWarnAudio() {
-                            fileId?.let {
-                                viewModel.getAudioPreUrl(fileId)
-                            }
-                        }
-
-                        override fun ignore() {
-                            currentRecordId?.let {
-                                viewModel.recordProcess(
-                                    it, "直接忽略", PROCESSED_IGNORE
-                                )
-                            }
-                        }
-
-                        override fun callFinish() {
-                            currentRecordId?.let {
-                                viewModel.recordProcess(
-                                    it, "已拨打设备语音了解情况", PROCESSED_STATUS
-                                )
-                            }
-                        }
-                    })
             XPopup.Builder(requireContext()).isViewMode(true)
                 .isDestroyOnDismiss(true)
                 .dismissOnBackPressed(false)
@@ -122,7 +95,25 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
                 .popupAnimation(PopupAnimation.TranslateFromBottom)
                 .asCustom(messageProcessDialog)
                 .show()
+
         }
+
+        messageAdapter?.addOnItemChildClickListener(R.id.play_tv) { adapter, view, position ->
+            processPosition = position
+            val snCode = messageList?.get(position)?.snCode
+            currentRecordId = messageList?.get(position)?.recordId
+            val fileId = messageList?.get(position)?.fileId
+            fileId?.let {
+                viewModel.getAudioPreUrl(fileId)
+            }
+        }
+
+        messageAdapter?.addOnItemChildClickListener(R.id.process_bt) { adapter, view, position ->
+
+        }
+
+
+
         binding.allMessageTv.setOnClickListener {
             resetMessageBt()
             binding.allMessageTv.shapeDrawableBuilder.setSolidColor(requireContext().getColor(com.sjb.base.R.color.gold))
@@ -237,14 +228,15 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
                 it1.data?.let { data ->
                     lifecycleScope.launch(Dispatchers.IO) {
                         kotlin.runCatching {
-                            val audioPlayDialog = AudioPlayDialog(requireContext()).setPlayUrl(data.url)
-                                .setAudioPLayerEndListener {
-                                    currentRecordId?.let { recordId ->
-                                        viewModel.recordProcess(
-                                            recordId, "已查看报警现场音频", PROCESSED_STATUS
-                                        )
+                            val audioPlayDialog =
+                                AudioPlayDialog(requireContext()).setPlayUrl(data.url)
+                                    .setAudioPLayerEndListener {
+                                        currentRecordId?.let { recordId ->
+                                            viewModel.recordProcess(
+                                                recordId, "已查看报警现场音频", PROCESSED_STATUS
+                                            )
+                                        }
                                     }
-                                }
                             XPopup.Builder(requireContext())
                                 .isViewMode(true)
                                 .dismissOnBackPressed(false)

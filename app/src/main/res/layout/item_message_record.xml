@@ -9,8 +9,8 @@
         android:id="@+id/layout_item"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_130"
-        app:shape_radius="@dimen/dp_20"
-        app:shape_solidColor="@color/device_offline">
+        app:shape_radius="@dimen/dp_10"
+        app:shape_solidColor="@color/white">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/device_sn_tv"
