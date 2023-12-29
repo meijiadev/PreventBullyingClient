@@ -3,6 +3,7 @@ package com.mj.preventbullying.client.ui.activity
 import android.graphics.Color
 import android.view.View
 import cn.jpush.android.ups.JPushUPSManager
+import com.azhon.appupdate.listener.OnDownloadListenerAdapter
 import com.azhon.appupdate.manager.DownloadManager
 import com.gyf.immersionbar.ktx.immersionBar
 import com.lxj.xpopup.XPopup
@@ -12,6 +13,7 @@ import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.MyApp
 import com.mj.preventbullying.client.R
 import com.mj.preventbullying.client.databinding.ActivitySettingBinding
+import com.mj.preventbullying.client.http.result.AppData
 import com.mj.preventbullying.client.http.result.UpdateAppResult
 import com.mj.preventbullying.client.tool.ActivityManager
 import com.mj.preventbullying.client.tool.NetworkUtil
@@ -53,14 +55,17 @@ class SettingActivity : BaseMvActivity<ActivitySettingBinding, SettingViewModel>
         } else {
             View.GONE
         }
-
-        viewModel.getAppVersion()
+        MyApp.globalEventViewModel.getAppVersion()
     }
 
     override fun initViewObservable() {
         binding.backIv.setOnClickListener {
             finish()
         }
+        binding.phoneNumberLy.setOnClickListener {
+            toast("暂不支持修改手机号码")
+        }
+
         binding.passwordLy.setOnClickListener {
             val passwordDialog = AmendPasswordDialog(this)
             XPopup.Builder(this).isViewMode(true).popupAnimation(PopupAnimation.TranslateFromBottom)
@@ -86,31 +91,7 @@ class SettingActivity : BaseMvActivity<ActivitySettingBinding, SettingViewModel>
         binding.updateAppLy.setOnClickListener {
             if (Constant.isNewAppVersion) {
                 appUpdateResult?.data?.let {
-                    val version = it.versionNo
-                    val versionNo = version.replace("v", "")
-                    Constant.newAppVersion = versionNo.replace(".", "").toInt()
-                    val curVersion = BuildConfig.VERSION_NAME.replace(".", "").toInt()
-                    if (curVersion < Constant.newAppVersion) {
-                        val apkSize = "${it.fileSize.toLong() / 1024 / 1024}MB"
-                        val manager = DownloadManager.Builder(this).run {
-                            apkUrl(it.fileUrl)
-                            apkName(it.fileName)
-                            apkVersionCode(2)
-                            smallIcon(R.mipmap.app_icon)
-                            showNewerToast(true)
-                            apkVersionName(version)
-                            apkSize(apkSize)
-                            apkDescription("修复bug\n优化用户体验")
-                            enableLog(true)
-                            jumpInstallPage(true)
-                            dialogButtonTextColor(Color.WHITE)
-                            showNotification(true)
-                            showBgdToast(false)
-                            forcedUpgrade(false)
-                            build()
-                        }
-                        manager.download()
-                    }
+                    showUpdateDialog(it)
                 }
             } else {
                 toast("暂无新版本")
@@ -119,11 +100,22 @@ class SettingActivity : BaseMvActivity<ActivitySettingBinding, SettingViewModel>
 
     }
 
+    private var updateAppDialog: UpdateAppDialog? = null
+
     /**
      * 显示dialog
      */
-    private fun showUpdateDialog(version: String) {
-        val updateAppDialog = UpdateAppDialog(this).setUpdateMsg(version)
+    private fun showUpdateDialog(app: AppData) {
+        updateAppDialog = UpdateAppDialog(this).setUpdateMsg(app).setUpdateAppListener {
+            val manager = DownloadManager.Builder(this).run {
+                apkUrl(app.fileUrl)
+                apkName(app.fileName)
+                smallIcon(R.mipmap.app_icon)
+                onDownloadListener(listenerAdapter)
+                build()
+            }
+            manager.download()
+        }
         XPopup.Builder(this)
             .isViewMode(true)
             .popupAnimation(PopupAnimation.TranslateFromBottom)
@@ -132,6 +124,16 @@ class SettingActivity : BaseMvActivity<ActivitySettingBinding, SettingViewModel>
             .asCustom(updateAppDialog)
             .show()
     }
+
+    private val listenerAdapter: OnDownloadListenerAdapter = object : OnDownloadListenerAdapter() {
+
+        override fun downloading(max: Int, progress: Int) {
+            val curr = (progress / max.toDouble() * 100.0).toInt()
+            Logger.i("当前下载进度：$curr")
+            updateAppDialog?.setProgress(curr)
+        }
+    }
+
 
     /**
      * 退出登录
@@ -158,6 +160,7 @@ class SettingActivity : BaseMvActivity<ActivitySettingBinding, SettingViewModel>
     override fun initListener() {
         MyApp.globalEventViewModel.updateAppEvent.observe(this) {
             appUpdateResult = it
+            Logger.i("获取更新信息：$it")
         }
     }
 }

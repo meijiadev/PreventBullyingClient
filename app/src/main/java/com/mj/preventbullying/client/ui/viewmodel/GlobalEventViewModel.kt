@@ -1,8 +1,12 @@
 package com.mj.preventbullying.client.ui.viewmodel
 
 import cn.jpush.android.api.NotificationMessage
+import com.blackview.base.http.requestNoCheck
 import com.kunminx.architecture.ui.callback.UnPeekLiveData
+import com.mj.preventbullying.client.MyApp
+import com.mj.preventbullying.client.http.apiService
 import com.mj.preventbullying.client.http.result.UpdateAppResult
+import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseViewModel
 
 /**
@@ -18,4 +22,13 @@ class GlobalEventViewModel : BaseViewModel() {
      * App更新事件
      */
     var updateAppEvent = UnPeekLiveData<UpdateAppResult>()
+
+    fun getAppVersion() {
+        requestNoCheck({
+            apiService.getNewApp()
+        }, {
+         //   Logger.i("获取的最新app版本信息：$it")
+            MyApp.globalEventViewModel.updateAppEvent.postValue(it)
+        })
+    }
 }

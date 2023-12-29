@@ -10,6 +10,7 @@ import com.google.gson.reflect.TypeToken
 import com.gyf.immersionbar.ktx.immersionBar
 import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.enums.PopupAnimation
+import com.mj.preventbullying.client.BuildConfig
 import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.Constant.USER_ID_KEY
 import com.mj.preventbullying.client.MyApp
@@ -66,6 +67,8 @@ class MainActivity : BaseMvActivity<ActivityMainBinding, MainViewModel>() {
             MyApp.socketEventViewModel.initSocket(userId, registerId)
             // viewModel.getAllDeviceRecords()
         }
+
+        MyApp.globalEventViewModel.getAppVersion()
 
 
     }
@@ -161,6 +164,11 @@ class MainActivity : BaseMvActivity<ActivityMainBinding, MainViewModel>() {
         }
         viewModel.addDevEvent.observe(this) {
             toast("设备添加成功！")
+        }
+
+        MyApp.globalEventViewModel.updateAppEvent.observe(this) {
+            Logger.i("收到更新信息:$it")
+            Constant.isNewAppVersion = it.data.versionCode > BuildConfig.VERSION_CODE
         }
 
 

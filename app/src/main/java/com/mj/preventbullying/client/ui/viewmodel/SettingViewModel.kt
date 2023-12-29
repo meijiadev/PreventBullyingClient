@@ -33,12 +33,4 @@ class SettingViewModel : BaseViewModel() {
         })
     }
 
-    fun getAppVersion() {
-        requestNoCheck({
-            apiService.getNewApp()
-        }, {
-            Logger.i("获取的最新app版本信息：$it")
-            MyApp.globalEventViewModel.updateAppEvent.postValue(it)
-        })
-    }
 }

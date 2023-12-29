@@ -138,7 +138,7 @@ interface ApiService {
      */
     @GET("anti-bullying/version/latest")
     suspend fun getNewApp(
-        @Query("type") type: String = "app",
-        @Query("model") model: String = "app"
+        @Query("type") type: String = "mobile",
+        @Query("model") model: String = "android"
     ): UpdateAppResult
 }
