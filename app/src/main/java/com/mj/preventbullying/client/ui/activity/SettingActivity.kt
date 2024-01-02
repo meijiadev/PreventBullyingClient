@@ -15,6 +15,7 @@ import com.mj.preventbullying.client.R
 import com.mj.preventbullying.client.databinding.ActivitySettingBinding
 import com.mj.preventbullying.client.http.result.AppData
 import com.mj.preventbullying.client.http.result.UpdateAppResult
+import com.mj.preventbullying.client.http.service.ApiService
 import com.mj.preventbullying.client.tool.ActivityManager
 import com.mj.preventbullying.client.tool.NetworkUtil
 import com.mj.preventbullying.client.tool.SpManager
@@ -56,6 +57,7 @@ class SettingActivity : BaseMvActivity<ActivitySettingBinding, SettingViewModel>
             View.GONE
         }
         MyApp.globalEventViewModel.getAppVersion()
+        binding.serviceTv.text = ApiService.BASE_HTTP_URL
     }
 
     override fun initViewObservable() {

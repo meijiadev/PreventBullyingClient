@@ -22,6 +22,7 @@ import com.mj.preventbullying.client.ui.adapter.PROCESSED_IGNORE
 import com.mj.preventbullying.client.ui.adapter.PROCESSED_STATUS
 import com.mj.preventbullying.client.ui.adapter.PROCESSING_STATUS
 import com.mj.preventbullying.client.ui.dialog.AudioPlayDialog
+import com.mj.preventbullying.client.ui.dialog.InputMsgDialog
 import com.mj.preventbullying.client.ui.dialog.MessageProcessDialog
 import com.mj.preventbullying.client.ui.viewmodel.MessageViewModel
 import com.mj.preventbullying.client.webrtc.getUUID
@@ -73,6 +74,7 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
     }
 
     override fun initViewObservable() {
+        // 对讲
         messageAdapter?.addOnItemChildClickListener(R.id.call_tv) { adapter, view, position ->
             processPosition = position
             val snCode = messageList?.get(position)?.snCode
@@ -98,18 +100,33 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
 
         }
 
+        // 播放
         messageAdapter?.addOnItemChildClickListener(R.id.play_tv) { adapter, view, position ->
             processPosition = position
-            val snCode = messageList?.get(position)?.snCode
+            //val snCode = messageList?.get(position)?.snCode
             currentRecordId = messageList?.get(position)?.recordId
             val fileId = messageList?.get(position)?.fileId
             fileId?.let {
                 viewModel.getAudioPreUrl(fileId)
             }
         }
-
+        // 处理按钮
         messageAdapter?.addOnItemChildClickListener(R.id.process_bt) { adapter, view, position ->
-
+            processPosition = position
+            currentRecordId = messageList?.get(position)?.recordId
+            val inputMsgDialog = InputMsgDialog(requireContext()).setConfirmListener { model, msg ->
+                currentRecordId?.let { recordId ->
+                    viewModel.recordProcess(
+                        recordId, msg, model
+                    )
+                    Logger.i("处理活动：$msg")
+                }
+            }
+            XPopup.Builder(requireContext())
+                .isViewMode(true)
+                .popupAnimation(PopupAnimation.TranslateFromBottom)
+                .asCustom(inputMsgDialog)
+                .show()
         }
 
 
@@ -231,11 +248,11 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
                             val audioPlayDialog =
                                 AudioPlayDialog(requireContext()).setPlayUrl(data.url)
                                     .setAudioPLayerEndListener {
-                                        currentRecordId?.let { recordId ->
-                                            viewModel.recordProcess(
-                                                recordId, "已查看报警现场音频", PROCESSED_STATUS
-                                            )
-                                        }
+//                                        currentRecordId?.let { recordId ->
+//                                            viewModel.recordProcess(
+//                                                recordId, "已查看报警现场音频", PROCESSED_STATUS
+//                                            )
+//                                        }
                                     }
                             XPopup.Builder(requireContext())
                                 .isViewMode(true)
