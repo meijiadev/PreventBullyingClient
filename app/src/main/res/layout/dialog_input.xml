@@ -22,7 +22,7 @@
 
         <com.hjq.shape.view.ShapeEditText
             android:id="@+id/remark_tv"
-            android:layout_width="@dimen/dp_180"
+            android:layout_width="@dimen/dp_250"
             android:layout_height="@dimen/dp_90"
             android:layout_margin="@dimen/dp_8"
             android:gravity="left"

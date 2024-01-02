@@ -10,7 +10,7 @@
         android:id="@+id/layout_item"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_110"
-        app:shape_radius="@dimen/dp_20"
+        app:shape_radius="@dimen/dp_10"
         app:shape_solidColor="@color/device_online">
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -21,7 +21,7 @@
             android:layout_marginTop="@dimen/dp_10"
             android:text="名称:2A82312000031330"
             android:textColor="@color/black"
-            android:textSize="@dimen/sp_15"
+            android:textSize="@dimen/sp_13"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_percent="0.55"
@@ -35,7 +35,7 @@
             android:layout_marginTop="@dimen/dp_10"
             android:text="型号：SJB5000"
             android:textColor="@color/black"
-            android:textSize="@dimen/sp_15"
+            android:textSize="@dimen/sp_13"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/device_name_tv"
             app:layout_constraintWidth_percent="0.45"
@@ -50,6 +50,7 @@
             android:text="状态：在线"
             android:textColor="@color/black"
             android:textSize="@dimen/sp_15"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_percent="0.4"
@@ -65,7 +66,7 @@
             android:layout_marginEnd="@dimen/dp_10"
             android:text="位置：二楼洗手间"
             android:textColor="@color/black"
-            android:textSize="@dimen/sp_15"
+            android:textSize="@dimen/sp_13"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintWidth_percent="0.4"
             app:layout_constraintTop_toBottomOf="@id/device_status_tv" />
@@ -77,7 +78,7 @@
             android:layout_marginStart="@dimen/dp_10"
             android:text="SN：2A82312000031330"
             android:textColor="@color/black"
-            android:textSize="@dimen/sp_15"
+            android:textSize="@dimen/sp_13"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/device_type_tv"
             app:layout_constraintWidth_percent="0.65"

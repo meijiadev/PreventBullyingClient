@@ -88,7 +88,7 @@
     <color name="common_text_hint_color">@color/panda</color>
 
     <color name="device_offline">#CECFD4</color>
-    <color name="device_online">#FFFFD700</color>
+    <color name="device_online">#FFFFFFFF</color>
     <!-- 按钮按压时的颜色 -->
     <color name="common_button_pressed_color">#FFFFA500</color>
     <!-- 按钮禁用时的颜色 -->

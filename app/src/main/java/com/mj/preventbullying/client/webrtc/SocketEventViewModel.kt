@@ -78,10 +78,8 @@ class SocketEventViewModel : ViewModel(), HandlerAction {
                 "${ApiService.BASE_SOCKET_IO_URL}token=$token&clientType=anti_bullying_device&clientId=$sn"
             val uri = URI.create(url)
             val websocket = arrayOf("websocket")
-            val options = IO.Options.builder()
-                .setReconnectionDelay(3000)
-                .setTransports(websocket)
-                .build()
+            val options =
+                IO.Options.builder().setReconnectionDelay(3000).setTransports(websocket).build()
             kotlin.runCatching {
                 mSocket = IO.socket(
                     uri, options
