@@ -2,7 +2,7 @@ package com.mj.preventbullying.client.webrtc
 
 import android.content.Context
 import android.media.AudioManager
-import com.mj.preventbullying.client.MyApp
+import com.mj.preventbullying.client.app.MyApp
 import com.orhanobut.logger.Logger
 import org.webrtc.*
 import org.webrtc.audio.JavaAudioDeviceModule

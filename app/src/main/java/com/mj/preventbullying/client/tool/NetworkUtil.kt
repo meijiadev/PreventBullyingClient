@@ -7,7 +7,7 @@ import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.provider.Settings
 import android.telephony.TelephonyManager
-import com.mj.preventbullying.client.MyApp
+import com.mj.preventbullying.client.app.MyApp
 import com.orhanobut.logger.Logger
 import java.net.InetAddress
 import java.net.NetworkInterface

@@ -10,7 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import com.hjq.toast.ToastUtils
 import com.lxj.xpopup.core.CenterPopupView
 import com.mj.preventbullying.client.Constant
-import com.mj.preventbullying.client.MyApp
+import com.mj.preventbullying.client.app.MyApp
 import com.mj.preventbullying.client.R
 import com.mj.preventbullying.client.tool.SpManager
 import com.mj.preventbullying.client.webrtc.CALLED_STATUS

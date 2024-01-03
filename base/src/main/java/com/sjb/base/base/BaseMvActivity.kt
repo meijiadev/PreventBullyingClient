@@ -41,7 +41,7 @@ abstract class BaseMvActivity<V : ViewBinding, VM : BaseViewModel> : AppCompatAc
     }
 
 
-    private fun onViewCreated() {
+    protected open fun onViewCreated() {
         initStatus()
         initParam()
         initView()

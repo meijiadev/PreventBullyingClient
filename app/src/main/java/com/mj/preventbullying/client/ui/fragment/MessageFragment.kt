@@ -6,11 +6,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import cn.jpush.android.api.JPushInterface
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.enums.PopupAnimation
 import com.mj.preventbullying.client.Constant
-import com.mj.preventbullying.client.MyApp
+import com.mj.preventbullying.client.app.MyApp
 import com.mj.preventbullying.client.R
 import com.mj.preventbullying.client.tool.SpManager
 import com.mj.preventbullying.client.databinding.FragmentMessageBinding
@@ -41,6 +42,8 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
     private var processPosition: Int? = null
     private var currentRecordId: String? = null
     private var curShowType = PENDING_STATUS
+    private var isHideFragment: Boolean = false
+    private var isNotify = false
 
 
     companion object {
@@ -65,7 +68,7 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
 
     override fun initData() {
         messageAdapter = MessageAdapter()
-        messageAdapter?.setItemAnimation(BaseQuickAdapter.AnimationType.SlideInLeft)
+        messageAdapter?.setItemAnimation(BaseQuickAdapter.AnimationType.ScaleIn)
         //deviceListAdapter?.addAll(deviceList)
         val layoutManager = LinearLayoutManager(context)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
@@ -238,6 +241,11 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
             binding.smartRefreshLayout.finishRefresh(1000)
             messageList = it?.data?.records
             filtrationMsgTp(curShowType)
+            if (!isHideFragment) {
+                // 可见状态
+                JPushInterface.clearAllNotifications(context)
+                isNotify = false
+            }
         }
 
         viewModel.getPreVieUrlEvent.observe(this) {
@@ -273,6 +281,19 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
         MyApp.globalEventViewModel.notifyMsgEvent.observe(this) {
             viewModel.getAllDeviceRecords()
             toast("收到报警推送")
+            Logger.i("收到报警通知")
+            isNotify = true
+
+        }
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        Logger.i("是否隐藏：$hidden")
+        isHideFragment = hidden
+        if (!isHideFragment) {
+            isNotify = false
+            JPushInterface.clearAllNotifications(context)
         }
     }
 

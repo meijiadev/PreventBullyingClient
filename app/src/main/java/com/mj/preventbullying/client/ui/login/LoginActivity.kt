@@ -21,6 +21,7 @@ import com.mj.preventbullying.client.R
 import com.mj.preventbullying.client.tool.SpManager
 import com.mj.preventbullying.client.databinding.ActivityLoginBinding
 import com.mj.preventbullying.client.http.service.ApiService
+import com.mj.preventbullying.client.tool.requestPermission
 import com.mj.preventbullying.client.ui.activity.MainActivity
 import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseMvActivity
@@ -66,24 +67,7 @@ class LoginActivity : BaseMvActivity<ActivityLoginBinding, LoginViewModel>() {
     }
 
     override fun initData() {
-        XXPermissions.with(this)
-            // .permission(Permission.MANAGE_EXTERNAL_STORAGE)
-            .permission(Permission.RECORD_AUDIO)
-            .request(object : OnPermissionCallback {
-                override fun onGranted(permissions: MutableList<String>?, all: Boolean) {
-                    Logger.i("录音权限获取成功")
-                    if (all) {
-
-                    }
-
-                }
-
-                override fun onDenied(permissions: MutableList<String>?, never: Boolean) {
-                    super.onDenied(permissions, never)
-                    Logger.i("权限获取失败")
-                }
-            })
-
+        requestPermission()
 
     }
 

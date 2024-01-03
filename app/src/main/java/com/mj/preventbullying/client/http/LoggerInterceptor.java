@@ -12,7 +12,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hjq.toast.ToastUtils;
 import com.mj.preventbullying.client.Constant;
-import com.mj.preventbullying.client.MyApp;
+import com.mj.preventbullying.client.app.MyApp;
 import com.mj.preventbullying.client.tool.SpManager;
 import com.mj.preventbullying.client.ui.login.LoginActivity;
 import com.orhanobut.logger.Logger;

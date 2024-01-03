@@ -1,8 +1,10 @@
 package com.mj.preventbullying.client.ui.activity
 
 import android.annotation.SuppressLint
+import android.app.Notification
 import android.view.View
 import androidx.fragment.app.Fragment
+import cn.jpush.android.api.BasicPushNotificationBuilder
 import cn.jpush.android.api.JPushInterface
 import cn.jpush.android.ups.JPushUPSManager
 import com.google.gson.Gson
@@ -13,14 +15,16 @@ import com.lxj.xpopup.enums.PopupAnimation
 import com.mj.preventbullying.client.BuildConfig
 import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.Constant.USER_ID_KEY
-import com.mj.preventbullying.client.MyApp
+import com.mj.preventbullying.client.app.MyApp
 import com.mj.preventbullying.client.R
+import com.mj.preventbullying.client.app.AppMvActivity
 import com.mj.preventbullying.client.tool.SpManager
 import com.mj.preventbullying.client.databinding.ActivityMainBinding
 import com.mj.preventbullying.client.foldtree.TreeModel
 import com.mj.preventbullying.client.http.result.DevType
 import com.mj.preventbullying.client.jpush.receive.JPushExtraMessage
 import com.mj.preventbullying.client.tool.NetworkUtil
+import com.mj.preventbullying.client.tool.requestPermission
 import com.mj.preventbullying.client.ui.dialog.DevInfoDialog
 import com.mj.preventbullying.client.ui.dialog.MessageTipsDialog
 import com.mj.preventbullying.client.ui.fragment.DeviceFragment
@@ -39,7 +43,7 @@ import com.sjb.base.base.BaseMvActivity
  * Create by MJ on 2023/12/9.
  * Describe : 主页
  */
-class MainActivity : BaseMvActivity<ActivityMainBinding, MainViewModel>() {
+class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
     private val messageFragment by lazy { MessageFragment.newInstance() }
     private val deviceFragment by lazy { DeviceFragment.newInstance() }
 
@@ -58,6 +62,20 @@ class MainActivity : BaseMvActivity<ActivityMainBinding, MainViewModel>() {
             //深色字体
             statusBarDarkFont(true)
         }
+        requestPermission()
+        // 设置通知的样式
+        val builder = BasicPushNotificationBuilder(this)
+        builder.statusBarDrawable = R.drawable.app_icon
+        builder.notificationFlags = (Notification.FLAG_AUTO_CANCEL
+                or Notification.FLAG_SHOW_LIGHTS) //设置为自动消失和呼吸灯闪烁
+
+        builder.notificationDefaults = (Notification.DEFAULT_SOUND
+                or Notification.DEFAULT_VIBRATE
+                or Notification.DEFAULT_LIGHTS) // 设置为铃声、震动、呼吸灯闪烁都要
+
+        JPushInterface.setPushNotificationBuilder(1, builder)
+        JPushInterface.setDebugMode(true)
+        JPushInterface.init(this)
     }
 
     override fun initData() {
@@ -69,7 +87,6 @@ class MainActivity : BaseMvActivity<ActivityMainBinding, MainViewModel>() {
         }
 
         MyApp.globalEventViewModel.getAppVersion()
-
 
     }
 

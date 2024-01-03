@@ -1,6 +1,5 @@
 package com.mj.preventbullying.client.ui.activity
 
-import android.graphics.Color
 import android.view.View
 import cn.jpush.android.ups.JPushUPSManager
 import com.azhon.appupdate.listener.OnDownloadListenerAdapter
@@ -8,10 +7,10 @@ import com.azhon.appupdate.manager.DownloadManager
 import com.gyf.immersionbar.ktx.immersionBar
 import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.enums.PopupAnimation
-import com.mj.preventbullying.client.BuildConfig
 import com.mj.preventbullying.client.Constant
-import com.mj.preventbullying.client.MyApp
+import com.mj.preventbullying.client.app.MyApp
 import com.mj.preventbullying.client.R
+import com.mj.preventbullying.client.app.AppMvActivity
 import com.mj.preventbullying.client.databinding.ActivitySettingBinding
 import com.mj.preventbullying.client.http.result.AppData
 import com.mj.preventbullying.client.http.result.UpdateAppResult
@@ -25,7 +24,6 @@ import com.mj.preventbullying.client.ui.login.LoginActivity
 import com.mj.preventbullying.client.ui.viewmodel.SettingViewModel
 import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseMvActivity
-import com.sjb.base.base.BaseViewModel
 import com.sjb.base.view.SwitchButton
 
 /**
@@ -33,7 +31,7 @@ import com.sjb.base.view.SwitchButton
  * Describe :设置界面
  */
 
-class SettingActivity : BaseMvActivity<ActivitySettingBinding, SettingViewModel>() {
+class SettingActivity : AppMvActivity<ActivitySettingBinding, SettingViewModel>() {
     private var appUpdateResult: UpdateAppResult? = null
     override fun getViewBinding(): ActivitySettingBinding {
         return ActivitySettingBinding.inflate(layoutInflater)
@@ -44,7 +42,6 @@ class SettingActivity : BaseMvActivity<ActivitySettingBinding, SettingViewModel>
             //深色字体
             statusBarDarkFont(true)
         }
-
     }
 
     override fun initData() {
@@ -61,11 +58,14 @@ class SettingActivity : BaseMvActivity<ActivitySettingBinding, SettingViewModel>
     }
 
     override fun initViewObservable() {
-        binding.backIv.setOnClickListener {
+        binding.titleLayout.backIv.setOnClickListener {
             finish()
         }
         binding.phoneNumberLy.setOnClickListener {
             toast("暂不支持修改手机号码")
+        }
+        binding.msgToneLy.setOnClickListener {
+            startActivity(AlarmAudioActivity::class.java)
         }
 
         binding.passwordLy.setOnClickListener {

@@ -1,4 +1,4 @@
-package com.mj.preventbullying.client
+package com.mj.preventbullying.client.app
 
 import android.annotation.SuppressLint
 import android.app.Application
@@ -12,6 +12,7 @@ import cn.jpush.android.ups.JPushUPSManager
 import com.hjq.toast.ToastLogInterceptor
 import com.hjq.toast.ToastUtils
 import com.hjq.toast.style.WhiteToastStyle
+import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.tool.ActivityManager
 import com.mj.preventbullying.client.tool.SpManager
 import com.mj.preventbullying.client.ui.viewmodel.GlobalEventViewModel
@@ -83,13 +84,6 @@ class MyApp : Application(), ViewModelStoreOwner {
         Logger.e("初始化极光推送")
         JPushInterface.setDebugMode(true)
         JPushInterface.init(this)
-//        JPushInterface.setTags(this, mutableSetOf("HUAWEI"), object : TagAliasCallback {
-//            override fun gotResult(p0: Int, p1: String?, p2: MutableSet<String>?) {
-//
-//            }
-//
-//        })
-
         JPushUPSManager.registerToken(
             this, "1f56ed865ec03bb22a91c9ed", null, ""
         ) {

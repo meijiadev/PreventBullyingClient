@@ -8,7 +8,7 @@ import cn.jpush.android.api.JPushInterface
 import cn.jpush.android.api.NotificationMessage
 
 import cn.jpush.android.service.JPushMessageService
-import com.mj.preventbullying.client.MyApp
+import com.mj.preventbullying.client.app.MyApp
 import com.mj.preventbullying.client.tool.ActivityManager
 import com.mj.preventbullying.client.ui.activity.MainActivity
 import com.orhanobut.logger.Logger
@@ -45,9 +45,10 @@ class JPushReceive : JPushMessageService() {
                 p0?.startActivity(intent)
             } else {
                 Logger.i("当前activity正在前台")
-                MyApp.globalEventViewModel.notifyMsgEvent.postValue(p1)
+               // MyApp.globalEventViewModel.notifyMsgEvent.postValue(p1)
 
             }
+            MyApp.globalEventViewModel.notifyMsgEvent.postValue(p1)
         }.onFailure {
             Logger.e("错误：${it.message}")
         }
@@ -63,10 +64,13 @@ class JPushReceive : JPushMessageService() {
 
     override fun onNotifyMessageArrived(p0: Context?, p1: NotificationMessage?) {
         Logger.i("收到通知---onNotifyMessageArrived:$p1")
+        MyApp.globalEventViewModel.notifyMsgEvent.postValue(p1)
     }
 
     override fun onNotifyMessageDismiss(p0: Context?, p1: NotificationMessage?) {
         Logger.i("onNotifyMessageDismiss:$p1")
 
     }
+
+
 }

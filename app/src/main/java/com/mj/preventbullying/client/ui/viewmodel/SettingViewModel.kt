@@ -3,7 +3,6 @@ package com.mj.preventbullying.client.ui.viewmodel
 import android.util.ArrayMap
 import com.blackview.base.http.requestNoCheck
 import com.mj.preventbullying.client.Constant
-import com.mj.preventbullying.client.MyApp
 import com.mj.preventbullying.client.http.apiService
 import com.mj.preventbullying.client.tool.SpManager
 import com.orhanobut.logger.Logger

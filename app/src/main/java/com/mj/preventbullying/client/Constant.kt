@@ -18,7 +18,8 @@ object Constant {
     const val AUTO_LOGIN_KEY = "auto_login_key"    // 是否是自动登录 默认true
 
     var isNewAppVersion = false           // 是否有新版本app
-    var newAppVersion: Int = 10            // 1.0
+    const val ALARM_PLAY_NAME_KEY = "alarm_audio_name_key"
+    var alarmAudioName = "alarm_1.mp3"      // 默认的警报声音
 }
 
 

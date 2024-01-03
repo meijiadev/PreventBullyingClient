@@ -3,10 +3,9 @@ package com.mj.preventbullying.client.ui.viewmodel
 import cn.jpush.android.api.NotificationMessage
 import com.blackview.base.http.requestNoCheck
 import com.kunminx.architecture.ui.callback.UnPeekLiveData
-import com.mj.preventbullying.client.MyApp
+import com.mj.preventbullying.client.app.MyApp
 import com.mj.preventbullying.client.http.apiService
 import com.mj.preventbullying.client.http.result.UpdateAppResult
-import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseViewModel
 
 /**

@@ -1,9 +1,8 @@
 package com.mj.preventbullying.client.tool
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.media.MediaPlayer
-import com.mj.preventbullying.client.MyApp
+import com.mj.preventbullying.client.app.MyApp
 import com.orhanobut.logger.Logger
 import java.io.IOException
 
@@ -45,6 +44,22 @@ class AudioPlayer private constructor(context: Context) : MediaPlayer.OnPrepared
         }
     }
 
+    /**
+     * assets文件夹下的MP3
+     */
+    fun playAssets(name: String) {
+        kotlin.runCatching {
+            Logger.i("播放的assets文件：$name")
+            val afd = context.resources.assets.openFd(name)
+            //   mediaPlayer.release()
+            mediaPlayer.reset()
+            mediaPlayer.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
+            mediaPlayer.prepareAsync()
+        } .onFailure {
+            Logger.e("error:$it")
+        }
+    }
+
     fun stop() {
         // if (mediaPlayer.isPlaying) {
         mediaPlayer.stop()
@@ -52,17 +67,21 @@ class AudioPlayer private constructor(context: Context) : MediaPlayer.OnPrepared
     }
 
     fun pause() {
-        if (mediaPlayer.isPlaying) {
-            mediaPlayer.pause()
-            for (listener in listeners) {
-                listener.onAudioPause()
+        kotlin.runCatching {
+            if (mediaPlayer.isPlaying) {
+                mediaPlayer.pause()
+                for (listener in listeners) {
+                    listener.onAudioPause()
+                }
             }
+        }.onFailure {
+            Logger.i("error:$it")
         }
     }
 
 
     fun start() {
-        if (!mediaPlayer.isPlaying){
+        if (!mediaPlayer.isPlaying) {
             mediaPlayer.start()
             for (listener in listeners) {
                 listener.onAudioRestart()
@@ -88,7 +107,13 @@ class AudioPlayer private constructor(context: Context) : MediaPlayer.OnPrepared
     }
 
     fun isPlaying(): Boolean {
-        return mediaPlayer.isPlaying
+        kotlin.runCatching {
+            return mediaPlayer.isPlaying
+        }.onFailure {
+            Logger.i("error:$it")
+            return false
+        }
+        return false
     }
 
     override fun onPrepared(mp: MediaPlayer) {
@@ -102,6 +127,9 @@ class AudioPlayer private constructor(context: Context) : MediaPlayer.OnPrepared
     override fun onCompletion(mp: MediaPlayer?) {
         for (listener in listeners) {
             listener.onAudioPlayerStop()
+        }
+        if (listeners.size == 0) {
+            stop()
         }
     }
 

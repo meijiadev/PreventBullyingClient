@@ -8,8 +8,9 @@ import com.kunminx.architecture.ui.callback.UnPeekLiveData
  * Describe :
  */
 
-open class BaseViewModel :ViewModel(){
+open class BaseViewModel : ViewModel() {
     val uiChangeLiveData = UIChangeLiveData()
+
     companion object {
         class UIChangeLiveData : UnPeekLiveData<Void>() {
             val showDialogEvent = UnPeekLiveData<String>()
@@ -17,6 +18,7 @@ open class BaseViewModel :ViewModel(){
             val finishEvent = UnPeekLiveData<Void>()
             val uiMessageEvent = UnPeekLiveData<UIMessage>()
             val toastEvent = UnPeekLiveData<String>()
+            val alarmEvent = UnPeekLiveData<Boolean>()
         }
     }
 }

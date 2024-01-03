@@ -6,7 +6,7 @@ import com.google.gson.Gson
 import com.hjq.toast.ToastUtils
 import com.kunminx.architecture.ui.callback.UnPeekLiveData
 import com.mj.preventbullying.client.Constant
-import com.mj.preventbullying.client.MyApp
+import com.mj.preventbullying.client.app.MyApp
 import com.mj.preventbullying.client.tool.SpManager
 import com.mj.preventbullying.client.http.service.ApiService
 import com.orhanobut.logger.Logger

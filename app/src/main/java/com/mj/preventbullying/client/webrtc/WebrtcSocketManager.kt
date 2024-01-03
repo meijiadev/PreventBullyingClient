@@ -1,11 +1,10 @@
 package com.mj.preventbullying.client.webrtc
 
 import android.annotation.SuppressLint
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.kunminx.architecture.ui.callback.UnPeekLiveData
-import com.mj.preventbullying.client.MyApp
+import com.mj.preventbullying.client.app.MyApp
 import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseViewModel
 import io.socket.client.Ack

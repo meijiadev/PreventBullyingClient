@@ -6,7 +6,7 @@ import com.franmontiel.persistentcookiejar.cache.SetCookieCache
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor
 import com.google.gson.GsonBuilder
 import com.mj.preventbullying.client.Constant
-import com.mj.preventbullying.client.MyApp
+import com.mj.preventbullying.client.app.MyApp
 import com.mj.preventbullying.client.tool.SpManager
 import com.mj.preventbullying.client.http.service.ApiService
 import okhttp3.Cache

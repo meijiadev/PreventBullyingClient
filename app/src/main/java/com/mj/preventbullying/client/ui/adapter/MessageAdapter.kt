@@ -3,14 +3,9 @@ package com.mj.preventbullying.client.ui.adapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter4.BaseQuickAdapter
-import com.mj.preventbullying.client.MyApp
-import com.mj.preventbullying.client.R
-import com.mj.preventbullying.client.databinding.ItemDeviceListBinding
-import com.mj.preventbullying.client.databinding.ItemMessageRecordBinding
 import com.mj.preventbullying.client.databinding.ItemMessageRecordNewBinding
 import com.mj.preventbullying.client.http.result.Record
 

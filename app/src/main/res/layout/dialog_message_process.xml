@@ -26,7 +26,7 @@
             android:layout_height="@dimen/dp_40"
             android:layout_alignEnd="@id/loading_tv"
             android:src="@mipmap/exit_gray"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <LinearLayout
             android:id="@+id/call_ll"
