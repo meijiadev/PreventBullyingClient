@@ -24,6 +24,7 @@ import com.mj.preventbullying.client.foldtree.TreeModel
 import com.mj.preventbullying.client.http.result.DevType
 import com.mj.preventbullying.client.jpush.receive.JPushExtraMessage
 import com.mj.preventbullying.client.tool.NetworkUtil
+import com.mj.preventbullying.client.tool.requestLocationPermission
 import com.mj.preventbullying.client.tool.requestPermission
 import com.mj.preventbullying.client.ui.dialog.DevInfoDialog
 import com.mj.preventbullying.client.ui.dialog.MessageTipsDialog
@@ -87,6 +88,7 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
         }
 
         MyApp.globalEventViewModel.getAppVersion()
+        requestLocationPermission()
 
     }
 
@@ -185,7 +187,10 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
 
         MyApp.globalEventViewModel.updateAppEvent.observe(this) {
             Logger.i("收到更新信息:$it")
-            Constant.isNewAppVersion = it.data.versionCode > BuildConfig.VERSION_CODE
+            val versionCode = it?.data?.versionCode
+            if (versionCode != null) {
+                Constant.isNewAppVersion = it.data.versionCode > BuildConfig.VERSION_CODE
+            }
         }
 
 
@@ -201,14 +206,14 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
 
             override fun onConfirm(
                 sn: String,
-                name: String,
+                //name: String,
                 orgId: Long,
                 orgName: String,
                 location: String,
                 modelCode: String,
                 desc: String?
             ) {
-                viewModel.addDev(sn, name, orgId, modelCode, location, desc)
+                viewModel.addDev(sn, orgId, modelCode, location, desc)
             }
 
 
@@ -293,7 +298,7 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
             val transaction = supportFragmentManager.beginTransaction()
             if (target is MessageFragment) {
                 binding.messageIv.setImageResource(R.mipmap.message_icon_select)
-                binding.deviceManagerIv.setImageResource(R.mipmap.device_icon)
+                binding.deviceManagerIv.setImageResource(R.mipmap.dev_manager)
                 transaction.setCustomAnimations(
                     R.anim.action_left_enter,
                     R.anim.action_left_exit

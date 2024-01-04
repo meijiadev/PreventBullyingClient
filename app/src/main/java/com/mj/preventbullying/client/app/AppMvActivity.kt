@@ -1,7 +1,9 @@
 package com.mj.preventbullying.client.app
 
 import androidx.viewbinding.ViewBinding
+import com.jeremyliao.liveeventbus.LiveEventBus
 import com.mj.preventbullying.client.Constant
+import com.mj.preventbullying.client.jpush.NotifyMsgEvent
 import com.mj.preventbullying.client.tool.AudioPlayer
 import com.mj.preventbullying.client.tool.SpManager
 import com.sjb.base.base.BaseMvActivity
@@ -16,7 +18,7 @@ abstract class AppMvActivity<V : ViewBinding, VM : BaseViewModel> : BaseMvActivi
 
     override fun onViewCreated() {
         super.onViewCreated()
-        MyApp.globalEventViewModel.notifyMsgEvent.observe(this) {
+        LiveEventBus.get<NotifyMsgEvent>(Constant.NOTIFY_MSG_EVENT_KEY).observe(this){
             val alarm = SpManager.getString(Constant.ALARM_PLAY_NAME_KEY)
             Constant.alarmAudioName = if (alarm.isNullOrEmpty()) Constant.alarmAudioName else alarm
             if (AudioPlayer.instance.isPlaying()) {

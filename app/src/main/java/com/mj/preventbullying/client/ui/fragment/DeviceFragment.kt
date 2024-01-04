@@ -3,6 +3,7 @@ package com.mj.preventbullying.client.ui.fragment
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -59,8 +60,7 @@ class DeviceFragment : BaseMvFragment<FragmentDeviceBinding, DeviceViewModel>() 
     override fun initData() {
         deviceListAdapter = DeviceListAdapter()
         //deviceListAdapter?.addAll(deviceList)
-        val layoutManager = LinearLayoutManager(context)
-        layoutManager.orientation = LinearLayoutManager.VERTICAL
+        val layoutManager = GridLayoutManager(requireContext(), 2)
         binding.deviceList.layoutManager = layoutManager
         binding.deviceList.adapter = deviceListAdapter
     }
@@ -95,6 +95,11 @@ class DeviceFragment : BaseMvFragment<FragmentDeviceBinding, DeviceViewModel>() 
             showDialogInfo(devMsg)
         }
 
+//        deviceListAdapter?.setOnItemLongClickListener { adapter, view, position ->
+//
+//            true
+//        }
+
     }
 
     private fun getDevInfoList() {
@@ -114,7 +119,7 @@ class DeviceFragment : BaseMvFragment<FragmentDeviceBinding, DeviceViewModel>() 
 
                 override fun onConfirm(
                     sn: String,
-                    name: String,
+                    //name: String,
                     orgId: Long,
                     orgName: String,
                     location: String,
@@ -122,7 +127,7 @@ class DeviceFragment : BaseMvFragment<FragmentDeviceBinding, DeviceViewModel>() 
                     desc: String?
                 ) {
                     dev?.let {
-                        viewModel.amendDev(dev.deviceId, sn, name, orgId, modelCode, location, desc)
+                        viewModel.amendDev(dev.deviceId, sn, orgId, modelCode, location, desc)
                     }
                 }
 

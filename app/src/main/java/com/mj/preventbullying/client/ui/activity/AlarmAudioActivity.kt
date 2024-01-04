@@ -3,6 +3,7 @@ package com.mj.preventbullying.client.ui.activity
 import android.annotation.SuppressLint
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.gyf.immersionbar.ktx.immersionBar
 import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.R
 import com.mj.preventbullying.client.app.AppMvActivity
@@ -31,7 +32,10 @@ class AlarmAudioActivity : AppMvActivity<ActivityAlarmAudioBinding, BaseViewMode
     }
 
     override fun initParam() {
-
+        immersionBar {
+            //深色字体
+            statusBarDarkFont(true)
+        }
     }
 
     override fun initData() {

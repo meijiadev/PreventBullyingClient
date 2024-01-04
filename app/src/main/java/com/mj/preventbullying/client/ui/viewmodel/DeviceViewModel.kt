@@ -46,7 +46,7 @@ class DeviceViewModel : BaseViewModel() {
     fun amendDev(
         deviceId: String,
         sn: String,
-        name: String,
+      //  name: String,
         orgID: Long,
         devType: String,
         location: String,
@@ -55,7 +55,7 @@ class DeviceViewModel : BaseViewModel() {
         val params = ArrayMap<Any, Any>()
         params["deviceId"] = deviceId
         params["snCode"] = sn
-        params["name"] = name
+        params["name"] = "校园防欺凌设备"
         params["orgId"] = orgID
         params["location"] = location
         params["modelCode"] = devType

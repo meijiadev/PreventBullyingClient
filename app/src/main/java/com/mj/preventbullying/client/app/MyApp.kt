@@ -66,7 +66,6 @@ class MyApp : Application(), ViewModelStoreOwner {
         webrtcSocketManager = getApplicationViewModel(WebrtcSocketManager::class.java)
         globalEventViewModel = getApplicationViewModel(GlobalEventViewModel::class.java)
         initJGPush()
-
     }
 
     /**

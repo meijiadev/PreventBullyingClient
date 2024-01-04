@@ -256,11 +256,7 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
                             val audioPlayDialog =
                                 AudioPlayDialog(requireContext()).setPlayUrl(data.url)
                                     .setAudioPLayerEndListener {
-//                                        currentRecordId?.let { recordId ->
-//                                            viewModel.recordProcess(
-//                                                recordId, "已查看报警现场音频", PROCESSED_STATUS
-//                                            )
-//                                        }
+
                                     }
                             XPopup.Builder(requireContext())
                                 .isViewMode(true)
@@ -283,7 +279,6 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
             toast("收到报警推送")
             Logger.i("收到报警通知")
             isNotify = true
-
         }
     }
 

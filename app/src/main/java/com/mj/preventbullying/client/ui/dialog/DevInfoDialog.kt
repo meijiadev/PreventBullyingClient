@@ -37,7 +37,7 @@ class DevInfoDialog(context: Context) : CenterPopupView(context) {
     private val addDevLayout: ShapeRelativeLayout by lazy { findViewById(R.id.add_dev_layout) }
     private val titleTv: AppCompatTextView by lazy { findViewById(R.id.title_tv) }
     private val snLl: ShapeLinearLayout by lazy { findViewById(R.id.sn_ll) }
-    private val nameEt: ShapeEditText by lazy { findViewById(R.id.name_et) }
+//    private val nameEt: ShapeEditText by lazy { findViewById(R.id.name_et) }
     private val snEt: EditText by lazy { findViewById(R.id.sn_et) }
     private val devTypeTv: ShapeTextView by lazy { findViewById(R.id.dev_type_tv) }
     private val orgListTv: ShapeTextView by lazy { findViewById(R.id.org_list_tv) }
@@ -86,7 +86,7 @@ class DevInfoDialog(context: Context) : CenterPopupView(context) {
         }
         devData?.let {
             snEt.setText(it.snCode)
-            nameEt.setText(it.name)
+           // nameEt.setText(it.name)
             curOrgId = it.org.id.toLong()
             orgListTv.text = it.org.name
             devTypeTv.text = it.modelCode
@@ -162,15 +162,15 @@ class DevInfoDialog(context: Context) : CenterPopupView(context) {
 
         confirmTv.setOnClickListener {
             val sn = snEt.text.toString()
-            val name = nameEt.text.toString()
+           // val name = nameEt.text.toString()
             val orgMsg = orgListTv.text.toString()
             val devType = devTypeTv.text.toString()
             val location = locationEt.text.toString()
             val desc = desEt.text.toString()
-            if (sn.isEmpty() || name.isEmpty() || orgMsg.isEmpty() || devType.isEmpty() || location.isEmpty()) {
+            if (sn.isEmpty() || orgMsg.isEmpty() || devType.isEmpty() || location.isEmpty()) {
                 ToastUtils.show("请按照指示填写必填信息")
             } else {
-                listener?.onConfirm(sn, name, curOrgId,orgMsg, location, devType, desc)
+                listener?.onConfirm(sn, curOrgId,orgMsg, location, devType, desc)
                 dismiss()
             }
         }
@@ -249,7 +249,7 @@ class DevInfoDialog(context: Context) : CenterPopupView(context) {
         fun onCancel()
         fun onConfirm(
             sn: String,
-            name: String,
+         //   name: String,
             orgId: Long,
             orgName:String,
             location: String,

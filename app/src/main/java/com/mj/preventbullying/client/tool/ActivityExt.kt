@@ -66,3 +66,38 @@ fun AppCompatActivity.getAssetsList(): List<String>? {
     }
 
 }
+
+/**
+ * 获取后台定位权限
+ */
+fun AppCompatActivity.requestLocationPermission() {
+    XXPermissions.with(this)
+        // .permission(Permission.MANAGE_EXTERNAL_STORAGE)
+        .permission(Permission.ACCESS_BACKGROUND_LOCATION)
+        .request(object : OnPermissionCallback {
+            override fun onGranted(permissions: MutableList<String>?, all: Boolean) {
+                // Logger.i("录音权限获取成功")
+                if (all) {
+                    Logger.i("所有权限获取成功")
+                } else {
+                    permissions?.let {
+                        for (permission in it) {
+                            Logger.i("获取到的权限：$permission")
+                        }
+                    }
+
+                }
+
+            }
+
+            override fun onDenied(permissions: MutableList<String>?, never: Boolean) {
+                super.onDenied(permissions, never)
+                //Logger.i("权限获取失败")
+                permissions?.let {
+                    for (permission in it) {
+                        Logger.i("权限获取失败：$permission")
+                    }
+                }
+            }
+        })
+}

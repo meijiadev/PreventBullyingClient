@@ -62,14 +62,14 @@ class MainViewModel : BaseViewModel() {
 
     fun addDev(
         sn: String,
-        name: String,
+       // name: String,
         orgID: Long,
         devType: String,
         location: String,
         des: String?
     ) {
         val params = ArrayMap<Any, Any>()
-        params["name"] = name
+        params["name"] = "校园防欺凌设备"
         params["snCode"] = sn
         params["orgId"] = orgID
         params["location"] = location

@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.mj.preventbullying.client.R
 import com.mj.preventbullying.client.databinding.ItemDeviceListBinding
+import com.mj.preventbullying.client.databinding.ItemDeviceNewListBinding
 import com.mj.preventbullying.client.http.result.DeviceRecord
 
 /**
@@ -17,7 +18,7 @@ import com.mj.preventbullying.client.http.result.DeviceRecord
 class DeviceListAdapter : BaseQuickAdapter<DeviceRecord, DeviceListAdapter.VH>() {
     class VH(
         parent: ViewGroup,
-        val binding: ItemDeviceListBinding = ItemDeviceListBinding.inflate(
+        val binding: ItemDeviceNewListBinding = ItemDeviceNewListBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         ),
     ) : RecyclerView.ViewHolder(binding.root)
@@ -26,27 +27,25 @@ class DeviceListAdapter : BaseQuickAdapter<DeviceRecord, DeviceListAdapter.VH>()
     override fun onBindViewHolder(holder: VH, position: Int, item: DeviceRecord?) {
         //设置item数据
         holder.binding.apply {
-            deviceNameTv.text = "名称：${item?.name}"
-            deviceTypeTv.text = "型号：${item?.modelCode}"
-            deviceSnTv.text = "SN：${item?.snCode}"
-            deviceStatusTv.text = when (item?.state?.toInt()) {
+            nameTv.text = "校园防欺凌设备 ${item?.modelCode}"
+            locationTv.text = "${item?.org?.name} | ${item?.location}"
+            snTv.text = "SN-${item?.snCode}"
+            statusTv.text = when (item?.state?.toInt()) {
                 1 -> {
-                    layoutItem.shapeDrawableBuilder.setSolidColor(context.getColor(com.sjb.base.R.color.device_offline))
-                        .intoBackground()
-                    "状态：离线"
+                    statusTv.setTextColor(context.getColor(com.sjb.base.R.color.common_button_disable_color))
+                    "未连接"
                 }
 
                 2 -> {
                     layoutItem.shapeDrawableBuilder.setSolidColor(context.getColor(com.sjb.base.R.color.device_online))
                         .intoBackground()
-                    "状态：在线"
+                    "在线"
                 }
 
                 else -> {
-                    "状态：报警"
+                    "报警"
                 }
             }
-            deviceLocationTv.text = "位置：${item?.location}"
         }
     }
 

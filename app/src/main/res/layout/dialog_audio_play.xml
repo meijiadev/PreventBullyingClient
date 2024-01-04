@@ -5,8 +5,8 @@
     android:layout_height="wrap_content">
 
     <com.hjq.shape.layout.ShapeRelativeLayout
-        android:layout_width="@dimen/dp_220"
-        android:layout_height="@dimen/dp_100"
+        android:layout_width="@dimen/dp_250"
+        android:layout_height="@dimen/dp_120"
         app:shape_radius="@dimen/dp_20"
         app:shape_solidColor="@color/white">
 
@@ -16,7 +16,7 @@
             android:layout_width="@dimen/dp_30"
             android:layout_height="@dimen/dp_30"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/dp_15"
+            android:layout_marginTop="@dimen/dp_20"
             android:src="@mipmap/play_icon" />
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -27,42 +27,42 @@
             android:layout_marginTop="@dimen/dp_5"
             android:layout_marginEnd="@dimen/dp_5"
             android:src="@mipmap/dialog_exit_icon" />
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/play_iv"
-            android:layout_marginTop="@dimen/dp_10"
-            >
+            android:layout_marginTop="@dimen/dp_10">
+
             <TextView
+                android:id="@+id/tv_start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/tv_start"
-                android:layout_toLeftOf="@id/seekbar"
                 android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/seekbar"
 
-                android:text="00:00"
-                android:textSize="@dimen/sp_8"
-                android:textColor="@color/black"
                 android:gravity="center"
-                />
+                android:text="00:00"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_8" />
 
             <SeekBar
                 android:id="@+id/seekbar"
                 android:layout_width="@dimen/dp_150"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                />
+                android:layout_centerHorizontal="true" />
+
             <TextView
+                android:id="@+id/tv_end"
                 android:layout_width="@dimen/dp_40"
                 android:layout_height="wrap_content"
-                android:id="@+id/tv_end"
-                android:layout_toRightOf="@id/seekbar"
-
                 android:layout_centerVertical="true"
+
+                android:layout_toRightOf="@id/seekbar"
+                android:gravity="center"
                 android:text="00:00"
-                android:textSize="@dimen/sp_8"
                 android:textColor="@color/black"
-                android:gravity="center" />
+                android:textSize="@dimen/sp_8" />
         </RelativeLayout>
 
 

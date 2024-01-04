@@ -54,7 +54,7 @@ class SettingActivity : AppMvActivity<ActivitySettingBinding, SettingViewModel>(
             View.GONE
         }
         MyApp.globalEventViewModel.getAppVersion()
-        binding.serviceTv.text = ApiService.BASE_HTTP_URL
+        binding.serviceTv.text = ApiService.DEV_HTTP_URL
     }
 
     override fun initViewObservable() {
