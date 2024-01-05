@@ -8,6 +8,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.jpush.android.api.JPushInterface
 import com.chad.library.adapter4.BaseQuickAdapter
+import com.chad.library.adapter4.QuickAdapterHelper
+import com.chad.library.adapter4.loadState.trailing.TrailingLoadStateAdapter
 import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.enums.PopupAnimation
 import com.mj.preventbullying.client.Constant
@@ -74,6 +76,10 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
         messageAdapter = MessageAdapter()
         messageAdapter?.setItemAnimation(BaseQuickAdapter.AnimationType.ScaleIn)
         //deviceListAdapter?.addAll(deviceList)
+//        val helper = QuickAdapterHelper.Builder(messageAdapter!!)
+//            .setTrailingLoadStateAdapter(object : TrailingLoadStateAdapter.OnTrailingListener {
+//
+//            })
         val layoutManager = LinearLayoutManager(context)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         binding.messageList.layoutManager = layoutManager

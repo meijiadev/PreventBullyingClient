@@ -139,6 +139,9 @@ class SocketEventViewModel : ViewModel(), HandlerAction {
             mSocket?.emit("call", Gson().toJson(message), Ack { ack ->
                 if (ack?.isEmpty() == true) {
                     Logger.i("ack为空")
+                    isAnswer = false
+                    MyApp.webrtcSocketManager.sendHangUp()
+                    ToastUtils.show("语音连接无响应，请重试！")
                 } else {
                     Logger.i("接收ack:${ack[0].toString()}")
                     val status = ack[0].toString()

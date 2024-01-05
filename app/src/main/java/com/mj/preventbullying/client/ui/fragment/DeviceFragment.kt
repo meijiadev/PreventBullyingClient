@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.jpush.android.api.JPushInterface
+import com.chad.library.adapter4.BaseQuickAdapter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.lxj.xpopup.XPopup
@@ -60,6 +61,7 @@ class DeviceFragment : BaseMvFragment<FragmentDeviceBinding, DeviceViewModel>() 
 
     override fun initData() {
         deviceListAdapter = DeviceListAdapter()
+        deviceListAdapter?.setItemAnimation(BaseQuickAdapter.AnimationType.ScaleIn)
         //deviceListAdapter?.addAll(deviceList)
         val layoutManager = GridLayoutManager(requireContext(), 2)
         binding.deviceList.layoutManager = layoutManager

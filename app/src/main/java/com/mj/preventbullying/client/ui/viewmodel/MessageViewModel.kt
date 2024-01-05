@@ -24,6 +24,7 @@ class MessageViewModel : BaseViewModel() {
      * 获取所有设备的报警记录
      */
     fun getAllDeviceRecords() {
+        Logger.i("去获取所有设备的报警记录")
         requestNoCheck({
             apiService.getAllRecords()
         }, {

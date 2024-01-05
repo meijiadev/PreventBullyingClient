@@ -10,6 +10,7 @@ import android.net.Uri
 import android.os.Build
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import cn.jpush.android.api.BasicPushNotificationBuilder
 import cn.jpush.android.api.JPushInterface
 import cn.jpush.android.ups.JPushUPSManager
@@ -43,6 +44,8 @@ import com.mj.preventbullying.client.webrtc.LOGIN_STATUS_FORCE_LOGOUT
 import com.mj.preventbullying.client.webrtc.SOCKET_IO_CONNECT
 import com.mj.preventbullying.client.webrtc.SOCKET_IO_DISCONNECTED
 import com.orhanobut.logger.Logger
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 /**
@@ -104,7 +107,7 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
                 notificationChannel.enableLights(true)
                 notificationChannel.enableVibration(true)
                 notificationChannel.setSound(
-                    Uri.parse("android.resource://com.mj.preventbullying.client/${R.raw.alarm_3}"),
+                    Uri.parse("android.resource://com.mj.preventbullying.client/${R.raw.alarm_4}"),
                     null
                 ) // 设置自定义铃声
                 nm.createNotificationChannel(notificationChannel)
@@ -131,10 +134,13 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
 
     override fun initView() {
         switchFragment(messageFragment)
-        if (MyApp.socketEventViewModel.isConnected) {
-            binding.devServerIv.setImageResource(R.mipmap.dev_connect)
-        } else {
-            binding.devServerIv.setImageResource(R.mipmap.dev_disconnect)
+        lifecycleScope.launch {
+            delay(200)
+            if (MyApp.socketEventViewModel.isConnected) {
+                binding.devServerIv.setImageResource(R.mipmap.dev_connect)
+            } else {
+                binding.devServerIv.setImageResource(R.mipmap.dev_disconnect)
+            }
         }
         binding.devServerIv.setOnClickListener {
             if (MyApp.socketEventViewModel.isConnected) {

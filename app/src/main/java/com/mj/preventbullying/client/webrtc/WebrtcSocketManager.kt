@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.kunminx.architecture.ui.callback.UnPeekLiveData
 import com.mj.preventbullying.client.app.MyApp
+import com.mj.preventbullying.client.http.service.ApiService
 import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseViewModel
 import io.socket.client.Ack
@@ -20,9 +21,6 @@ import java.util.UUID
  * Create by MJ on 2023/12/25.
  * Describe :
  */
-// webrtc 需要使用的socket.io 连接
-const val DEV_WEBRTC_URL = "http://192.168.1.6:80/webrtc?"
-const val BASE_WEBRTC_URL = "http://cloud.hdvsiot.com:8080/webrtc?"
 fun getUUID(): String {
     return UUID.randomUUID().toString()
 }
@@ -53,7 +51,7 @@ class WebrtcSocketManager : BaseViewModel() {
         this.toId = toId
         this.uuid = uuid
         val url =
-            "${BASE_WEBRTC_URL}token=1231&clientType=anti_bullying_device&clientId=$snCode"
+            "${ApiService.getHostUrl()}webrtc?token=1231&clientType=anti_bullying_device&clientId=$snCode"
         kotlin.runCatching {
             webrtcSocket = IO.socket(
                 url

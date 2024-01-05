@@ -44,5 +44,6 @@ data class DeviceRecord(
     val name: String,
     val org: Org,
     val snCode: String,
-    val state: String
+    val state: String,
+    val stateMsg: String?
 )

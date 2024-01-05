@@ -110,8 +110,8 @@ class SettingActivity : AppMvActivity<ActivitySettingBinding, SettingViewModel>(
         binding.serviceIpLy.setOnClickListener {
             count++
             if (count > 7) {
-                ActivityManager.getInstance().finishAllActivities()
-                startActivity(LoginActivity::class.java)
+                SpManager.putBoolean(Constant.SERVICE_URL_KEY, !ApiService.isDevVersion)
+                loginOut()
             }
         }
     }

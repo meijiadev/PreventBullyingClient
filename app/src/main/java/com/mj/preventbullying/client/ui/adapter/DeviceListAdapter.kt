@@ -30,20 +30,26 @@ class DeviceListAdapter : BaseQuickAdapter<DeviceRecord, DeviceListAdapter.VH>()
             nameTv.text = "校园防欺凌设备 ${item?.modelCode}"
             locationTv.text = "${item?.org?.name} | ${item?.location}"
             snTv.text = "SN-${item?.snCode}"
+            val stateMsg = item?.stateMsg
             statusTv.text = when (item?.state?.toInt()) {
                 1 -> {
-                    statusTv.setTextColor(context.getColor(com.sjb.base.R.color.common_button_disable_color))
-                    "未连接"
+                    layoutItem.shapeDrawableBuilder.setSolidColor(context.getColor(com.sjb.base.R.color.device_offline))
+                        .intoBackground()
+                   // statusTv.setTextColor(context.getColor(com.sjb.base.R.color.common_button_disable_color))
+                    statusTv.setTextColor(context.getColor(com.sjb.base.R.color.black))
+                    "离线"
                 }
 
                 2 -> {
                     layoutItem.shapeDrawableBuilder.setSolidColor(context.getColor(com.sjb.base.R.color.device_online))
                         .intoBackground()
+                    statusTv.setTextColor(context.getColor(com.sjb.base.R.color.black))
                     "在线"
                 }
 
                 else -> {
-                    "报警"
+                    statusTv.setTextColor(context.getColor(com.sjb.base.R.color.common_cancel_text_color))
+                    "设备故障"
                 }
             }
         }

@@ -35,8 +35,9 @@ interface ApiService {
         private const val BASE_HTTP_URL = "http://cloud.hdvsiot.com:8080/"
         private const val DEV_HTTP_URL = "http://192.168.1.6:80/"
         const val API = "api/"
-        private const val isDevVersion = true
+        var isDevVersion = false
         fun getHostUrl(): String {
+          //  isDevVersion = SpManager.getBoolean(Constant.SERVICE_URL_KEY, true)
             return if (isDevVersion) {
                 DEV_HTTP_URL
             } else {
@@ -86,8 +87,8 @@ interface ApiService {
      */
     @GET("anti-bullying/record/page")
     suspend fun getAllRecords(
-        @Query("current") current: Int = 1,
-        @Query("size") size: Int = 100
+        @Query("current") current: Int = 0,
+        @Query("size") size: Int = 20
         //@Header("Authorization") authorization: String = "Bearer ${SpManager.getString(Constant.ACCESS_TOKEN_KEY)}"
     ): DeviceRecordResult
 
