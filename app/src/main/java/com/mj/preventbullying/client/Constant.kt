@@ -19,7 +19,7 @@ object Constant {
 
     var isNewAppVersion = false           // 是否有新版本app
     const val ALARM_PLAY_NAME_KEY = "alarm_audio_name_key"
-    var alarmAudioName = "alarm_1.mp3"      // 默认的警报声音
+    var alarmAudioName = "alarm_3.mp3"      // 默认的警报声音
 
     const val NOTIFY_MSG_EVENT_KEY = "notify_msg_event_key"  //
 }

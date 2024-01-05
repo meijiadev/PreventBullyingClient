@@ -2,6 +2,12 @@ package com.mj.preventbullying.client.ui.activity
 
 import android.annotation.SuppressLint
 import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationChannelGroup
+import android.app.NotificationManager
+import android.content.Context
+import android.net.Uri
+import android.os.Build
 import android.view.View
 import androidx.fragment.app.Fragment
 import cn.jpush.android.api.BasicPushNotificationBuilder
@@ -15,15 +21,15 @@ import com.lxj.xpopup.enums.PopupAnimation
 import com.mj.preventbullying.client.BuildConfig
 import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.Constant.USER_ID_KEY
-import com.mj.preventbullying.client.app.MyApp
 import com.mj.preventbullying.client.R
 import com.mj.preventbullying.client.app.AppMvActivity
-import com.mj.preventbullying.client.tool.SpManager
+import com.mj.preventbullying.client.app.MyApp
 import com.mj.preventbullying.client.databinding.ActivityMainBinding
 import com.mj.preventbullying.client.foldtree.TreeModel
 import com.mj.preventbullying.client.http.result.DevType
 import com.mj.preventbullying.client.jpush.receive.JPushExtraMessage
 import com.mj.preventbullying.client.tool.NetworkUtil
+import com.mj.preventbullying.client.tool.SpManager
 import com.mj.preventbullying.client.tool.requestLocationPermission
 import com.mj.preventbullying.client.tool.requestPermission
 import com.mj.preventbullying.client.ui.dialog.DevInfoDialog
@@ -37,7 +43,6 @@ import com.mj.preventbullying.client.webrtc.LOGIN_STATUS_FORCE_LOGOUT
 import com.mj.preventbullying.client.webrtc.SOCKET_IO_CONNECT
 import com.mj.preventbullying.client.webrtc.SOCKET_IO_DISCONNECTED
 import com.orhanobut.logger.Logger
-import com.sjb.base.base.BaseMvActivity
 
 
 /**
@@ -77,6 +82,34 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
         JPushInterface.setPushNotificationBuilder(1, builder)
         JPushInterface.setDebugMode(true)
         JPushInterface.init(this)
+        initChannel()
+    }
+
+    /**
+     *  初始化channel通道
+     */
+    private fun initChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            if (nm != null) {
+                val notificationChannelGroup =
+                    NotificationChannelGroup("prevent_group_1", "极光推送铃声自定义")
+                nm.createNotificationChannelGroup(notificationChannelGroup)
+                val notificationChannel = NotificationChannel(
+                    "prevent_channel1",
+                    "极光消息通道",
+                    NotificationManager.IMPORTANCE_HIGH
+                )
+                notificationChannel.group = "prevent_group_1"
+                notificationChannel.enableLights(true)
+                notificationChannel.enableVibration(true)
+                notificationChannel.setSound(
+                    Uri.parse("android.resource://com.mj.preventbullying.client/${R.raw.alarm_3}"),
+                    null
+                ) // 设置自定义铃声
+                nm.createNotificationChannel(notificationChannel)
+            }
+        }
     }
 
     override fun initData() {

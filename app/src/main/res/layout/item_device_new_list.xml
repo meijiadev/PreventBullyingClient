@@ -8,7 +8,7 @@
     <com.hjq.shape.layout.ShapeRelativeLayout
         android:id="@+id/layout_item"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_160"
+        android:layout_height="@dimen/dp_150"
         app:shape_radius="@dimen/dp_15"
         app:shape_solidColor="@color/device_online">
 
@@ -49,7 +49,9 @@
             android:layout_marginStart="@dimen/dp_10"
             android:layout_marginTop="@dimen/dp_8"
             android:text="在   线"
-            android:textSize="@dimen/sp_13" />
+            android:textSize="@dimen/sp_15"
+            android:textStyle="bold"
+            />
 
 
         <!--        <androidx.appcompat.widget.AppCompatImageView-->

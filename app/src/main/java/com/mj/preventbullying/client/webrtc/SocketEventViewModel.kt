@@ -75,7 +75,7 @@ class SocketEventViewModel : ViewModel(), HandlerAction {
             this.registerId = registerId
             val token = SpManager.getString(Constant.ACCESS_TOKEN_KEY)
             val url =
-                "${ApiService.DEV_SOCKET_IO_URL}token=$token&clientType=anti_bullying_device&clientId=$sn"
+                "${ApiService.getHostUrl()}app?token=$token&clientType=anti_bullying_device&clientId=$sn"
             val uri = URI.create(url)
             val websocket = arrayOf("websocket")
             val options =

@@ -54,18 +54,22 @@ class SettingActivity : AppMvActivity<ActivitySettingBinding, SettingViewModel>(
             View.GONE
         }
         MyApp.globalEventViewModel.getAppVersion()
-        binding.serviceTv.text = ApiService.DEV_HTTP_URL
+        binding.serviceTv.text = ApiService.getHostUrl()
     }
 
     override fun initViewObservable() {
         binding.titleLayout.backIv.setOnClickListener {
+            count = 0
             finish()
+
         }
         binding.phoneNumberLy.setOnClickListener {
+            count = 0
             toast("暂不支持修改手机号码")
         }
         binding.msgToneLy.setOnClickListener {
             startActivity(AlarmAudioActivity::class.java)
+            count = 0
         }
 
         binding.passwordLy.setOnClickListener {
@@ -76,10 +80,12 @@ class SettingActivity : AppMvActivity<ActivitySettingBinding, SettingViewModel>(
                 // 确认修改密码
                 viewModel.amendPassword(oldPs, newPs)
             }
+            count = 0
         }
         // 退出登录
         binding.logoutLy.setOnClickListener {
             loginOut()
+            count = 0
         }
 
         binding.autoLoginBt.setOnCheckedChangeListener(object :
@@ -98,9 +104,20 @@ class SettingActivity : AppMvActivity<ActivitySettingBinding, SettingViewModel>(
             } else {
                 toast("暂无新版本")
             }
+            count = 0
         }
 
+        binding.serviceIpLy.setOnClickListener {
+            count++
+            if (count > 7) {
+                ActivityManager.getInstance().finishAllActivities()
+                startActivity(LoginActivity::class.java)
+            }
+        }
     }
+
+    private var count = 0
+
 
     private var updateAppDialog: UpdateAppDialog? = null
 

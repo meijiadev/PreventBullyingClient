@@ -114,7 +114,7 @@ class LoginActivity : BaseMvActivity<ActivityLoginBinding, LoginViewModel>() {
                 toast("网络不可用！")
             }
             randomStr = generateRandomString()
-            val url = "${ApiService.DEV_HTTP_URL}/api/code?randomStr=$randomStr"
+            val url = "${ApiService.getHostUrl()}/api/code?randomStr=$randomStr"
             binding.codeImage.load(url)
             Logger.i("加载验证码：$url")
         }, 200)
@@ -161,7 +161,7 @@ class LoginActivity : BaseMvActivity<ActivityLoginBinding, LoginViewModel>() {
      */
     fun refresh(v: View) {
         randomStr = generateRandomString()
-        val url = "${ApiService.DEV_HTTP_URL}/api/code?randomStr=$randomStr"
+        val url = "${ApiService.getHostUrl()}/api/code?randomStr=$randomStr"
         binding.codeImage.load(url) {
             error(R.drawable.ic_launcher_background)
         }

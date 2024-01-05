@@ -95,7 +95,7 @@
         android:layout_marginTop="@dimen/dp_8"
         android:layout_marginEnd="@dimen/dp_8"
         app:srlAccentColor="#7c7c7c"
-        app:srlPrimaryColor="#d4d4d4">
+        app:srlPrimaryColor="@color/common_line_color">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/message_list"

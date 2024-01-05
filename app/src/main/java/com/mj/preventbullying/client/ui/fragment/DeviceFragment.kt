@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import cn.jpush.android.api.JPushInterface
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.lxj.xpopup.XPopup
@@ -200,6 +201,14 @@ class DeviceFragment : BaseMvFragment<FragmentDeviceBinding, DeviceViewModel>() 
         mainViewModel?.devTypeEvent?.observe(this) {
             typeList = it?.data as MutableList<DevType>?
             amendDevDialog?.setTypeData(typeList)
+        }
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        Logger.i("是否隐藏：$hidden")
+        if (!hidden) {
+            viewModel.getAllDevices()
         }
     }
 }

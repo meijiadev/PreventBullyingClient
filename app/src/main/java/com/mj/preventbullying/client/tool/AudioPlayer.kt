@@ -1,6 +1,7 @@
 package com.mj.preventbullying.client.tool
 
 import android.content.Context
+import android.media.AudioManager
 import android.media.MediaPlayer
 import com.mj.preventbullying.client.app.MyApp
 import com.orhanobut.logger.Logger
@@ -38,6 +39,7 @@ class AudioPlayer private constructor(context: Context) : MediaPlayer.OnPrepared
         try {
             mediaPlayer.reset()
             mediaPlayer.setDataSource(url)
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
             mediaPlayer.prepareAsync()
         } catch (e: IOException) {
             e.printStackTrace()
@@ -54,8 +56,9 @@ class AudioPlayer private constructor(context: Context) : MediaPlayer.OnPrepared
             //   mediaPlayer.release()
             mediaPlayer.reset()
             mediaPlayer.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_NOTIFICATION)
             mediaPlayer.prepareAsync()
-        } .onFailure {
+        }.onFailure {
             Logger.e("error:$it")
         }
     }

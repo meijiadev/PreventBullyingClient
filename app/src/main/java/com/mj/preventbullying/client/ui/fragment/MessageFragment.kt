@@ -30,6 +30,7 @@ import com.mj.preventbullying.client.webrtc.getUUID
 import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseMvFragment
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
@@ -63,7 +64,10 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
 
 
     override fun initParam() {
-        viewModel.getAllDeviceRecords()
+        lifecycleScope.launch {
+            delay(200)
+            viewModel.getAllDeviceRecords()
+        }
     }
 
     override fun initData() {

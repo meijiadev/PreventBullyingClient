@@ -32,12 +32,17 @@ import retrofit2.http.Query
 
 interface ApiService {
     companion object {
-        //const val BASE_HTTP_URL = "http://cloud.zyq0407.com:8080/"
-        const val BASE_SOCKET_IO_URL = "http://cloud.hdvsiot.com:8080/app?"
-        const val BASE_HTTP_URL = "http://cloud.hdvsiot.com:8080/"
-        const val DEV_SOCKET_IO_URL = "http://192.168.1.6:80/app?"
-        const val DEV_HTTP_URL = "http://192.168.1.6:80/"
+        private const val BASE_HTTP_URL = "http://cloud.hdvsiot.com:8080/"
+        private const val DEV_HTTP_URL = "http://192.168.1.6:80/"
         const val API = "api/"
+        private const val isDevVersion = true
+        fun getHostUrl(): String {
+            return if (isDevVersion) {
+                DEV_HTTP_URL
+            } else {
+                BASE_HTTP_URL
+            }
+        }
     }
 
 

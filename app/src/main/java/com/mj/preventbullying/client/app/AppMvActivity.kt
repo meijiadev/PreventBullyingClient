@@ -19,11 +19,12 @@ abstract class AppMvActivity<V : ViewBinding, VM : BaseViewModel> : BaseMvActivi
     override fun onViewCreated() {
         super.onViewCreated()
         LiveEventBus.get<NotifyMsgEvent>(Constant.NOTIFY_MSG_EVENT_KEY).observe(this){
-            val alarm = SpManager.getString(Constant.ALARM_PLAY_NAME_KEY)
-            Constant.alarmAudioName = if (alarm.isNullOrEmpty()) Constant.alarmAudioName else alarm
+            //val alarm = SpManager.getString(Constant.ALARM_PLAY_NAME_KEY)
+           // Constant.alarmAudioName = if (alarm.isNullOrEmpty()) Constant.alarmAudioName else alarm
             if (AudioPlayer.instance.isPlaying()) {
                 AudioPlayer.instance.stop()
             }
+
             AudioPlayer.instance.playAssets(Constant.alarmAudioName)
         }
     }

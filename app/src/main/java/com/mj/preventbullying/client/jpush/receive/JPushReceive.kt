@@ -1,20 +1,27 @@
 package com.mj.preventbullying.client.jpush.receive
 
+import android.R
+import android.app.Notification
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import androidx.core.app.NotificationCompat
 import cn.jpush.android.api.CustomMessage
 import cn.jpush.android.api.JPushInterface
 import cn.jpush.android.api.NotificationMessage
-
 import cn.jpush.android.service.JPushMessageService
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.app.MyApp
+import com.mj.preventbullying.client.app.MyApp.Companion.context
 import com.mj.preventbullying.client.jpush.NotifyMsgEvent
 import com.mj.preventbullying.client.tool.ActivityManager
 import com.mj.preventbullying.client.ui.activity.MainActivity
 import com.orhanobut.logger.Logger
+import okhttp3.internal.notify
+
 
 /**
  * Create by MJ on 2023/12/6.
@@ -51,7 +58,7 @@ class JPushReceive : JPushMessageService() {
                 // MyApp.globalEventViewModel.notifyMsgEvent.postValue(p1)
 
             }
-           // LiveEventBus.get<NotifyMsgEvent>(Constant.NOTIFY_MSG_EVENT_KEY).post(NotifyMsgEvent(p1?.notificationId))
+            // LiveEventBus.get<NotifyMsgEvent>(Constant.NOTIFY_MSG_EVENT_KEY).post(NotifyMsgEvent(p1?.notificationId))
             MyApp.globalEventViewModel.notifyMsgEvent.postValue(p1)
         }.onFailure {
             Logger.e("错误：${it.message}")
@@ -69,7 +76,8 @@ class JPushReceive : JPushMessageService() {
     override fun onNotifyMessageArrived(p0: Context?, p1: NotificationMessage?) {
         Logger.i("收到通知---onNotifyMessageArrived:$p1")
         MyApp.globalEventViewModel.notifyMsgEvent.postValue(p1)
-        LiveEventBus.get<NotifyMsgEvent>(Constant.NOTIFY_MSG_EVENT_KEY).post(NotifyMsgEvent(p1?.notificationId))
+        LiveEventBus.get<NotifyMsgEvent>(Constant.NOTIFY_MSG_EVENT_KEY)
+            .post(NotifyMsgEvent(p1?.notificationId))
     }
 
     override fun onNotifyMessageDismiss(p0: Context?, p1: NotificationMessage?) {
