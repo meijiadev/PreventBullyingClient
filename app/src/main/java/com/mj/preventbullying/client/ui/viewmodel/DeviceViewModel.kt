@@ -5,8 +5,6 @@ import com.blackview.base.http.requestNoCheck
 import com.hjq.toast.ToastUtils
 import com.kunminx.architecture.ui.callback.UnPeekLiveData
 import com.mj.preventbullying.client.http.apiService
-import com.mj.preventbullying.client.http.result.DeviceData
-import com.mj.preventbullying.client.http.result.DeviceRecord
 import com.mj.preventbullying.client.http.result.DeviceResult
 import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseViewModel
@@ -46,7 +44,7 @@ class DeviceViewModel : BaseViewModel() {
     fun amendDev(
         deviceId: String,
         sn: String,
-      //  name: String,
+        //  name: String,
         orgID: Long,
         devType: String,
         location: String,
@@ -70,5 +68,17 @@ class DeviceViewModel : BaseViewModel() {
                 amendDevEvent.postValue(false)
             }
         })
+    }
+
+    fun upgradeDev(deviceId: Long) {
+        requestNoCheck(
+            {
+                apiService.upgradeDevice(deviceId)
+            }, {
+                if (it.success) {
+
+                }
+            }
+        )
     }
 }

@@ -263,7 +263,7 @@
             android:textColor="@color/white"
             android:textSize="@dimen/sp_15"
             app:shape_radius="@dimen/dp_8"
-            app:shape_solidColor="@color/green60" />
+            app:shape_solidColor="@color/common_confirm_text_color" />
 
         <com.hjq.shape.layout.ShapeLinearLayout
             android:id="@+id/org_list_ll"

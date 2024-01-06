@@ -35,7 +35,7 @@ interface ApiService {
         private const val BASE_HTTP_URL = "http://cloud.hdvsiot.com:8080/"
         private const val DEV_HTTP_URL = "http://192.168.1.6:80/"
         const val API = "api/"
-        var isDevVersion = false
+        private var isDevVersion = false
         fun getHostUrl(): String {
             //  isDevVersion = SpManager.getBoolean(Constant.SERVICE_URL_KEY, true)
             return if (isDevVersion) {
@@ -149,4 +149,8 @@ interface ApiService {
         @Query("type") type: String = "mobile",
         @Query("model") model: String = "android"
     ): UpdateAppResult
+
+
+    @PUT("anti-bullying/device/upgrades/{deviceId}")
+    suspend fun upgradeDevice(@Path("deviceId") deviceId: Long): BaseResult
 }

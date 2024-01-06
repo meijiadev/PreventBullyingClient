@@ -4,14 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import cn.jpush.android.api.JPushInterface
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.enums.PopupAnimation
 import com.mj.preventbullying.client.R
+import com.mj.preventbullying.client.app.MyApp
 import com.mj.preventbullying.client.databinding.FragmentDeviceBinding
 import com.mj.preventbullying.client.foldtree.TreeModel
 import com.mj.preventbullying.client.http.result.DevType
@@ -96,6 +95,27 @@ class DeviceFragment : BaseMvFragment<FragmentDeviceBinding, DeviceViewModel>() 
         deviceListAdapter?.addOnItemChildClickListener(R.id.amend_iv) { adapter, view, position ->
             val devMsg = deviceList?.get(position)
             showDialogInfo(devMsg)
+        }
+
+        deviceListAdapter?.addOnItemChildClickListener(R.id.upgrade_device_iv) { adapter, view, position ->
+            val tipsDialog = MessageTipsDialog(requireContext()).setListener(object :
+                MessageTipsDialog.OnListener {
+                override fun onCancel() {
+
+                }
+
+                override fun onConfirm() {
+                    val deviceId = deviceList?.get(position)?.deviceId?.toLong()
+                    deviceId?.let {
+                        viewModel.upgradeDev(deviceId)
+                    }
+                }
+            }).setTitle("是否要给该设备系统升级？")
+            XPopup.Builder(requireContext())
+                .isViewMode(true)
+                .popupAnimation(PopupAnimation.TranslateFromBottom)
+                .asCustom(tipsDialog)
+                .show()
         }
 
 //        deviceListAdapter?.setOnItemLongClickListener { adapter, view, position ->
@@ -204,6 +224,10 @@ class DeviceFragment : BaseMvFragment<FragmentDeviceBinding, DeviceViewModel>() 
             typeList = it?.data as MutableList<DevType>?
             amendDevDialog?.setTypeData(typeList)
         }
+        MyApp.globalEventViewModel.notifyMsgEvent.observe(this) {
+            viewModel.getAllDevices()
+        }
+
     }
 
     override fun onHiddenChanged(hidden: Boolean) {

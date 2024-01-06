@@ -61,10 +61,10 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
     private var typeList: MutableList<DevType>? = null
 
 
-
     override fun getViewBinding(): ActivityMainBinding {
         return ActivityMainBinding.inflate(layoutInflater)
     }
+
 
     @SuppressLint("ResourceType")
     override fun initParam() {
@@ -125,7 +125,7 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
         }
 
         MyApp.globalEventViewModel.getAppVersion()
-        requestLocationPermission()
+        //requestLocationPermission()
 
     }
 

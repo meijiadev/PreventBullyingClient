@@ -88,7 +88,7 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
                 }
 
                 override fun onLoad() {
-                   Logger.i("加载更多数据")
+                    Logger.i("加载更多数据")
                     viewModel.getAllDeviceRecords(curDataPage + 1)
 
                 }
@@ -318,7 +318,6 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
         MyApp.globalEventViewModel.notifyMsgEvent.observe(this) {
             curDataPage = 1
             viewModel.getAllDeviceRecords(curDataPage)
-            toast("收到报警推送")
             Logger.i("收到报警通知")
             isNotify = true
         }
@@ -327,6 +326,9 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         Logger.i("是否隐藏：$hidden")
+        if (!hidden) {
+            viewModel.getAllDeviceRecords(curDataPage)
+        }
         isHideFragment = hidden
         if (!isHideFragment) {
             isNotify = false

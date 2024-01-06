@@ -41,6 +41,7 @@
             android:layout_marginTop="@dimen/dp_8"
             android:text="SN-1234647659687080"
             android:textSize="@dimen/sp_11" />
+
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/status_tv"
             android:layout_width="wrap_content"
@@ -50,18 +51,20 @@
             android:layout_marginTop="@dimen/dp_8"
             android:text="在   线"
             android:textSize="@dimen/sp_15"
-            android:textStyle="bold"
-            />
+            android:textStyle="bold" />
 
 
-        <!--        <androidx.appcompat.widget.AppCompatImageView-->
-        <!--            android:id="@+id/device_iv"-->
-        <!--            android:layout_width="@dimen/dp_60"-->
-        <!--            android:layout_height="@dimen/dp_60"-->
-        <!--            android:layout_below="@id/sn_tv"-->
-        <!--            android:layout_marginStart="@dimen/dp_10"-->
-        <!--            android:layout_marginTop="@dimen/dp_5"-->
-        <!--            android:src="@mipmap/ic_launcher_round" />-->
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/upgrade_device_iv"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_30"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:layout_marginBottom="8dp"
+            android:layout_toLeftOf="@id/amend_iv"
+            android:src="@mipmap/device_upgrade_icon" />
+
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/amend_iv"
             android:layout_width="@dimen/dp_30"
