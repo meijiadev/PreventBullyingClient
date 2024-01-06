@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class DeviceRecordResult(
     val code: Int,
     @SerializedName("data")
-    val `data`: RecordData,
+    val `data`: RecordData?,
     val msg: Any,
     val success: Boolean
 )

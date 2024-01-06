@@ -61,6 +61,7 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
     private var typeList: MutableList<DevType>? = null
 
 
+
     override fun getViewBinding(): ActivityMainBinding {
         return ActivityMainBinding.inflate(layoutInflater)
     }

@@ -35,7 +35,7 @@ class DeviceListAdapter : BaseQuickAdapter<DeviceRecord, DeviceListAdapter.VH>()
                 1 -> {
                     layoutItem.shapeDrawableBuilder.setSolidColor(context.getColor(com.sjb.base.R.color.device_offline))
                         .intoBackground()
-                   // statusTv.setTextColor(context.getColor(com.sjb.base.R.color.common_button_disable_color))
+                    // statusTv.setTextColor(context.getColor(com.sjb.base.R.color.common_button_disable_color))
                     statusTv.setTextColor(context.getColor(com.sjb.base.R.color.black))
                     "离线"
                 }
@@ -47,9 +47,23 @@ class DeviceListAdapter : BaseQuickAdapter<DeviceRecord, DeviceListAdapter.VH>()
                     "在线"
                 }
 
-                else -> {
+                3 -> {
                     statusTv.setTextColor(context.getColor(com.sjb.base.R.color.common_cancel_text_color))
                     "设备故障"
+                }
+
+                4 -> {
+                    layoutItem.shapeDrawableBuilder.setSolidColor(context.getColor(com.sjb.base.R.color.device_online))
+                        .intoBackground()
+                    statusTv.setTextColor(context.getColor(com.sjb.base.R.color.black))
+                    "更新中"
+                }
+
+                else -> {
+                    layoutItem.shapeDrawableBuilder.setSolidColor(context.getColor(com.sjb.base.R.color.device_online))
+                        .intoBackground()
+                    statusTv.setTextColor(context.getColor(com.sjb.base.R.color.black))
+                    "为止状态"
                 }
             }
         }

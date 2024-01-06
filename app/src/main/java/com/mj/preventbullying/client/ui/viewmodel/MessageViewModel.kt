@@ -23,10 +23,11 @@ class MessageViewModel : BaseViewModel() {
     /**
      * 获取所有设备的报警记录
      */
-    fun getAllDeviceRecords() {
+    fun getAllDeviceRecords(curPage: Int? = null) {
         Logger.i("去获取所有设备的报警记录")
+        val page = curPage ?: 1
         requestNoCheck({
-            apiService.getAllRecords()
+            apiService.getAllRecords(page)
         }, {
             Logger.d("获取设备报警记录：$it")
             messageEvent.postValue(it)
@@ -46,7 +47,7 @@ class MessageViewModel : BaseViewModel() {
         }, {
             Logger.i("更改记录状态:$it")
             if (it.success) {
-                getAllDeviceRecords()
+                getAllDeviceRecords(1)
             }
         })
     }

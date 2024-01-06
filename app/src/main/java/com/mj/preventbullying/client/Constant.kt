@@ -6,8 +6,7 @@ package com.mj.preventbullying.client
  */
 
 object Constant {
-    //    const val USER_TOKEN = "token"
-//
+
     const val USER_ID_KEY = "user_id_key"
     const val FRESH_TOKEN_KEY = "fresh_token_key"
     const val ACCESS_TOKEN_KEY = "access_token_key"
@@ -22,7 +21,6 @@ object Constant {
     var alarmAudioName = "alarm_4.mp3"      // 默认的警报声音
 
     const val NOTIFY_MSG_EVENT_KEY = "notify_msg_event_key"  // 极光消息通知
-    const val SERVICE_URL_KEY="service_url_key"    // 服务器地址
 }
 
 

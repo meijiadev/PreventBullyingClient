@@ -37,7 +37,7 @@ interface ApiService {
         const val API = "api/"
         var isDevVersion = false
         fun getHostUrl(): String {
-          //  isDevVersion = SpManager.getBoolean(Constant.SERVICE_URL_KEY, true)
+            //  isDevVersion = SpManager.getBoolean(Constant.SERVICE_URL_KEY, true)
             return if (isDevVersion) {
                 DEV_HTTP_URL
             } else {
@@ -87,14 +87,16 @@ interface ApiService {
      */
     @GET("anti-bullying/record/page")
     suspend fun getAllRecords(
-        @Query("current") current: Int = 0,
+        @Query("current") current: Int = 1,
         @Query("size") size: Int = 20
         //@Header("Authorization") authorization: String = "Bearer ${SpManager.getString(Constant.ACCESS_TOKEN_KEY)}"
     ): DeviceRecordResult
 
 
     /**
-     * 获取1-100条设备信息
+     * 获取设备信息
+     * @param current 获取的当前页数
+     * @param size 每页的数据条数
      */
     @GET("anti-bullying/device/page")
     suspend fun getAllDevices(
