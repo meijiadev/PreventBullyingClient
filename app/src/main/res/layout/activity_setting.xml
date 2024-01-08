@@ -60,7 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_60"
                 android:layout_marginTop="@dimen/dp_10"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:background="@color/white">
 
                 <androidx.appcompat.widget.AppCompatTextView

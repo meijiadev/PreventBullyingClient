@@ -78,7 +78,7 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
 
     override fun initData() {
         messageAdapter = MessageAdapter()
-        messageAdapter?.setItemAnimation(BaseQuickAdapter.AnimationType.ScaleIn)
+        //messageAdapter?.setItemAnimation(BaseQuickAdapter.AnimationType.ScaleIn)
         //deviceListAdapter?.addAll(deviceList)
         loadMoreHelp = QuickAdapterHelper.Builder(messageAdapter!!)
             .setTrailingLoadStateAdapter(object : TrailingLoadStateAdapter.OnTrailingListener {
@@ -274,11 +274,13 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
             } else {
                 loadMoreHelp?.trailingLoadState = LoadState.NotLoading(false)
             }
-            val datas = it?.data?.records as MutableList<Record>
-            if (it.data.current == 1) {
-                messageList = datas
-            } else {
-                messageList.addAll(datas)
+            if (!it?.data?.records.isNullOrEmpty()){
+                val datas = it?.data?.records as MutableList<Record>
+                if (it.data.current == 1) {
+                    messageList = datas
+                } else {
+                    messageList.addAll(datas)
+                }
             }
             binding.smartRefreshLayout.finishRefresh(500)
             filtrationMsgTp(curShowType)

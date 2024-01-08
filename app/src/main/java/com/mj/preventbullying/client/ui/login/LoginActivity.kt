@@ -63,10 +63,17 @@ class LoginActivity : BaseMvActivity<ActivityLoginBinding, LoginViewModel>() {
     @SuppressLint("ResourceType")
     override fun initParam() {
         loginViewModel = getActivityViewModel(LoginViewModel::class.java)
-
     }
 
     override fun initData() {
+        val account = SpManager.getString(Constant.ACCOUNT_KEY)
+        val password = SpManager.getString(Constant.ACCOUNT_PASSWORD)
+        if (!account.isNullOrEmpty()) {
+            nameTV.setText(account)
+        }
+        if (!password.isNullOrEmpty()) {
+            passwordTv.setText(password)
+        }
         requestPermission()
 
     }
@@ -146,6 +153,8 @@ class LoginActivity : BaseMvActivity<ActivityLoginBinding, LoginViewModel>() {
             SpManager.putLong(Constant.LOGIN_OR_REFRESH_TIME_KEY, System.currentTimeMillis())
             SpManager.putString(Constant.USER_ID_KEY, it.user_id)
             SpManager.putString(Constant.ACCOUNT_KEY, it.username)
+            SpManager.putString(Constant.ACCOUNT_PASSWORD, passwordTv.text.toString())
+            SpManager.putString(Constant.USER_PHONE_KEY, it.user_info.phone)
             JPushUPSManager.turnOnPush(this) {
                 Logger.i("打开极光推送服务：$it")
             }
@@ -176,7 +185,7 @@ class LoginActivity : BaseMvActivity<ActivityLoginBinding, LoginViewModel>() {
             val psTV = passwordTv.text.toString()
             val ps = encrypt("thanks,pig4cloud", psTV).trim()
             val name = nameTV.text.toString()
-            val code = codeTv?.text.toString()
+            val code = codeTv.text.toString()
             Logger.i("加密后的密码：$ps")
             randomStr?.let {
                 loginViewModel.login(name, it, code, ps)

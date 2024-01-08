@@ -14,6 +14,8 @@ object Constant {
     const val EXPIRES_TIME_KEY = "expires_in_key"   // 过期时间
     const val LOGIN_OR_REFRESH_TIME_KEY = "last_login_or_fresh_time_key"  // 上次刷新或者登录时间
     const val ACCOUNT_KEY = "account_key"           // 用户名
+    const val ACCOUNT_PASSWORD = "account_password"   // 密码
+    const val USER_PHONE_KEY = "user_phone_key"               // 账号密码绑定的手机号码
     const val AUTO_LOGIN_KEY = "auto_login_key"    // 是否是自动登录 默认true
 
     var isNewAppVersion = false           // 是否有新版本app

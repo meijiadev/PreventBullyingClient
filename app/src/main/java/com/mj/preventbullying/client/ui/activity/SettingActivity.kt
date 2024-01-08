@@ -55,6 +55,13 @@ class SettingActivity : AppMvActivity<ActivitySettingBinding, SettingViewModel>(
         }
         MyApp.globalEventViewModel.getAppVersion()
         binding.serviceTv.text = ApiService.getHostUrl()
+        var phone = SpManager.getString(Constant.USER_PHONE_KEY)
+        if (phone.isNullOrEmpty()) {
+            phone = "未绑定手机号码"
+        } else {
+            phone = phone.substring(0, 3) + "****" + phone.substring(7, 11)
+        }
+        binding.phoneTv.text = phone
     }
 
     override fun initViewObservable() {
