@@ -90,7 +90,6 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
                 override fun onLoad() {
                     Logger.i("加载更多数据")
                     viewModel.getAllDeviceRecords(curDataPage + 1)
-
                 }
 
 //                override fun isAllowLoading(): Boolean {
@@ -108,8 +107,10 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
         // 对讲
         messageAdapter?.addOnItemChildClickListener(R.id.call_tv) { adapter, view, position ->
             processPosition = position
-            val snCode = messageList.get(position).snCode
-            currentRecordId = messageList.get(position).recordId
+            val record=messageAdapter?.getItem(position)
+            Logger.i("当前点击的参数：$position,${record}")
+            val snCode = record?.snCode
+            currentRecordId = record?.recordId
             //val fileId = messageList?.get(position)?.fileId
             Logger.i("去处理消息")
             lifecycleScope.launch(Dispatchers.Main) {
@@ -135,16 +136,18 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
         messageAdapter?.addOnItemChildClickListener(R.id.play_tv) { adapter, view, position ->
             processPosition = position
             //val snCode = messageList?.get(position)?.snCode
-            currentRecordId = messageList[position].recordId
-            val fileId = messageList[position].fileId
-            fileId.let {
+            val record=messageAdapter?.getItem(position)
+            currentRecordId = record?.recordId
+            val fileId = record?.fileId
+            fileId?.let {
                 viewModel.getAudioPreUrl(fileId)
             }
         }
         // 处理按钮
         messageAdapter?.addOnItemChildClickListener(R.id.process_bt) { adapter, view, position ->
             processPosition = position
-            currentRecordId = messageList[position].recordId
+            val record=messageAdapter?.getItem(position)
+            currentRecordId = record?.recordId
             val inputMsgDialog = InputMsgDialog(requireContext()).setConfirmListener { model, msg ->
                 currentRecordId?.let { recordId ->
                     viewModel.recordProcess(
@@ -274,7 +277,7 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
             } else {
                 loadMoreHelp?.trailingLoadState = LoadState.NotLoading(false)
             }
-            if (!it?.data?.records.isNullOrEmpty()){
+            if (!it?.data?.records.isNullOrEmpty()) {
                 val datas = it?.data?.records as MutableList<Record>
                 if (it.data.current == 1) {
                     messageList = datas
