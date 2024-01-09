@@ -25,6 +25,8 @@ fun getUUID(): String {
     return UUID.randomUUID().toString()
 }
 
+var isReCall = false
+
 class WebrtcSocketManager : BaseViewModel() {
     private var snCode: String? = null
     private var toId: String? = null
@@ -63,6 +65,7 @@ class WebrtcSocketManager : BaseViewModel() {
         webrtcSocket?.connect()
         Logger.i("创建webrtc的socket.io链接:${url}")
         //  }
+        isReCall = false
 
     }
 
@@ -137,10 +140,15 @@ class WebrtcSocketManager : BaseViewModel() {
     }
 
     fun release() {
-        webRtcManager?.release()
-        webRtcManager = null
+        isReCall = false
+        releaseWebrtc()
         webrtcSocket?.disconnect()
         webrtcSocket = null
+    }
+
+    private fun releaseWebrtc() {
+        webRtcManager?.release()
+        webRtcManager = null
     }
 
     /**
@@ -201,6 +209,7 @@ class WebrtcSocketManager : BaseViewModel() {
                     webrtcSocket?.disconnect()
                     webrtcSocket = null
                     callEvent.postValue(false)
+                    isReCall = false
                     //voiceCallEvent.postValue(CALL_HANG_UP)
 //                    viewModelScope.launch {
 //                        delay(200)
@@ -213,6 +222,7 @@ class WebrtcSocketManager : BaseViewModel() {
                     val ice = Gson().fromJson(message.data.toString(), IceCandidate::class.java)
                     webRtcManager?.addIce(ice)
                     isAnswer = true
+                    isReCall = true
                 }
 
             }
@@ -220,11 +230,17 @@ class WebrtcSocketManager : BaseViewModel() {
 
         webrtcSocket?.on(Socket.EVENT_CONNECT) {
             Logger.i("webrtc socket.io 连接成功")
+            if (webRtcManager != null) {
+                releaseWebrtc()
+                Logger.i("网络波动，正在重连...")
+                voiceCallEvent.postValue(RESTART_CALL)
+            }
             webRtcManager = WebRtcManager(MyApp.context)
             viewModelScope.launch {
                 delay(100)
                 MyApp.socketEventViewModel.call(toId, uuid)
             }
+
         }
 
         webrtcSocket?.on(Socket.EVENT_DISCONNECT) {

@@ -40,7 +40,7 @@ import kotlinx.coroutines.launch
  * Create by MJ on 2023/12/11.
  * Describe :
  */
-class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>() {
+class MessageFragment : BaseMvFragment<`FragmentMessageBinding`, MessageViewModel>() {
     private var messageAdapter: MessageAdapter? = null
     private var loadMoreHelp: QuickAdapterHelper? = null
     private var messageList: MutableList<Record> = mutableListOf()

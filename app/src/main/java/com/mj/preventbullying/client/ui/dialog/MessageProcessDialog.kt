@@ -9,15 +9,12 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.lifecycle.lifecycleScope
 import com.hjq.toast.ToastUtils
 import com.lxj.xpopup.core.CenterPopupView
-import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.app.MyApp
 import com.mj.preventbullying.client.R
-import com.mj.preventbullying.client.tool.SpManager
 import com.mj.preventbullying.client.webrtc.CALLED_STATUS
 import com.mj.preventbullying.client.webrtc.CALL_FAILURE
 import com.mj.preventbullying.client.webrtc.CALL_HANG_UP
 import com.mj.preventbullying.client.webrtc.RESTART_CALL
-import com.mj.preventbullying.client.webrtc.getUUID
 import com.orhanobut.logger.Logger
 import kotlinx.coroutines.launch
 
@@ -38,6 +35,8 @@ class MessageProcessDialog(context: Context) : CenterPopupView(context) {
     private val closeIv: AppCompatImageView by lazy { findViewById(R.id.close_iv) }
 
     private val callTimeTv: AppCompatTextView by lazy { findViewById(R.id.call_time_tv) }
+
+    private val callStatueTv: AppCompatTextView by lazy { findViewById(R.id.call_statue_tv) }
 
 
     //private var messageDialogClick: MessageDialogClick? = null
@@ -89,6 +88,7 @@ class MessageProcessDialog(context: Context) : CenterPopupView(context) {
                             closeIv.visibility = View.GONE
                             MyApp.timerViewModel.startTimer()
                         }
+                        callStatueTv.text = "正在通话中..."
                     }
                 }
 
@@ -104,14 +104,10 @@ class MessageProcessDialog(context: Context) : CenterPopupView(context) {
                     MyApp.timerViewModel.stopTimer()
                 }
                 // 重新连接
-//                RESTART_CALL -> {
-//                    isRestartCall = true
-//                    MyApp.webrtcSocketManager.createWebrtcSc(
-//                        SpManager.getString(Constant.USER_ID_KEY),
-//                        toId,
-//                        getUUID()
-//                    )
-//                }
+                RESTART_CALL -> {
+                    isRestartCall = true
+                    callStatueTv.text = "网络有波动，正在重接中..."
+                }
 
             }
         }

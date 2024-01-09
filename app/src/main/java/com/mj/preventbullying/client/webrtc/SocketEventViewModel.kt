@@ -187,8 +187,6 @@ class SocketEventViewModel : ViewModel(), HandlerAction {
                 }
             }
         }
-        // ice:{"sdpMid":"0","sdpMLineIndex":0,"sdp":"candidate:4160270536 1 udp 2122260223 192.168.1.19 61451 typ host generation 0 ufrag sWgO network-id 1 network-cost 10"}
-// ice:{adapterType=UNKNOWN, sdp=candidate:842163049 1 udp 1686052607 116.17.147.180 13175 typ srflx raddr 192.168.1.29 rport 54022 generation 0 ufrag wlhQ network-id 1, sdpMLineIndex=0.0, sdpMid=audio, serverUrl=stun:39.108.177.117:3478}
 
         mSocket?.on(Socket.EVENT_CONNECT) {
             Logger.i("全局socket.io 连接成功")
