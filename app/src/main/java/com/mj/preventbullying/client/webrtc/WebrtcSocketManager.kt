@@ -202,10 +202,10 @@ class WebrtcSocketManager : BaseViewModel() {
                     webrtcSocket = null
                     callEvent.postValue(false)
                     //voiceCallEvent.postValue(CALL_HANG_UP)
-                    viewModelScope.launch {
-                        delay(200)
-                        voiceCallEvent.postValue(RESTART_CALL)
-                    }
+//                    viewModelScope.launch {
+//                        delay(200)
+//                        voiceCallEvent.postValue(RESTART_CALL)
+//                    }
                 }
 
                 "icecandidate" -> {

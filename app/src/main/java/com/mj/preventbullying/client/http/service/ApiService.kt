@@ -34,12 +34,13 @@ interface ApiService {
     companion object {
         private const val BASE_HTTP_URL = "http://cloud.hdvsiot.com:8080/"
         private const val DEV_HTTP_URL = "http://192.168.1.6:80/"
+        private const val BASE_HTTP_URL_ZYQ = "http://cloud.zyq0407.com:8080/"
         const val API = "api/"
         private var isDevVersion = false
         fun getHostUrl(): String {
             //  isDevVersion = SpManager.getBoolean(Constant.SERVICE_URL_KEY, true)
             return if (isDevVersion) {
-                DEV_HTTP_URL
+                BASE_HTTP_URL_ZYQ
             } else {
                 BASE_HTTP_URL
             }

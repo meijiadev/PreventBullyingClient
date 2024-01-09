@@ -12,9 +12,6 @@ import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseViewModel
 
 class LoginViewModel() : BaseViewModel() {
-    private val _loginForm = MutableLiveData<LoginFormState>()
-    val loginFormState: LiveData<LoginFormState> = _loginForm
-
     private val _loginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _loginResult
 
@@ -32,26 +29,4 @@ class LoginViewModel() : BaseViewModel() {
 
     }
 
-
-    fun loginDataChanged(username: String, password: String, code: String) {
-        if (!isUserNameValid(username)) {
-            _loginForm.value = LoginFormState(usernameError = R.string.invalid_username)
-        } else if (!isPasswordValid(password)) {
-            _loginForm.value = LoginFormState(passwordError = R.string.invalid_password)
-        } else if (code.isEmpty()) {
-            _loginForm.value = LoginFormState(codeError = R.string.invalid_code)
-        } else {
-            _loginForm.value = LoginFormState(isDataValid = true)
-        }
-    }
-
-    // A placeholder username validation check
-    private fun isUserNameValid(username: String): Boolean {
-        return username.isNotEmpty()
-    }
-
-    // A placeholder password validation check
-    private fun isPasswordValid(password: String): Boolean {
-        return password.length > 5
-    }
 }

@@ -70,6 +70,11 @@ public class LoggerInterceptor implements Interceptor {
             if (!TextUtils.isEmpty(clone.message())) {
                 Logger.d("message : " + clone.message());
             }
+            if (clone.code() == 403) {
+                ToastUtils.show("无权限访问！");
+                return response;
+            }
+            MyApp.globalEventViewModel.getCodeEvent().postValue(clone.code());
             if (this.showResponse) {
                 ResponseBody body = clone.body();
                 if (body != null) {

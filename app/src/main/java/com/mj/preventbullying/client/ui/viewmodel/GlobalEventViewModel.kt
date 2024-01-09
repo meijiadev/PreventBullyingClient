@@ -15,6 +15,11 @@ import com.sjb.base.base.BaseViewModel
 
 class GlobalEventViewModel : BaseViewModel() {
 
+    /**
+     * http请求返回code值
+     */
+    var codeEvent = UnPeekLiveData<Int>()
+
     var notifyMsgEvent = UnPeekLiveData<NotificationMessage>()
 
     /**
@@ -26,7 +31,7 @@ class GlobalEventViewModel : BaseViewModel() {
         requestNoCheck({
             apiService.getNewApp()
         }, {
-         //   Logger.i("获取的最新app版本信息：$it")
+            //   Logger.i("获取的最新app版本信息：$it")
             MyApp.globalEventViewModel.updateAppEvent.postValue(it)
         })
     }

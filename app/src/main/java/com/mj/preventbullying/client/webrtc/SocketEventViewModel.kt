@@ -132,7 +132,7 @@ class SocketEventViewModel : ViewModel(), HandlerAction {
      * 拨打设备语音
      */
     fun call(toId: String?, uuid: String?) {
-        Logger.i("call ,toId:$toId")
+        Logger.i("call ,toId:$toId,uuid:$uuid")
         toId?.let {
             this.toId = toId
             val message = Message("call", userId, toId, null, uuid)

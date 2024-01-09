@@ -66,9 +66,8 @@
             app:shape_strokeWidth="@dimen/dp_1"
 
             />
-
-        <com.hjq.shape.view.ShapeEditText
-            android:id="@+id/password"
+        <com.hjq.shape.layout.ShapeLinearLayout
+            android:id="@+id/password_ll"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_45"
             android:layout_below="@id/username"
@@ -76,33 +75,39 @@
             android:layout_marginStart="@dimen/dp_35"
             android:layout_marginTop="@dimen/dp_15"
             android:layout_marginEnd="@dimen/dp_35"
-            android:hint="@string/prompt_password"
-            android:imeActionLabel="@string/action_sign_in_short"
-            android:imeOptions="actionDone"
-            android:inputType="textPassword"
-            android:paddingStart="@dimen/dp_8"
-            android:selectAllOnFocus="true"
-            android:text="Spad12#"
-            android:textSize="@dimen/sp_15"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/username"
             app:shape_radius="@dimen/dp_15"
             app:shape_strokeColor="@color/common_button_disable_color"
-            app:shape_strokeWidth="@dimen/dp_1"
-            />
+            app:shape_strokeWidth="@dimen/dp_1">
+            <com.sjb.base.view.PasswordEditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_45"
+                android:hint="@string/prompt_password"
+                android:imeActionLabel="@string/action_sign_in_short"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword"
+                android:paddingStart="@dimen/dp_8"
+                android:selectAllOnFocus="true"
+                android:text="Spad12#"
+                android:textSize="@dimen/sp_15"
+                android:background="@null"
+                />
 
+        </com.hjq.shape.layout.ShapeLinearLayout>
         <com.hjq.shape.view.ShapeEditText
             android:id="@+id/code_tv"
             android:layout_width="0dp"
             android:layout_height="@dimen/dp_45"
-            android:layout_below="@id/password"
+            android:layout_below="@id/password_ll"
             android:layout_marginStart="@dimen/dp_35"
             android:layout_marginTop="@dimen/dp_15"
             android:hint="验证码"
             android:paddingStart="@dimen/dp_8"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/password"
+            app:layout_constraintTop_toBottomOf="@id/password_ll"
             app:layout_constraintWidth_percent="0.4"
             app:shape_radius="@dimen/dp_15"
             app:shape_strokeColor="@color/common_button_disable_color"
@@ -116,19 +121,19 @@
             android:scaleType="centerCrop"
             android:layout_marginStart="@dimen/dp_15"
             app:layout_constraintStart_toEndOf="@id/code_tv"
-            app:layout_constraintTop_toBottomOf="@id/password"
+            app:layout_constraintTop_toBottomOf="@id/password_ll"
             />
 
 
         <ImageView
             android:layout_width="@dimen/dp_40"
             android:layout_height="@dimen/dp_40"
-            android:layout_below="@id/password"
+            android:layout_below="@id/password_ll"
             android:layout_toRightOf="@id/code_image"
             android:onClick="refresh"
             android:scaleType="center"
             android:src="@mipmap/refresh_icon"
-            app:layout_constraintTop_toBottomOf="@id/password"
+            app:layout_constraintTop_toBottomOf="@id/password_ll"
             app:layout_constraintStart_toEndOf="@id/code_image"
             android:layout_marginTop="@dimen/dp_15"
             />

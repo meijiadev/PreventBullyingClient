@@ -18,6 +18,7 @@ import com.hjq.shape.view.ShapeEditText
 import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.tool.NetworkUtil
 import com.mj.preventbullying.client.R
+import com.mj.preventbullying.client.app.MyApp
 import com.mj.preventbullying.client.tool.SpManager
 import com.mj.preventbullying.client.databinding.ActivityLoginBinding
 import com.mj.preventbullying.client.http.service.ApiService
@@ -79,71 +80,21 @@ class LoginActivity : BaseMvActivity<ActivityLoginBinding, LoginViewModel>() {
     }
 
     override fun initViewObservable() {
-        nameTV.afterTextChanged {
-            viewModel.loginDataChanged(
-                nameTV.text.toString(),
-                passwordTv.text.toString(),
-                codeTv.text.toString()
-            )
-        }
 
-        passwordTv.apply {
-            afterTextChanged {
-                viewModel.loginDataChanged(
-                    nameTV.text.toString(),
-                    passwordTv.text.toString(),
-                    codeTv.text.toString()
-                )
-            }
-        }
-
-        codeTv.apply {
-            afterTextChanged {
-                viewModel.loginDataChanged(
-                    nameTV.text.toString(),
-                    passwordTv.text.toString(),
-                    codeTv.text.toString()
-                )
-            }
-        }
 
     }
 
     override fun initView() {
-        viewModel.loginDataChanged(
-            nameTV.text.toString(),
-            passwordTv.text.toString(),
-            codeTv.text.toString()
-        )
         postDelayed({
             Logger.i("网络是否可以：${NetworkUtil.isAvailable()},IP:${NetworkUtil.getIPAddress(true)}")
             if (!NetworkUtil.isAvailable()) {
                 toast("网络不可用！")
             }
-            randomStr = generateRandomString()
-            val url = "${ApiService.getHostUrl()}/api/code?randomStr=$randomStr"
-            binding.codeImage.load(url)
-            Logger.i("加载验证码：$url")
+            refresh()
         }, 200)
     }
 
     override fun initListener() {
-        loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
-            val loginState = it ?: return@Observer
-
-            // disable login button unless both username / password is valid
-            login.isEnabled = loginState.isDataValid
-
-            if (loginState.usernameError != null) {
-                nameTV.error = getString(loginState.usernameError)
-            }
-            if (loginState.passwordError != null) {
-                passwordTv.error = getString(loginState.passwordError)
-            }
-            if (loginState.codeError != null) {
-                codeTv.error = getString(loginState.codeError)
-            }
-        })
         // 登录返回值
         loginViewModel.loginResult.observe(this) {
             toast("登陆成功！")
@@ -161,14 +112,20 @@ class LoginActivity : BaseMvActivity<ActivityLoginBinding, LoginViewModel>() {
             startActivity(MainActivity::class.java)
             finish()
         }
+        MyApp.globalEventViewModel.codeEvent.observe(this) {
+            if (it == 428) {
+                codeTv.setText("")
+                refresh()
+            }
+        }
 
     }
 
 
     /**
-     * 刷新图片验证码点击事件
+     * 刷新验证码
      */
-    fun refresh(v: View) {
+    private fun refresh() {
         randomStr = generateRandomString()
         val url = "${ApiService.getHostUrl()}/api/code?randomStr=$randomStr"
         binding.codeImage.load(url) {
@@ -178,21 +135,28 @@ class LoginActivity : BaseMvActivity<ActivityLoginBinding, LoginViewModel>() {
     }
 
     /**
+     * 刷新图片验证码点击事件
+     */
+    fun refresh(v: View) {
+        refresh()
+    }
+
+    /**
      * 登录点击事件
      */
     fun onLogin(v: View) {
-        if (login.isEnabled) {
-            val psTV = passwordTv.text.toString()
-            val ps = encrypt("thanks,pig4cloud", psTV).trim()
-            val name = nameTV.text.toString()
-            val code = codeTv.text.toString()
-            Logger.i("加密后的密码：$ps")
+        val psTV = passwordTv.text.toString()
+        val ps = encrypt("thanks,pig4cloud", psTV).trim()
+        val name = nameTV.text.toString()
+        val code = codeTv.text.toString()
+        Logger.i("加密后的密码：$ps")
+        if (ps.isNotEmpty() && name.isNotEmpty() && code.isNotEmpty()) {
             randomStr?.let {
                 loginViewModel.login(name, it, code, ps)
             }
-        } else {
-            toast("请完整填写登录账号密码和验证码")
+            return
         }
+        toast("请完整填写登录账号密码和验证码")
 
 
     }

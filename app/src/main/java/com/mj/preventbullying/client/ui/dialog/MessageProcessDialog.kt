@@ -104,14 +104,14 @@ class MessageProcessDialog(context: Context) : CenterPopupView(context) {
                     MyApp.timerViewModel.stopTimer()
                 }
                 // 重新连接
-                RESTART_CALL -> {
-                    isRestartCall = true
-                    MyApp.webrtcSocketManager.createWebrtcSc(
-                        SpManager.getString(Constant.USER_ID_KEY),
-                        toId,
-                        getUUID()
-                    )
-                }
+//                RESTART_CALL -> {
+//                    isRestartCall = true
+//                    MyApp.webrtcSocketManager.createWebrtcSc(
+//                        SpManager.getString(Constant.USER_ID_KEY),
+//                        toId,
+//                        getUUID()
+//                    )
+//                }
 
             }
         }
