@@ -14,30 +14,16 @@
         android:orientation="horizontal">
 
         <com.hjq.shape.view.ShapeTextView
-            android:id="@+id/all_message_tv"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/dp_25"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="全部"
-            android:textSize="@dimen/sp_15"
-            android:textStyle="bold"
-            app:shape_radius="@dimen/dp_10"
-            app:shape_solidColor="@color/white" />
-
-        <com.hjq.shape.view.ShapeTextView
             android:id="@+id/pending_tv"
             android:layout_width="0dp"
             android:layout_height="@dimen/dp_25"
             android:layout_marginStart="8dp"
-            android:layout_toRightOf="@id/all_message_tv"
             android:layout_weight="1"
             android:gravity="center"
             android:text="待处理"
             android:textSize="@dimen/sp_15"
             android:textStyle="bold"
             app:shape_radius="@dimen/dp_10"
-
             app:shape_solidColor="@color/gold" />
 
         <com.hjq.shape.view.ShapeTextView
@@ -45,8 +31,6 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/dp_25"
             android:layout_marginStart="8dp"
-
-            android:layout_toRightOf="@id/ignore_tv"
             android:layout_weight="1"
             android:gravity="center"
             android:text="处理中"
@@ -60,7 +44,6 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/dp_25"
             android:layout_marginStart="8dp"
-            android:layout_toRightOf="@id/pending_tv"
             android:layout_weight="1"
             android:gravity="center"
             android:text="已处理"
@@ -74,7 +57,6 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/dp_25"
             android:layout_marginStart="8dp"
-            android:layout_toRightOf="@id/processed_tv"
             android:layout_weight="1"
             android:gravity="center"
             android:text="已忽略"
@@ -82,6 +64,19 @@
             android:textStyle="bold"
             app:shape_radius="@dimen/dp_10"
             app:shape_solidColor="@color/white" />
+        <com.hjq.shape.view.ShapeTextView
+            android:id="@+id/all_message_tv"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_25"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/dp_8"
+            android:gravity="center"
+            android:text="全部"
+            android:textSize="@dimen/sp_15"
+            android:textStyle="bold"
+            app:shape_radius="@dimen/dp_10"
+            app:shape_solidColor="@color/white" />
+
 
     </LinearLayout>
 

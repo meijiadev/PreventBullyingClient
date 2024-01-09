@@ -123,6 +123,7 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
                 .popupAnimation(PopupAnimation.TranslateFromBottom)
                 .asCustom(messageProcessDialog)
                 .show()
+            currentRecordId?.let { viewModel.recordProcess(it, "处理中", PROCESSING_STATUS) }
 
         }
 
@@ -288,15 +289,21 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
             }
         }
 
-        viewModel.getPreVieUrlEvent.observe(this) {
+        viewModel.getPreVieUrlEvent.observe(this) { it ->
             it?.let { it1 ->
                 it1.data?.let { data ->
                     lifecycleScope.launch(Dispatchers.IO) {
                         kotlin.runCatching {
                             val audioPlayDialog =
                                 AudioPlayDialog(requireContext()).setPlayUrl(data.url)
-                                    .setAudioPLayerEndListener {
-
+                                    .setAudioPLayerStartListener {
+                                        currentRecordId?.let { recordId ->
+                                            viewModel.recordProcess(
+                                                recordId,
+                                                "处理中",
+                                                PROCESSING_STATUS
+                                            )
+                                        }
                                     }
                             XPopup.Builder(requireContext())
                                 .isViewMode(true)

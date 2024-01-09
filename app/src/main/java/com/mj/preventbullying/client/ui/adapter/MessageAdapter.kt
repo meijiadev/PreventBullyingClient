@@ -3,6 +3,7 @@ package com.mj.preventbullying.client.ui.adapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter4.BaseQuickAdapter
@@ -41,14 +42,16 @@ class MessageAdapter : BaseQuickAdapter<Record, MessageAdapter.VH>() {
                     processTv.shapeDrawableBuilder.setSolidColor(context.getColor(com.sjb.base.R.color.red))
                         .intoBackground()
                     //R.mipmap.pending_icon
+                    processBt.visibility=View.VISIBLE
                 }
                 // 处理中
                 PROCESSING_STATUS -> {
                     processTv.text = "处理中"
-                    processTv.shapeDrawableBuilder.setSolidColor(context.getColor(com.sjb.base.R.color.yellow))
+                    processTv.shapeDrawableBuilder.setSolidColor(context.getColor(com.sjb.base.R.color.gold))
                         .intoBackground()
                     //goProcessTv.visibility = View.GONE
                     //R.mipmap.processing_icon
+                    processBt.visibility=View.VISIBLE
                 }
                 // 已处理
                 PROCESSED_STATUS -> {
@@ -57,12 +60,14 @@ class MessageAdapter : BaseQuickAdapter<Record, MessageAdapter.VH>() {
                         .intoBackground()
                     //goProcessTv.visibility = View.GONE
                     //R.mipmap.processed_icon
+                    processBt.visibility=View.GONE
                 }
                 // 已忽略
                 PROCESSED_IGNORE -> {
                     processTv.text = "已忽略"
                     processTv.shapeDrawableBuilder.setSolidColor(context.getColor(com.sjb.base.R.color.gray))
                         .intoBackground()
+                    processBt.visibility=View.GONE
                     // goProcessTv.visibility = View.GONE
                     //R.mipmap.ignore_icon
                 }

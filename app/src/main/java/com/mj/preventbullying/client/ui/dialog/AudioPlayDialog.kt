@@ -164,7 +164,7 @@ class AudioPlayDialog(context: Context) : CenterPopupView(context),
     override fun onAudioPlayerStop() {
         isPlaying = false
         AudioPlayer.instance.stop()
-        mAudioPlayerEndListener?.invoke()
+        mAudioPlayerStartListener?.invoke()
         dismiss()
     }
 
@@ -182,9 +182,9 @@ class AudioPlayDialog(context: Context) : CenterPopupView(context),
     }
 
 
-    private var mAudioPlayerEndListener: (() -> Unit)? = null
+    private var mAudioPlayerStartListener: (() -> Unit)? = null
 
-    fun setAudioPLayerEndListener(listener: (() -> Unit)): AudioPlayDialog = apply {
-        this.mAudioPlayerEndListener = listener
+    fun setAudioPLayerStartListener(listener: (() -> Unit)): AudioPlayDialog = apply {
+        this.mAudioPlayerStartListener = listener
     }
 }

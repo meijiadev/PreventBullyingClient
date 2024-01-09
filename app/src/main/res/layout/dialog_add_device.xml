@@ -260,10 +260,10 @@
             android:layout_marginEnd="@dimen/dp_20"
             android:gravity="center"
             android:text="确定"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="@dimen/sp_15"
             app:shape_radius="@dimen/dp_8"
-            app:shape_solidColor="@color/common_confirm_text_color" />
+            app:shape_solidColor="@color/gold" />
 
         <com.hjq.shape.layout.ShapeLinearLayout
             android:id="@+id/org_list_ll"
