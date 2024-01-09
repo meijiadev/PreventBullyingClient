@@ -13,10 +13,10 @@ import com.mj.preventbullying.client.http.result.Record
  * Create by MJ on 2023/12/11.
  * Describe :
  */
-const val PENDING_STATUS = "0"
-const val PROCESSING_STATUS = "1"
-const val PROCESSED_STATUS = "2"
-const val PROCESSED_IGNORE = "3"
+const val PENDING_STATUS = "0"           //待处理
+const val PROCESSING_STATUS = "1"        // 处理中
+const val PROCESSED_STATUS = "2"         // 已处理
+const val PROCESSED_IGNORE = "3"         // 已忽略
 
 class MessageAdapter : BaseQuickAdapter<Record, MessageAdapter.VH>() {
     class VH(

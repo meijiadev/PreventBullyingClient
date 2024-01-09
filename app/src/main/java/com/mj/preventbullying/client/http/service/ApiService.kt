@@ -89,7 +89,8 @@ interface ApiService {
     @GET("anti-bullying/record/page")
     suspend fun getAllRecords(
         @Query("current") current: Int = 1,
-        @Query("size") size: Int = 20
+        @Query("size") size: Int = 20,
+        @Query("state") state: String?
         //@Header("Authorization") authorization: String = "Bearer ${SpManager.getString(Constant.ACCESS_TOKEN_KEY)}"
     ): DeviceRecordResult
 

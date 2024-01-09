@@ -40,13 +40,12 @@ import kotlinx.coroutines.launch
  * Create by MJ on 2023/12/11.
  * Describe :
  */
-class MessageFragment : BaseMvFragment<`FragmentMessageBinding`, MessageViewModel>() {
+class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>() {
     private var messageAdapter: MessageAdapter? = null
     private var loadMoreHelp: QuickAdapterHelper? = null
-    private var messageList: MutableList<Record> = mutableListOf()
     private var processPosition: Int? = null
     private var currentRecordId: String? = null
-    private var curShowType = PENDING_STATUS
+    private var curShowType: String? = PENDING_STATUS
     private var isHideFragment: Boolean = false
     private var isNotify = false
 
@@ -72,30 +71,25 @@ class MessageFragment : BaseMvFragment<`FragmentMessageBinding`, MessageViewMode
     override fun initParam() {
         lifecycleScope.launch {
             delay(200)
-            viewModel.getAllDeviceRecords(1)
+            viewModel.getAllDeviceRecords(1, curShowType)
         }
     }
 
     override fun initData() {
         messageAdapter = MessageAdapter()
-        //messageAdapter?.setItemAnimation(BaseQuickAdapter.AnimationType.ScaleIn)
+        messageAdapter?.setItemAnimation(BaseQuickAdapter.AnimationType.ScaleIn)
         //deviceListAdapter?.addAll(deviceList)
         loadMoreHelp = QuickAdapterHelper.Builder(messageAdapter!!)
             .setTrailingLoadStateAdapter(object : TrailingLoadStateAdapter.OnTrailingListener {
                 override fun onFailRetry() {
                     Logger.i("加载更多失败")
-                    viewModel.getAllDeviceRecords(curDataPage + 1)
+                    viewModel.getAllDeviceRecords(curDataPage + 1, curShowType)
                 }
 
                 override fun onLoad() {
                     Logger.i("加载更多数据")
-                    viewModel.getAllDeviceRecords(curDataPage + 1)
+                    viewModel.getAllDeviceRecords(curDataPage + 1, curShowType)
                 }
-
-//                override fun isAllowLoading(): Boolean {
-//                    return binding.smartRefreshLayout.isRefreshing
-//                }
-
             }).build()
         val layoutManager = LinearLayoutManager(context)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
@@ -107,7 +101,7 @@ class MessageFragment : BaseMvFragment<`FragmentMessageBinding`, MessageViewMode
         // 对讲
         messageAdapter?.addOnItemChildClickListener(R.id.call_tv) { adapter, view, position ->
             processPosition = position
-            val record=messageAdapter?.getItem(position)
+            val record = messageAdapter?.getItem(position)
             Logger.i("当前点击的参数：$position,${record}")
             val snCode = record?.snCode
             currentRecordId = record?.recordId
@@ -136,7 +130,7 @@ class MessageFragment : BaseMvFragment<`FragmentMessageBinding`, MessageViewMode
         messageAdapter?.addOnItemChildClickListener(R.id.play_tv) { adapter, view, position ->
             processPosition = position
             //val snCode = messageList?.get(position)?.snCode
-            val record=messageAdapter?.getItem(position)
+            val record = messageAdapter?.getItem(position)
             currentRecordId = record?.recordId
             val fileId = record?.fileId
             fileId?.let {
@@ -146,7 +140,7 @@ class MessageFragment : BaseMvFragment<`FragmentMessageBinding`, MessageViewMode
         // 处理按钮
         messageAdapter?.addOnItemChildClickListener(R.id.process_bt) { adapter, view, position ->
             processPosition = position
-            val record=messageAdapter?.getItem(position)
+            val record = messageAdapter?.getItem(position)
             currentRecordId = record?.recordId
             val inputMsgDialog = InputMsgDialog(requireContext()).setConfirmListener { model, msg ->
                 currentRecordId?.let { recordId ->
@@ -169,7 +163,7 @@ class MessageFragment : BaseMvFragment<`FragmentMessageBinding`, MessageViewMode
             resetMessageBt()
             binding.allMessageTv.shapeDrawableBuilder.setSolidColor(requireContext().getColor(com.sjb.base.R.color.gold))
                 .intoBackground()
-            filtrationMsgTp("null")
+            filtrationMsgTp(null)
 
         }
 
@@ -222,23 +216,24 @@ class MessageFragment : BaseMvFragment<`FragmentMessageBinding`, MessageViewMode
      * 按照类型过滤
      */
     @SuppressLint("NotifyDataSetChanged")
-    private fun filtrationMsgTp(type: String) {
+    private fun filtrationMsgTp(type: String?) {
         curShowType = type
-        if (type == "null") {
-            messageAdapter?.submitList(messageList)
-            messageAdapter?.notifyDataSetChanged()
-            return
-        }
-        val list = mutableListOf<Record>()
-        messageList.let {
-            for (record in it) {
-                if (record.state == type) {
-                    list.add(record)
-                }
-            }
-            messageAdapter?.submitList(list)
-            messageAdapter?.notifyDataSetChanged()
-        }
+//        if (type == "null") {
+//            messageAdapter?.submitList(messageList)
+//            messageAdapter?.notifyDataSetChanged()
+//            return
+//        }
+//        val list = mutableListOf<Record>()
+//        messageList.let {
+//            for (record in it) {
+//                if (record.state == type) {
+//                    list.add(record)
+//                }
+//            }
+//            messageAdapter?.submitList(list)
+//            messageAdapter?.notifyDataSetChanged()
+//        }
+        viewModel.getAllDeviceRecords(1, curShowType)
     }
 
     override fun initView() {
@@ -246,7 +241,7 @@ class MessageFragment : BaseMvFragment<`FragmentMessageBinding`, MessageViewMode
             Logger.i("下拉刷新")
             it.setReboundDuration(300)
             curDataPage = 1
-            viewModel.getAllDeviceRecords(curDataPage)
+            viewModel.getAllDeviceRecords(curDataPage, curShowType)
         }
         //  AudioPlayer.instance.addListener(this)
     }
@@ -280,13 +275,12 @@ class MessageFragment : BaseMvFragment<`FragmentMessageBinding`, MessageViewMode
             if (!it?.data?.records.isNullOrEmpty()) {
                 val datas = it?.data?.records as MutableList<Record>
                 if (it.data.current == 1) {
-                    messageList = datas
+                    messageAdapter?.submitList(datas)
                 } else {
-                    messageList.addAll(datas)
+                    messageAdapter?.addAll(datas)
                 }
             }
             binding.smartRefreshLayout.finishRefresh(500)
-            filtrationMsgTp(curShowType)
             if (!isHideFragment) {
                 // 可见状态
                 JPushInterface.clearAllNotifications(context)
@@ -322,7 +316,8 @@ class MessageFragment : BaseMvFragment<`FragmentMessageBinding`, MessageViewMode
         // 收到极光通知
         MyApp.globalEventViewModel.notifyMsgEvent.observe(this) {
             curDataPage = 1
-            viewModel.getAllDeviceRecords(curDataPage)
+            curShowType = PENDING_STATUS
+            viewModel.getAllDeviceRecords(curDataPage, curShowType)
             Logger.i("收到报警通知")
             isNotify = true
         }
@@ -332,7 +327,7 @@ class MessageFragment : BaseMvFragment<`FragmentMessageBinding`, MessageViewMode
         super.onHiddenChanged(hidden)
         Logger.i("是否隐藏：$hidden")
         if (!hidden) {
-            viewModel.getAllDeviceRecords(curDataPage)
+            viewModel.getAllDeviceRecords(curDataPage, curShowType)
         }
         isHideFragment = hidden
         if (!isHideFragment) {

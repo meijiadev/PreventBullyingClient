@@ -59,7 +59,7 @@
             android:layout_marginStart="@dimen/dp_10"
             android:layout_marginTop="@dimen/dp_5"
             android:gravity="left"
-            android:text="关键字："
+            android:text="关键词："
             android:textColor="@color/gray"
             android:textSize="@dimen/sp_12"
             app:layout_constraintStart_toStartOf="parent"
