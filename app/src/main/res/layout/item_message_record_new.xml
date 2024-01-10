@@ -78,6 +78,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/text_tv" />
 
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/volume_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_45"
+            android:textColor="@color/common_cancel_text_color"
+            android:textSize="@dimen/sp_10"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/keyword_tv" />
+
         <View
             android:layout_width="@dimen/dp_1"
             android:layout_height="@dimen/dp_40"

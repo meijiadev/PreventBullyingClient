@@ -102,6 +102,7 @@ class MessageProcessDialog(context: Context) : CenterPopupView(context) {
                     closeSpeaker()
                     dismiss()
                     MyApp.timerViewModel.stopTimer()
+                    callFinishListener?.invoke()
                 }
                 // 重新连接
                 RESTART_CALL -> {
@@ -116,10 +117,6 @@ class MessageProcessDialog(context: Context) : CenterPopupView(context) {
         }
     }
 
-//    fun setClickListener(listener: MessageDialogClick): MessageProcessDialog = apply {
-//        messageDialogClick = listener
-//
-//    }
 
     fun setToId(id: String?): MessageProcessDialog = apply {
         this.toId = id
@@ -133,19 +130,17 @@ class MessageProcessDialog(context: Context) : CenterPopupView(context) {
         audioManager?.isSpeakerphoneOn = false
     }
 
+    private var callFinishListener: (() -> Unit)? = null
+
+    fun setCallListener(listener: (() -> Unit)): MessageProcessDialog = apply {
+        this.callFinishListener = listener
+    }
+
 
     override fun dismiss() {
         super.dismiss()
         Logger.i("退出")
     }
-//
-//    interface MessageDialogClick {
-//        fun toCall()
-//        fun playWarnAudio()
-//        fun ignore()
-//
-//        fun callFinish()
-//
-//    }
+
 
 }

@@ -205,11 +205,12 @@ class WebrtcSocketManager : BaseViewModel() {
                 }
 
                 "hangup" -> {
-                    webRtcManager?.release()
-                    webrtcSocket?.disconnect()
-                    webrtcSocket = null
-                    callEvent.postValue(false)
+//                    webRtcManager?.release()
+//                    webrtcSocket?.disconnect()
+//                    webrtcSocket = null
+//                    callEvent.postValue(false)
                     isReCall = false
+                    sendHangUp(false)
                     //voiceCallEvent.postValue(CALL_HANG_UP)
 //                    viewModelScope.launch {
 //                        delay(200)

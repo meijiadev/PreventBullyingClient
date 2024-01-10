@@ -45,6 +45,7 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
     private var loadMoreHelp: QuickAdapterHelper? = null
     private var processPosition: Int? = null
     private var currentRecordId: String? = null
+    private var currentState: String? = null
     private var curShowType: String? = PENDING_STATUS
     private var isHideFragment: Boolean = false
     private var isNotify = false
@@ -105,6 +106,7 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
             Logger.i("当前点击的参数：$position,${record}")
             val snCode = record?.snCode
             currentRecordId = record?.recordId
+            currentState = record?.state
             //val fileId = messageList?.get(position)?.fileId
             Logger.i("去处理消息")
             lifecycleScope.launch(Dispatchers.Main) {
@@ -115,7 +117,11 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
             }
             val messageProcessDialog =
                 MessageProcessDialog(requireContext())
-                    .setToId(snCode)
+                    .setToId(snCode).setCallListener {
+                        if (currentState == PENDING_STATUS) {
+                            currentRecordId?.let { viewModel.recordProcess(it, "处理中", PROCESSING_STATUS) }
+                        }
+                    }
             XPopup.Builder(requireContext()).isViewMode(true)
                 .isDestroyOnDismiss(true)
                 .dismissOnBackPressed(false)
@@ -123,7 +129,6 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
                 .popupAnimation(PopupAnimation.TranslateFromBottom)
                 .asCustom(messageProcessDialog)
                 .show()
-            currentRecordId?.let { viewModel.recordProcess(it, "处理中", PROCESSING_STATUS) }
 
         }
 
@@ -133,6 +138,7 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
             //val snCode = messageList?.get(position)?.snCode
             val record = messageAdapter?.getItem(position)
             currentRecordId = record?.recordId
+            currentState = record?.state
             val fileId = record?.fileId
             fileId?.let {
                 viewModel.getAudioPreUrl(fileId)
@@ -297,12 +303,14 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
                             val audioPlayDialog =
                                 AudioPlayDialog(requireContext()).setPlayUrl(data.url)
                                     .setAudioPLayerStartListener {
-                                        currentRecordId?.let { recordId ->
-                                            viewModel.recordProcess(
-                                                recordId,
-                                                "处理中",
-                                                PROCESSING_STATUS
-                                            )
+                                        if (currentState == PENDING_STATUS) {
+                                            currentRecordId?.let {
+                                                viewModel.recordProcess(
+                                                    it,
+                                                    "处理中",
+                                                    PROCESSING_STATUS
+                                                )
+                                            }
                                         }
                                     }
                             XPopup.Builder(requireContext())

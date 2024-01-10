@@ -34,15 +34,16 @@ class MessageAdapter : BaseQuickAdapter<Record, MessageAdapter.VH>() {
             snTv.text = "SN-${item?.snCode}"
             locationTv.text = "${item?.org?.name} ${item?.location}"
             keywordTv.text = item?.keyword
+            volumeTv.text = (item?.volume ?: "")
             waringTimeTv.text = item?.waringTime
-            val resource = when (item?.state) {
+            when (item?.state) {
                 // 待处理
                 PENDING_STATUS -> {
                     processTv.text = "待处理"
                     processTv.shapeDrawableBuilder.setSolidColor(context.getColor(com.sjb.base.R.color.red))
                         .intoBackground()
                     //R.mipmap.pending_icon
-                    processBt.visibility=View.VISIBLE
+                    processBt.visibility = View.VISIBLE
                 }
                 // 处理中
                 PROCESSING_STATUS -> {
@@ -51,7 +52,7 @@ class MessageAdapter : BaseQuickAdapter<Record, MessageAdapter.VH>() {
                         .intoBackground()
                     //goProcessTv.visibility = View.GONE
                     //R.mipmap.processing_icon
-                    processBt.visibility=View.VISIBLE
+                    processBt.visibility = View.VISIBLE
                 }
                 // 已处理
                 PROCESSED_STATUS -> {
@@ -60,14 +61,14 @@ class MessageAdapter : BaseQuickAdapter<Record, MessageAdapter.VH>() {
                         .intoBackground()
                     //goProcessTv.visibility = View.GONE
                     //R.mipmap.processed_icon
-                    processBt.visibility=View.GONE
+                    processBt.visibility = View.GONE
                 }
                 // 已忽略
                 PROCESSED_IGNORE -> {
                     processTv.text = "已忽略"
                     processTv.shapeDrawableBuilder.setSolidColor(context.getColor(com.sjb.base.R.color.gray))
                         .intoBackground()
-                    processBt.visibility=View.GONE
+                    processBt.visibility = View.GONE
                     // goProcessTv.visibility = View.GONE
                     //R.mipmap.ignore_icon
                 }

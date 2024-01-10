@@ -37,5 +37,6 @@ data class Record(
     val snCode: String,
     val state: String,
     val type: String,
-    val waringTime: String
+    val waringTime: String,
+    val volume: String?
 )
