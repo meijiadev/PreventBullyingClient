@@ -20,7 +20,7 @@
             android:layout_marginTop="@dimen/dp_10"
             android:text="校园防欺凌设备 AM100"
             android:textSize="@dimen/sp_13"
-            android:textStyle="bold" />
+             />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/location_tv"

@@ -131,7 +131,7 @@
             android:gravity="center"
             android:text="对讲"
             android:textSize="@dimen/sp_13"
-            android:textStyle="bold"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:shape_radius="@dimen/dp_10"
@@ -147,7 +147,7 @@
             android:gravity="center"
             android:text="播放"
             android:textSize="@dimen/sp_13"
-            android:textStyle="bold"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/call_tv"
             app:shape_radius="@dimen/dp_13"
@@ -163,7 +163,7 @@
             android:gravity="center"
             android:text="处理"
             android:textSize="@dimen/sp_13"
-            android:textStyle="bold"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/play_tv"
             app:shape_radius="@dimen/dp_10"
