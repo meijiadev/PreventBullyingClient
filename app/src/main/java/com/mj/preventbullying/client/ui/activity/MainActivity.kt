@@ -9,14 +9,22 @@ import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import cn.jpush.android.api.BasicPushNotificationBuilder
 import cn.jpush.android.api.JPushInterface
 import cn.jpush.android.ups.JPushUPSManager
+import com.clj.fastble.BleManager
+import com.clj.fastble.callback.BleScanCallback
+import com.clj.fastble.data.BleDevice
+import com.clj.fastble.scan.BleScanRuleConfig
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.gyf.immersionbar.ktx.immersionBar
+import com.hjq.permissions.OnPermissionCallback
+import com.hjq.permissions.Permission
+import com.hjq.permissions.XXPermissions
 import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.enums.PopupAnimation
 import com.mj.preventbullying.client.BuildConfig
@@ -31,12 +39,14 @@ import com.mj.preventbullying.client.http.result.DevType
 import com.mj.preventbullying.client.jpush.receive.JPushExtraMessage
 import com.mj.preventbullying.client.tool.NetworkUtil
 import com.mj.preventbullying.client.tool.SpManager
+import com.mj.preventbullying.client.tool.requestBlePermission
 import com.mj.preventbullying.client.tool.requestLocationPermission
 import com.mj.preventbullying.client.tool.requestPermission
 import com.mj.preventbullying.client.ui.dialog.DevInfoDialog
 import com.mj.preventbullying.client.ui.dialog.MessageTipsDialog
 import com.mj.preventbullying.client.ui.fragment.DeviceFragment
 import com.mj.preventbullying.client.ui.fragment.MessageFragment
+import com.mj.preventbullying.client.ui.fragment.MineFragment
 import com.mj.preventbullying.client.ui.login.LoginActivity
 import com.mj.preventbullying.client.ui.viewmodel.MainViewModel
 import com.mj.preventbullying.client.webrtc.LOGIN_STATUS_ANTHER
@@ -55,6 +65,8 @@ import kotlinx.coroutines.launch
 class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
     private val messageFragment by lazy { MessageFragment.newInstance() }
     private val deviceFragment by lazy { DeviceFragment.newInstance() }
+    private val mineFragment by lazy { MineFragment.newInstance() }
+
 
     private var jPushExtraMessage: JPushExtraMessage? = null
     private var treeList: MutableList<TreeModel>? = null
@@ -121,11 +133,10 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
         val registerId = SpManager.getString(Constant.REGISTER_ID_KEY)
         if (userId != null && registerId != null) {
             MyApp.socketEventViewModel.initSocket(userId, registerId)
-            // viewModel.getAllDeviceRecords()
         }
 
         MyApp.globalEventViewModel.getAppVersion()
-        //requestLocationPermission()
+
 
     }
 
@@ -138,9 +149,11 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
         lifecycleScope.launch {
             delay(200)
             if (MyApp.socketEventViewModel.isConnected) {
-                binding.devServerIv.setImageResource(R.mipmap.dev_connect)
+                binding.devServerIv.shapeDrawableBuilder.setSolidColor(getColor(com.sjb.base.R.color.gold))
+                    .intoBackground()
             } else {
-                binding.devServerIv.setImageResource(R.mipmap.dev_disconnect)
+                binding.devServerIv.shapeDrawableBuilder.setSolidColor(getColor(com.sjb.base.R.color.gray))
+                    .intoBackground()
             }
         }
         binding.devServerIv.setOnClickListener {
@@ -159,10 +172,11 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
     }
 
     override fun initListener() {
-        binding.addDeviceLl.setOnClickListener {
+        binding.addDevice.setOnClickListener {
             getDevInfoList()
             Logger.i("点击添加设备")
-            showAddDialog()
+            requestBlePermission()
+            // showAddDialog()
         }
         // 登录状态
         MyApp.socketEventViewModel.loginStatusEvent.observe(this) {
@@ -199,11 +213,13 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
                 }
 
                 SOCKET_IO_CONNECT -> {
-                    binding.devServerIv.setImageResource(R.mipmap.dev_connect)
+                    binding.devServerIv.shapeDrawableBuilder.setSolidColor(getColor(com.sjb.base.R.color.gold))
+                        .intoBackground()
                 }
 
                 SOCKET_IO_DISCONNECTED -> {
-                    binding.devServerIv.setImageResource(R.mipmap.dev_disconnect)
+                    binding.devServerIv.shapeDrawableBuilder.setSolidColor(getColor(com.sjb.base.R.color.gray))
+                        .intoBackground()
                 }
             }
         }
@@ -269,6 +285,47 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
 
     }
 
+    /**
+     * 获取蓝牙扫描、连接的权限
+     */
+    private fun requestBlePermission() {
+        XXPermissions.with(this)
+            .permission(Permission.BLUETOOTH_CONNECT)
+            .permission(Permission.BLUETOOTH_SCAN)
+            .permission(Permission.BLUETOOTH_ADVERTISE)
+            .permission(Permission.ACCESS_FINE_LOCATION)
+            .permission(Permission.ACCESS_COARSE_LOCATION)
+            .request(object : OnPermissionCallback {
+                override fun onGranted(permissions: MutableList<String>?, all: Boolean) {
+                    // Logger.i("录音权限获取成功")
+                    if (all) {
+                        Logger.i("所有权限获取成功")
+                        startActivity(DeviceConfigurationActivity::class.java)
+                    } else {
+                        permissions?.let {
+                            for (permission in it) {
+                                Logger.i("获取到的权限：$permission")
+                            }
+                        }
+
+                    }
+
+                }
+
+                override fun onDenied(permissions: MutableList<String>?, never: Boolean) {
+                    super.onDenied(permissions, never)
+                    //Logger.i("权限获取失败")
+                    permissions?.let {
+                        for (permission in it) {
+                            Logger.i("权限获取失败：$permission")
+                        }
+                    }
+                }
+            })
+
+    }
+
+
     override fun onDestroy() {
         super.onDestroy()
         MyApp.webrtcSocketManager.sendHangUp()
@@ -325,6 +382,11 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
         switchFragment(deviceFragment)
     }
 
+    fun onMine(v: View) {
+        binding.titleTv.text = "我的"
+        switchFragment(mineFragment)
+    }
+
     /**
      * 当前的fragment
      */
@@ -336,20 +398,31 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
     private fun switchFragment(target: Fragment) {
         if (target != null && target != mFragment) {
             val transaction = supportFragmentManager.beginTransaction()
-            if (target is MessageFragment) {
-                binding.messageIv.setImageResource(R.mipmap.message_icon_select)
-                binding.deviceManagerIv.setImageResource(R.mipmap.dev_manager)
-                transaction.setCustomAnimations(
-                    R.anim.action_left_enter,
-                    R.anim.action_left_exit
-                )
-            } else {
-                binding.messageIv.setImageResource(R.mipmap.message_icon)
-                binding.deviceManagerIv.setImageResource(R.mipmap.dev_manager_select)
-                transaction.setCustomAnimations(
-                    R.anim.action_rigth_enter,
-                    R.anim.action_rigth_exit
-                )
+            binding.addDevice.visibility = if (target is DeviceFragment) View.VISIBLE else View.GONE
+            when (target) {
+                is MessageFragment -> {
+                    binding.run {
+                        messageIv.setImageResource(R.mipmap.message_icon_select)
+                        deviceManagerIv.setImageResource(R.mipmap.dev_manager)
+                        mineIv.setImageResource(R.mipmap.mine_icon)
+                    }
+                }
+
+                is DeviceFragment -> {
+                    binding.run {
+                        messageIv.setImageResource(R.mipmap.message_icon)
+                        deviceManagerIv.setImageResource(R.mipmap.dev_manager_select)
+                        mineIv.setImageResource(R.mipmap.mine_icon)
+                    }
+                }
+
+                is MineFragment -> {
+                    binding.run {
+                        messageIv.setImageResource(R.mipmap.message_icon)
+                        deviceManagerIv.setImageResource(R.mipmap.dev_manager)
+                        mineIv.setImageResource(R.mipmap.mine_icon_select)
+                    }
+                }
             }
             // 先判断该fragment 是否已经被添加到管理器
             if (!target.isAdded) {

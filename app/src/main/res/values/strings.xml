@@ -10,7 +10,7 @@
     <string name="invalid_password">密码必须大于5个字符</string>
     <string name="invalid_code">验证码为空</string>
     <string name="login_failed">"登录失败"</string>
-
+    <string name="common_loading">加载中&#8230;</string>
     <string name="http_unknown_error">请求出错，未知错误</string>
     <string name="http_token_error">登录失效，请重新登录</string>
     <string name="http_data_explain_error">数据解析异常，请稍后</string>
@@ -21,4 +21,17 @@
     <string name="http_request_cancel">请求被中断，请重试</string>
     <string name="http_response_null_body">服务器数据返回异常，请稍后再试</string>
     <string name="http_response_md5_error">下载失败，文件 md5 校验失败</string>
+
+    <string name="connecting">连接中...</string>
+    <string name="not_connected">未连接</string>
+    <string name="none_paired">未配对</string>
+    <string name="none_found">未找到</string>
+    <string name="edit_hint">输入发送字符串</string>
+    <string name="button_send">Go</string>
+    <string name="scan">查找设备</string>
+    <string name="pairedDevice">已配对设备</string>
+    <string name="foundDevice">搜索到设备</string>
+    <string name="device_visibility">设备可见</string>
+    <string name="bluetoothON">开启蓝牙</string>
+    <string name="bluetoothOff">关闭蓝牙</string>
 </resources>

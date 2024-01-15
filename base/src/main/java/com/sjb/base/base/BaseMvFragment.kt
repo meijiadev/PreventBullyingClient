@@ -1,6 +1,8 @@
 package com.sjb.base.base
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -30,9 +32,9 @@ abstract class BaseMvFragment<V : ViewBinding, VM : BaseViewModel> : Fragment(),
 
     abstract fun getViewBinding(inflater: LayoutInflater, parent: ViewGroup?): V
 
-    private var mActivityProvider: ViewModelProvider?=null
+    private var mActivityProvider: ViewModelProvider? = null
 
-    private var mFragmentProvider: ViewModelProvider?=null
+    private var mFragmentProvider: ViewModelProvider? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -79,9 +81,9 @@ abstract class BaseMvFragment<V : ViewBinding, VM : BaseViewModel> : Fragment(),
     /**
      * 获取Activity作用域的ViewModel
      */
-    protected fun <T: ViewModel> getActivityViewModel(modelClass:Class<T>):T?{
-        if (mActivityProvider==null){
-            mActivityProvider= ViewModelProvider(mActivity)
+    protected fun <T : ViewModel> getActivityViewModel(modelClass: Class<T>): T? {
+        if (mActivityProvider == null) {
+            mActivityProvider = ViewModelProvider(mActivity)
         }
         return mActivityProvider?.get(modelClass)
     }
@@ -89,11 +91,17 @@ abstract class BaseMvFragment<V : ViewBinding, VM : BaseViewModel> : Fragment(),
     /**
      * 获取作用域为Fragment的ViewModel
      */
-    protected fun <T: ViewModel> getFragmentViewModel(modelClass:Class<T>):T?{
-        if (mFragmentProvider==null){
-            mFragmentProvider= ViewModelProvider(this)
+    protected fun <T : ViewModel> getFragmentViewModel(modelClass: Class<T>): T? {
+        if (mFragmentProvider == null) {
+            mFragmentProvider = ViewModelProvider(this)
         }
         return mFragmentProvider?.get(modelClass)
     }
 
+    /**
+     * 跳转 Activity 简化版
+     */
+    open fun startActivity(clazz: Class<out Activity?>?) {
+        mActivity.startActivity(Intent(mActivity, clazz))
+    }
 }

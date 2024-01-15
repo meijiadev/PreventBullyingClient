@@ -11,25 +11,40 @@
     <RelativeLayout
         android:id="@+id/title_ly"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_80"
+        android:layout_height="@dimen/dp_90"
         android:background="@color/white"
         android:orientation="horizontal">
-
-        <com.hjq.shape.view.ShapeTextView
-            android:id="@+id/title_tv"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/dp_10"
-            android:gravity="center"
-            android:text="消息通知"
-            android:textSize="@dimen/sp_18"
-            android:textStyle="bold"
-            app:shape_solidColor="@color/white70" />
+            >
+            <com.hjq.shape.view.ShapeTextView
+                android:id="@+id/title_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="消息通知"
+                android:textSize="@dimen/sp_18"
+                android:textStyle="bold"
+                app:shape_solidColor="@color/white70" />
+            <com.hjq.shape.view.ShapeTextView
+                android:id="@+id/dev_server_iv"
+                android:layout_width="@dimen/dp_5"
+                android:layout_height="@dimen/dp_5"
+                app:shape_radius="@dimen/dp_20"
+                app:shape_solidColor="@color/gold"
+                android:layout_marginStart="@dimen/dp_5"
+                android:layout_gravity="center_vertical"
+                />
+        </LinearLayout>
+
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/exit_iv"
+            android:id="@+id/add_device"
             android:layout_width="@dimen/dp_25"
             android:layout_height="@dimen/dp_25"
             android:layout_alignParentEnd="true"
@@ -37,19 +52,20 @@
             android:layout_marginEnd="@dimen/dp_20"
             android:layout_marginBottom="@dimen/dp_10"
             android:onClick="onExit"
+            android:visibility="visible"
             android:scaleType="centerCrop"
-            android:src="@mipmap/setting_icon" />
+            android:src="@mipmap/add_icon" />
 
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/dev_server_iv"
-            android:layout_width="@dimen/dp_25"
-            android:layout_height="@dimen/dp_25"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="@dimen/dp_10"
-            android:layout_marginBottom="@dimen/dp_10"
-            android:layout_toLeftOf="@id/exit_iv"
-            android:src="@mipmap/dev_disconnect" />
+<!--        <androidx.appcompat.widget.AppCompatImageView-->
+<!--            android:id="@+id/dev_server_iv"-->
+<!--            android:layout_width="@dimen/dp_25"-->
+<!--            android:layout_height="@dimen/dp_25"-->
+<!--            android:layout_alignParentBottom="true"-->
+<!--            android:layout_marginEnd="@dimen/dp_10"-->
+<!--            android:layout_marginBottom="@dimen/dp_10"-->
+<!--            android:layout_toLeftOf="@id/add_device"-->
+<!--            android:src="@mipmap/dev_disconnect" />-->
     </RelativeLayout>
 
 
@@ -74,7 +90,7 @@
             android:layout_width="@dimen/dp_60"
             android:layout_height="match_parent"
             android:layout_marginEnd="@dimen/dp_80"
-            android:layout_toLeftOf="@id/add_device_ll"
+            android:layout_marginStart="@dimen/dp_20"
             android:onClick="onMessage"
             android:orientation="vertical">
 
@@ -92,36 +108,35 @@
                 android:text="消息" />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/add_device_ll"
-            android:layout_width="@dimen/dp_60"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
+<!--        <LinearLayout-->
+<!--            android:id="@+id/add_device_ll"-->
+<!--            android:layout_width="@dimen/dp_60"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_centerHorizontal="true"-->
 
-            android:orientation="vertical">
+<!--            android:orientation="vertical">-->
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/add_dev_iv"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_30"
-                android:layout_marginTop="@dimen/dp_10"
-                android:src="@mipmap/add_icon" />
+<!--            <androidx.appcompat.widget.AppCompatImageView-->
+<!--                android:id="@+id/add_dev_iv"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="@dimen/dp_30"-->
+<!--                android:layout_marginTop="@dimen/dp_10"-->
+<!--                android:src="@mipmap/add_icon" />-->
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_2"
-                android:gravity="center"
-                android:text="添加设备" />
-        </LinearLayout>
+<!--            <androidx.appcompat.widget.AppCompatTextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="@dimen/dp_2"-->
+<!--                android:gravity="center"-->
+<!--                android:text="添加设备" />-->
+<!--        </LinearLayout>-->
 
 
         <LinearLayout
             android:id="@+id/device_ll"
             android:layout_width="@dimen/dp_60"
             android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/dp_80"
-            android:layout_toRightOf="@id/add_device_ll"
+            android:layout_centerHorizontal="true"
             android:onClick="onDevice"
             android:orientation="vertical">
 
@@ -140,6 +155,29 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/mine_ll"
+            android:layout_width="@dimen/dp_60"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/dp_20"
+            android:onClick="onMine"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/mine_iv"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_30"
+                android:layout_marginTop="@dimen/dp_10"
+                android:src="@mipmap/mine_icon" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="我的" />
+
+        </LinearLayout>
 
     </com.hjq.shape.layout.ShapeRelativeLayout>
 

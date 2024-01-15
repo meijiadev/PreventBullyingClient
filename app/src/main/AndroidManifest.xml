@@ -19,9 +19,13 @@
     <!--        tools:ignore="ScopedStorage" />-->
     <!--    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"-->
     <!--        android:maxSdkVersion="32" />-->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+    <!--    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>-->
 
     <application
         android:name=".app.MyApp"
@@ -65,6 +69,8 @@
         </activity>
         <activity android:name=".ui.activity.SettingActivity" />
         <activity android:name=".ui.activity.AlarmAudioActivity" />
+        <activity android:name=".ui.activity.DeviceConfigurationActivity"
+            android:theme="@style/AppTheme"/>
 
         <service
             android:name=".jpush.server.JPushService"

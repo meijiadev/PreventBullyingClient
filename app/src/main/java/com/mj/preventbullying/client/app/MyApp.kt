@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 import cn.jpush.android.api.JPushInterface
 import cn.jpush.android.ups.JPushUPSManager
+import com.clj.fastble.BleManager
 import com.hjq.toast.ToastLogInterceptor
 import com.hjq.toast.ToastUtils
 import com.hjq.toast.style.WhiteToastStyle
@@ -66,6 +67,10 @@ class MyApp : Application(), ViewModelStoreOwner {
         webrtcSocketManager = getApplicationViewModel(WebrtcSocketManager::class.java)
         globalEventViewModel = getApplicationViewModel(GlobalEventViewModel::class.java)
         initJGPush()
+        BleManager.getInstance().init(this)
+        BleManager.getInstance()
+            .enableLog(false)
+            .setReConnectCount(2, 5000).operateTimeout = 5000
     }
 
     /**
