@@ -62,7 +62,7 @@ class MainViewModel : BaseViewModel() {
 
     fun addDev(
         sn: String,
-       // name: String,
+        // name: String,
         orgID: Long,
         devType: String,
         location: String,
@@ -81,14 +81,17 @@ class MainViewModel : BaseViewModel() {
             if (it.success) {
                 Logger.i("添加设备成功！")
                 addDevEvent.postValue(true)
+            } else {
+                Logger.i("设备添加失败！")
+                addDevEvent.postValue(false)
             }
         })
     }
 
-    fun getAppVersion(){
+    fun getAppVersion() {
         requestNoCheck({
             apiService.getNewApp()
-        },{
+        }, {
 
         })
     }

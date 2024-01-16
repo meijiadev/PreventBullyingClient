@@ -23,6 +23,8 @@
     <string name="http_response_md5_error">下载失败，文件 md5 校验失败</string>
 
     <string name="connecting">连接中...</string>
+    <string name="network_config_ing">正在配网中...</string>
+    <string name="add_device_ing">设备添加中...</string>
     <string name="not_connected">未连接</string>
     <string name="none_paired">未配对</string>
     <string name="none_found">未找到</string>

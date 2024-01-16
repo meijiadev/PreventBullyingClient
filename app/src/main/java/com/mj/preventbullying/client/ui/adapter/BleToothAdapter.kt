@@ -21,6 +21,8 @@ class BleToothAdapter : BaseQuickAdapter<BleTooth, QuickViewHolder>() {
         holder.getView<AppCompatTextView>(R.id.mac_tv).text = item?.mac
         if (item?.connected == true) {
             holder.getView<ShapeButton>(R.id.ble_connect_bt).text = "已连接"
+        } else {
+            holder.getView<ShapeButton>(R.id.ble_connect_bt).text = "连接"
         }
     }
 

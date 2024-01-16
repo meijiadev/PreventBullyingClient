@@ -3,12 +3,8 @@ package com.mj.preventbullying.client.bletooth
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothServerSocket
 import android.bluetooth.BluetoothSocket
-import android.content.Context
-import android.os.Handler
-import android.util.Log
-import com.google.gson.annotations.Until
+import com.google.gson.Gson
 import com.orhanobut.logger.Logger
 import java.io.IOException
 import java.io.InputStream
@@ -151,6 +147,7 @@ class ChatService {
             } catch (e: IOException) {
                 connectionFailed()
                 Logger.e("连接失败：${e.message}")
+                onConnected?.invoke(false)
                 try {
                     mmSocket!!.close()
                 } catch (e2: IOException) {
@@ -199,8 +196,9 @@ class ChatService {
             var bytes: Int
             Logger.i("connectedThread 已启动")
             while (true) {
-                bytes = try {
-                    mmInStream!!.read(buffer)
+                try {
+                    bytes = mmInStream!!.read(buffer)
+                    parseData(buffer, bytes)
                 } catch (e: IOException) {
                     Logger.e("读取数据失败:${e.message}")
                     onConnected?.invoke(false)
@@ -228,6 +226,35 @@ class ChatService {
         }
     }
 
+
+    fun parseData(buffer: ByteArray, length: Int) {
+        Logger.i("接收的信息:${String(buffer, 0, length)}")
+        val jsonStr = String(buffer, 0, length)
+        val bleData = Gson().fromJson(jsonStr, BleData::class.java)
+        val url = bleData.url
+        val sn = bleData.snCode
+        val status = bleData.status
+        if (status == 2) {
+            if (sn != null)
+                onSnCodeListener?.invoke(sn)
+            return
+        }
+
+        if (status == 3) {
+            devRegisterListener?.invoke(true)
+            Logger.i("设备注册已连接成功！")
+            return
+        }
+        if (status == 4) {
+            Logger.i("设备已经被注册到平台了")
+            devHasRegister?.invoke()
+
+        }
+        Logger.e("参数配置错误")
+
+
+    }
+
     companion object {
         private const val NAME = "PREVENT"
 
@@ -243,10 +270,31 @@ class ChatService {
         const val STATE_CONNECTED = 3
     }
 
+    // 蓝牙通信建立成功
     private var onConnected: ((data: Boolean) -> Unit)? = null
+
+    // 收到设备发送的sn
+    private var onSnCodeListener: ((sn: String) -> Unit)? = null
+
+    // 设备已经注册到平台上了
+    private var devRegisterListener: ((data: Boolean) -> Unit)? = null
+
+    private var devHasRegister: (() -> Unit)? = null
 
     fun onConnected(listener: ((data: Boolean) -> Unit)) {
         onConnected = listener
+    }
+
+    fun onDevRegister(listener: (data: Boolean) -> Unit) {
+        devRegisterListener = listener
+    }
+
+    fun onSnListener(listener: (sn: String) -> Unit) {
+        onSnCodeListener = listener
+    }
+
+    fun onDevHasRegister(listener: () -> Unit) {
+        devHasRegister = listener
     }
 
 }

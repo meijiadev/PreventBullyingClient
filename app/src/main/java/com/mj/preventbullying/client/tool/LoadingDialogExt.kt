@@ -93,7 +93,7 @@ fun dismissLoadingExt() {
         if ((loadingPopup == null) || false == loadingPopup?.isShow) {
             return@launch
         }
-        loadingPopup?.delayDismiss(300)
+        loadingPopup?.delayDismiss(500)
         loadingPopup = null
         Logger.i("关闭等待框")
     }
