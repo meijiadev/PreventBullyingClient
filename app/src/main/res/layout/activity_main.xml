@@ -22,17 +22,16 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/dp_10"
             android:orientation="horizontal">
-
             <com.hjq.shape.view.ShapeTextView
                 android:id="@+id/title_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_5"
                 android:gravity="center"
                 android:text="消息通知"
                 android:textSize="@dimen/sp_18"
                 android:textStyle="bold"
                 app:shape_solidColor="@color/white70" />
-
             <com.hjq.shape.view.ShapeTextView
                 android:id="@+id/dev_server_iv"
                 android:layout_width="@dimen/dp_5"
@@ -41,6 +40,14 @@
                 android:layout_marginStart="@dimen/dp_5"
                 app:shape_radius="@dimen/dp_20"
                 app:shape_solidColor="@color/gold" />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/spread_iv"
+                android:layout_width="@dimen/dp_30"
+                android:layout_height="@dimen/dp_30"
+                android:src="@mipmap/xl_icon"
+                android:layout_marginStart="@dimen/dp_5"
+                />
+
         </LinearLayout>
 
 
@@ -58,15 +65,6 @@
             android:visibility="visible" />
 
 
-        <!--        <androidx.appcompat.widget.AppCompatImageView-->
-        <!--            android:id="@+id/dev_server_iv"-->
-        <!--            android:layout_width="@dimen/dp_25"-->
-        <!--            android:layout_height="@dimen/dp_25"-->
-        <!--            android:layout_alignParentBottom="true"-->
-        <!--            android:layout_marginEnd="@dimen/dp_10"-->
-        <!--            android:layout_marginBottom="@dimen/dp_10"-->
-        <!--            android:layout_toLeftOf="@id/add_device"-->
-        <!--            android:src="@mipmap/dev_disconnect" />-->
     </RelativeLayout>
 
 

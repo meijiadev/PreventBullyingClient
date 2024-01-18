@@ -15,10 +15,6 @@ import androidx.lifecycle.lifecycleScope
 import cn.jpush.android.api.BasicPushNotificationBuilder
 import cn.jpush.android.api.JPushInterface
 import cn.jpush.android.ups.JPushUPSManager
-import com.clj.fastble.BleManager
-import com.clj.fastble.callback.BleScanCallback
-import com.clj.fastble.data.BleDevice
-import com.clj.fastble.scan.BleScanRuleConfig
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.gyf.immersionbar.ktx.immersionBar
@@ -135,9 +131,20 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
             MyApp.socketEventViewModel.initSocket(userId, registerId)
         }
         MyApp.globalEventViewModel.getAppVersion()
+        binding.titleTv.text = MyApp.globalEventViewModel.schoolName
     }
 
     override fun initViewObservable() {
+        binding.spreadIv.setOnClickListener{
+
+        }
+        binding.devServerIv.setOnClickListener {
+            if (MyApp.socketEventViewModel.isConnected) {
+                toast("应用和设备服务器已连接成功")
+            } else {
+                toast("应用和设备服务器未连接，可能无法连接设备")
+            }
+        }
 
     }
 
@@ -153,14 +160,6 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
                     .intoBackground()
             }
         }
-        binding.devServerIv.setOnClickListener {
-            if (MyApp.socketEventViewModel.isConnected) {
-                toast("应用和设备服务器已连接成功")
-            } else {
-                toast("应用和设备服务器未连接，可能无法连接设备")
-            }
-        }
-
     }
 
 
@@ -226,6 +225,9 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
             if (versionCode != null) {
                 Constant.isNewAppVersion = it.data.versionCode > BuildConfig.VERSION_CODE
             }
+        }
+        MyApp.globalEventViewModel.orgTreeEvent.observe(this) {
+            binding.titleTv.text = MyApp.globalEventViewModel.schoolName
         }
 
 

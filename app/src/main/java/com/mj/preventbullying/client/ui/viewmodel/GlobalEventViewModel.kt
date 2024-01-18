@@ -62,12 +62,12 @@ class GlobalEventViewModel : BaseViewModel() {
             val jsonStr = gson.toJson(tree)
             treeList = gson.fromJson(jsonStr, object : TypeToken<List<TreeModel?>?>() {}.type)
             Logger.d("转化之后的组织树：${treeList?.size}")
+            treeList?.let { it1 -> findFirstSchool(it1) }
             orgTreeEvent.postValue(treeList)
-            findFirstSchool(treeList)
         })
     }
 
-    fun findFirstSchool(list: MutableList<TreeModel>) {
+    private fun findFirstSchool(list: MutableList<TreeModel>) {
         val tree1 = list.find { it.type == "1" }
         val tree0 = list.find { it.type == "0" }
         if (tree1 != null) {

@@ -48,7 +48,7 @@ android {
         release {
             keyAlias 'prevent'
             keyPassword 'qwer1234'
-            storeFile file('F:/AndroidProject1/PreventBullyingClient/preventClient.jks')
+            storeFile file('../../PreventBullyingClient/preventClient.jks')
             storePassword 'qwer1234'
         }
     }
