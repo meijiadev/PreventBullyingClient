@@ -7,9 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter4.BaseQuickAdapter
-import com.mj.preventbullying.client.databinding.ItemMessageRecordNewBinding
 import com.mj.preventbullying.client.http.result.Record
-
+import com.mj.preventbullying.client.databinding.ItemMessageRecordNewBinding
 /**
  * Create by MJ on 2023/12/11.
  * Describe :

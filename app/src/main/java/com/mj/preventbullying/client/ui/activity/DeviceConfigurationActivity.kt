@@ -15,8 +15,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.gyf.immersionbar.ktx.immersionBar
+import com.lxj.xpopup.XPopup
+import com.lxj.xpopup.enums.PopupAnimation
 import com.mj.preventbullying.client.R
 import com.mj.preventbullying.client.app.AppMvActivity
+import com.mj.preventbullying.client.app.MyApp
 import com.mj.preventbullying.client.bletooth.BleData
 import com.mj.preventbullying.client.bletooth.BleTooth
 import com.mj.preventbullying.client.bletooth.ChatService
@@ -29,6 +32,7 @@ import com.mj.preventbullying.client.tool.dismissLoadingExt
 import com.mj.preventbullying.client.tool.showLoadingExt
 import com.mj.preventbullying.client.ui.adapter.BleToothAdapter
 import com.mj.preventbullying.client.ui.adapter.DevTypeAdapter
+import com.mj.preventbullying.client.ui.dialog.ItemListDialog
 import com.mj.preventbullying.client.ui.viewmodel.MainViewModel
 import com.orhanobut.logger.Logger
 import kotlinx.coroutines.Dispatchers
@@ -59,8 +63,6 @@ class DeviceConfigurationActivity : AppMvActivity<ActivityDeviceConfigBinding, M
     // 设备注册相关页面
     private var treeList: MutableList<TreeModel>? = null
     private var typeList: MutableList<DevType>? = null
-    private var treeAdapter: TreeListAdapter? = null
-    private var devTypeAdapter: DevTypeAdapter? = null
     private var deviceSn: String? = null
     private var curOrgId: Long = 0
 
@@ -91,7 +93,7 @@ class DeviceConfigurationActivity : AppMvActivity<ActivityDeviceConfigBinding, M
      * 获取组织列表和设备类型
      */
     private fun getDevInfoList() {
-        viewModel.getOrgList()
+        //viewModel.getOrgList()
         viewModel.getDevType()
     }
 
@@ -105,12 +107,7 @@ class DeviceConfigurationActivity : AppMvActivity<ActivityDeviceConfigBinding, M
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         binding.bleRecycler.layoutManager = layoutManager
         binding.bleRecycler.adapter = bTAdapter
-        // 设备注册相关页面业务
-        treeAdapter = TreeListAdapter()
-        devTypeAdapter = DevTypeAdapter()
-        val lyManager = LinearLayoutManager(this)
-        layoutManager.orientation = LinearLayoutManager.VERTICAL
-        binding.listItemRecycler.layoutManager = lyManager
+
     }
 
     override fun initViewObservable() {
@@ -147,62 +144,11 @@ class DeviceConfigurationActivity : AppMvActivity<ActivityDeviceConfigBinding, M
         /**********************************设备注册页面业务***************************/
         binding.run {
             orgLl.setOnClickListener {
-                Logger.i("点击组织选择")
-                if (orgListLl.visibility == View.GONE) {
-                    refreshOrgList()
-                    val layoutParams = orgListLl.layoutParams as RelativeLayout.LayoutParams
-                    layoutParams.addRule(RelativeLayout.BELOW, R.id.org_ll)
-                    orgListLl.layoutParams = layoutParams
-                    orgEnterIv.rotation = 90f
-                    orgListLl.visibility = View.VISIBLE
-                } else {
-                    orgEnterIv.rotation = 0f
-                    orgListLl.visibility = View.GONE
-                }
+                showOrgDialog(it)
             }
 
             devTypeLl.setOnClickListener {
-                if (orgListLl.visibility == View.GONE) {
-                    refreshDevList()
-                    val layoutParams = orgListLl.layoutParams as RelativeLayout.LayoutParams
-                    layoutParams.addRule(RelativeLayout.BELOW, R.id.dev_type_ll)
-                    orgListLl.layoutParams = layoutParams
-
-                    typeEnterIv.rotation = 90f
-                    orgListLl.visibility = View.VISIBLE
-                } else {
-                    typeEnterIv.rotation = 0f
-                    orgListLl.visibility = View.GONE
-                }
-
-            }
-            treeAdapter?.setOnItemClickListener { adapter, view, position ->
-                val mode = treeAdapter?.getItem(position)
-                if (mode?.children != null) {
-                    treeAdapter?.setOpenOrClose(treeList, position)
-                    treeAdapter?.notifyDataSetChanged()
-                } else {
-                    val org = treeList?.get(position)
-                    Logger.i("点击的项：${org.toString()}")
-                    orgListTv.text = org?.name
-
-                    runCatching {
-                        curOrgId = org?.id?.toLong() ?: 0
-                    }.onFailure {
-                        Logger.e("error:${it.message}")
-                        curOrgId = 0
-                    }
-                    orgEnterIv.rotation = 0f
-                    orgListLl.visibility = View.GONE
-
-                }
-            }
-            devTypeAdapter?.setOnItemClickListener { adapter, v, position ->
-                val type = typeList?.get(position)
-                Logger.i("点击的项：${type}")
-                devTypeTv.text = type?.value
-                orgEnterIv.rotation = 0f
-                orgListLl.visibility = View.GONE
+                showTypeDialog(it)
             }
 
             confirmTv.setOnClickListener {
@@ -223,25 +169,46 @@ class DeviceConfigurationActivity : AppMvActivity<ActivityDeviceConfigBinding, M
     }
 
     /**
-     *  刷新组织列表
+     * 显示组织列表弹窗
      */
-    @SuppressLint("NotifyDataSetChanged")
-    fun refreshOrgList() {
-//        treeAdapter.setOpenOrClose()
-        binding.listItemRecycler.adapter = treeAdapter
-        treeAdapter?.submitList(treeList)
-        treeAdapter?.notifyDataSetChanged()
+    private fun showOrgDialog(v: View) {
+        val location = IntArray(2)
+        v.getLocationOnScreen(location)
+        val y = location[1]
+        val itemListDialog = ItemListDialog(this).setOrgData(treeList).onOrgListener {
+            Logger.i("选择的组织")
+            binding.orgListTv.text = it.name
+            curOrgId = it.id.toLong()
+        }
+        XPopup.Builder(this)
+            .isDestroyOnDismiss(true) //对于只使用一次的弹窗，推荐设置这个
+            .hasShadowBg(false)
+            .hasBlurBg(false)
+            .offsetY(y + v.height)
+            .asCustom(itemListDialog)
+            .show()
     }
 
     /**
-     * 刷新设备型号列表
+     * 显示设备的类型列表
      */
-    @SuppressLint("NotifyDataSetChanged")
-    fun refreshDevList() {
-        binding.listItemRecycler.adapter = devTypeAdapter
-        devTypeAdapter?.submitList(typeList)
-        devTypeAdapter?.notifyDataSetChanged()
+    private fun showTypeDialog(v: View) {
+        val location = IntArray(2)
+        v.getLocationOnScreen(location)
+        val y = location[1]
+        val itemListDialog = ItemListDialog(this).setDevType(typeList).onTypeListener {
+            Logger.i("选择的类型")
+            binding.devTypeTv.text = it
+        }
+        XPopup.Builder(this)
+            .isDestroyOnDismiss(true) //对于只使用一次的弹窗，推荐设置这个
+            .hasShadowBg(false)
+            .hasBlurBg(false)
+            .offsetY(y + v.height)
+            .asCustom(itemListDialog)
+            .show()
     }
+
 
     @SuppressLint("NotifyDataSetChanged")
     override fun initListener() {
@@ -280,17 +247,12 @@ class DeviceConfigurationActivity : AppMvActivity<ActivityDeviceConfigBinding, M
         chatService.onDevHasRegister {
             toast("该设备已经配置过，无需再配置！")
             dismissLoadingExt()
+
         }
 
-        viewModel.orgTreeEvent.observe(this) {
-            // 接收到组织树列表
-            val tree = it?.data
-            val gson = Gson()
-            val jsonStr = gson.toJson(tree)
-            treeList = gson.fromJson(jsonStr, object : TypeToken<List<TreeModel?>?>() {}.type)
-            Logger.d("转化之后的组织树：${treeList?.size}")
-        }
+
         viewModel.devTypeEvent.observe(this) {
+            treeList = MyApp.globalEventViewModel.treeList
             typeList = it?.data as MutableList<DevType>?
         }
         viewModel.addDevEvent.observe(this) {
@@ -302,8 +264,6 @@ class DeviceConfigurationActivity : AppMvActivity<ActivityDeviceConfigBinding, M
             } else {
                 dismissLoadingExt()
             }
-            // dismissLoadingExt()
-            //finish()
         }
 
     }
@@ -371,7 +331,7 @@ class DeviceConfigurationActivity : AppMvActivity<ActivityDeviceConfigBinding, M
                     }
                 }
                 // }
-            } else if ((BluetoothAdapter.ACTION_DISCOVERY_FINISHED == action)
+            } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED == action
             ) {
                 Logger.i("搜索完毕")
                 isScanning = false

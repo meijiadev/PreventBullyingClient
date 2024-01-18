@@ -2,10 +2,14 @@ package com.mj.preventbullying.client.ui.viewmodel
 
 import cn.jpush.android.api.NotificationMessage
 import com.blackview.base.http.requestNoCheck
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.kunminx.architecture.ui.callback.UnPeekLiveData
 import com.mj.preventbullying.client.app.MyApp
+import com.mj.preventbullying.client.foldtree.TreeModel
 import com.mj.preventbullying.client.http.apiService
 import com.mj.preventbullying.client.http.result.UpdateAppResult
+import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseViewModel
 
 /**
@@ -27,6 +31,14 @@ class GlobalEventViewModel : BaseViewModel() {
      */
     var updateAppEvent = UnPeekLiveData<UpdateAppResult>()
 
+    var treeList: MutableList<TreeModel>? = null
+
+    var orgTreeEvent = UnPeekLiveData<MutableList<TreeModel>>()
+
+    var curOrgName: String? = null
+    var schoolName: String? = null
+    var schoolId: String? = null
+
     fun getAppVersion() {
         requestNoCheck({
             apiService.getNewApp()
@@ -35,4 +47,36 @@ class GlobalEventViewModel : BaseViewModel() {
             MyApp.globalEventViewModel.updateAppEvent.postValue(it)
         })
     }
+
+
+    /**
+     * 获取组织列表
+     */
+    fun getOrgList() {
+        requestNoCheck({
+            apiService.getOrgTree()
+        }, { it ->
+            // 接收到组织树列表
+            val tree = it.data
+            val gson = Gson()
+            val jsonStr = gson.toJson(tree)
+            treeList = gson.fromJson(jsonStr, object : TypeToken<List<TreeModel?>?>() {}.type)
+            Logger.d("转化之后的组织树：${treeList?.size}")
+            orgTreeEvent.postValue(treeList)
+            findFirstSchool(treeList)
+        })
+    }
+
+    fun findFirstSchool(list: MutableList<TreeModel>) {
+        val tree1 = list.find { it.type == "1" }
+        val tree0 = list.find { it.type == "0" }
+        if (tree1 != null) {
+            findFirstSchool(tree1.children)
+        } else {
+            schoolName = tree0?.name
+            schoolId = tree0?.id
+        }
+    }
+
+
 }

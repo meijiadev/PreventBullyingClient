@@ -45,6 +45,7 @@ import com.mj.preventbullying.client.tool.requestPermission
 import com.mj.preventbullying.client.ui.dialog.DevInfoDialog
 import com.mj.preventbullying.client.ui.dialog.MessageTipsDialog
 import com.mj.preventbullying.client.ui.fragment.DeviceFragment
+import com.mj.preventbullying.client.ui.fragment.KeywordManagerFragment
 import com.mj.preventbullying.client.ui.fragment.MessageFragment
 import com.mj.preventbullying.client.ui.fragment.MineFragment
 import com.mj.preventbullying.client.ui.login.LoginActivity
@@ -65,12 +66,9 @@ import kotlinx.coroutines.launch
 class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
     private val messageFragment by lazy { MessageFragment.newInstance() }
     private val deviceFragment by lazy { DeviceFragment.newInstance() }
+    private val keywordManagerFragment by lazy { KeywordManagerFragment.newInstance() }
     private val mineFragment by lazy { MineFragment.newInstance() }
-
-
     private var jPushExtraMessage: JPushExtraMessage? = null
-    private var treeList: MutableList<TreeModel>? = null
-    private var typeList: MutableList<DevType>? = null
 
 
     override fun getViewBinding(): ActivityMainBinding {
@@ -80,6 +78,8 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
 
     @SuppressLint("ResourceType")
     override fun initParam() {
+        // 获取组织列表
+        MyApp.globalEventViewModel.getOrgList()
         immersionBar {
             //深色字体
             statusBarDarkFont(true)
@@ -134,10 +134,7 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
         if (userId != null && registerId != null) {
             MyApp.socketEventViewModel.initSocket(userId, registerId)
         }
-
         MyApp.globalEventViewModel.getAppVersion()
-
-
     }
 
     override fun initViewObservable() {
@@ -166,14 +163,9 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
 
     }
 
-    private fun getDevInfoList() {
-        viewModel.getOrgList()
-        viewModel.getDevType()
-    }
 
     override fun initListener() {
         binding.addDevice.setOnClickListener {
-            getDevInfoList()
             Logger.i("点击添加设备")
             requestBlePermission()
             // showAddDialog()
@@ -224,19 +216,6 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
             }
         }
 
-        viewModel.orgTreeEvent.observe(this) {
-            // 接收到组织树列表
-            val tree = it?.data
-            val gson = Gson()
-            val jsonStr = gson.toJson(tree)
-            treeList = gson.fromJson(jsonStr, object : TypeToken<List<TreeModel?>?>() {}.type)
-            Logger.d("转化之后的组织树：${treeList?.size}")
-            addDevDialog?.setOrgData(treeList)
-        }
-        viewModel.devTypeEvent.observe(this) {
-            typeList = it?.data as MutableList<DevType>?
-            addDevDialog?.setTypeData(typeList)
-        }
         viewModel.addDevEvent.observe(this) {
             toast("设备添加成功！")
         }
@@ -249,39 +228,6 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
             }
         }
 
-
-    }
-
-    var addDevDialog: DevInfoDialog? = null
-    private fun showAddDialog() {
-        addDevDialog = DevInfoDialog(this).setOnListener(object : DevInfoDialog.AddDevListener {
-
-            override fun onCancel() {
-
-            }
-
-            override fun onConfirm(
-                sn: String,
-                //name: String,
-                orgId: Long,
-                orgName: String,
-                location: String,
-                modelCode: String,
-                desc: String?
-            ) {
-                viewModel.addDev(sn, orgId, modelCode, location, desc)
-            }
-
-
-        }).setOrgData(treeList).setTypeData(typeList).setTitleMsg("添加设备")
-        XPopup.Builder(this)
-            .isViewMode(true)
-            .dismissOnTouchOutside(false)
-            .dismissOnBackPressed(false)
-            .isDestroyOnDismiss(true)
-            .popupAnimation(PopupAnimation.TranslateFromBottom)
-            .asCustom(addDevDialog)
-            .show()
 
     }
 
@@ -382,6 +328,11 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
         switchFragment(deviceFragment)
     }
 
+    fun onKeyword(v: View) {
+        binding.titleTv.text = "关键词管理"
+        switchFragment(keywordManagerFragment)
+    }
+
     fun onMine(v: View) {
         binding.titleTv.text = "我的"
         switchFragment(mineFragment)
@@ -404,6 +355,7 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
                     binding.run {
                         messageIv.setImageResource(R.mipmap.message_icon_select)
                         deviceManagerIv.setImageResource(R.mipmap.dev_manager)
+                        keywordManagerIv.setImageResource(R.mipmap.keyword_icon)
                         mineIv.setImageResource(R.mipmap.mine_icon)
                     }
                 }
@@ -412,6 +364,16 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
                     binding.run {
                         messageIv.setImageResource(R.mipmap.message_icon)
                         deviceManagerIv.setImageResource(R.mipmap.dev_manager_select)
+                        keywordManagerIv.setImageResource(R.mipmap.keyword_icon)
+                        mineIv.setImageResource(R.mipmap.mine_icon)
+                    }
+                }
+
+                is KeywordManagerFragment -> {
+                    binding.run {
+                        messageIv.setImageResource(R.mipmap.message_icon)
+                        deviceManagerIv.setImageResource(R.mipmap.dev_manager)
+                        keywordManagerIv.setImageResource(R.mipmap.keyword_select)
                         mineIv.setImageResource(R.mipmap.mine_icon)
                     }
                 }
@@ -420,6 +382,7 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
                     binding.run {
                         messageIv.setImageResource(R.mipmap.message_icon)
                         deviceManagerIv.setImageResource(R.mipmap.dev_manager)
+                        keywordManagerIv.setImageResource(R.mipmap.keyword_icon)
                         mineIv.setImageResource(R.mipmap.mine_icon_select)
                     }
                 }

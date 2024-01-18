@@ -2,11 +2,13 @@ package com.mj.preventbullying.client.http.service
 
 import android.util.ArrayMap
 import com.mj.preventbullying.client.Constant
+import com.mj.preventbullying.client.app.MyApp
 import com.mj.preventbullying.client.tool.SpManager
 import com.mj.preventbullying.client.http.result.BaseResult
 import com.mj.preventbullying.client.http.result.DevTypeResult
 import com.mj.preventbullying.client.http.result.DeviceRecordResult
 import com.mj.preventbullying.client.http.result.DeviceResult
+import com.mj.preventbullying.client.http.result.KeywordResult
 import com.mj.preventbullying.client.http.result.LoginResult
 import com.mj.preventbullying.client.http.result.OrgTreeResult
 import com.mj.preventbullying.client.http.result.PreviewAudioResult
@@ -90,10 +92,17 @@ interface ApiService {
     suspend fun getAllRecords(
         @Query("current") current: Int = 1,
         @Query("size") size: Int = 20,
-        @Query("state") state: String?
+        @Query("state") state: String?,
+        @Query("orgId") orgId: Long? = MyApp.globalEventViewModel.schoolId?.toLong()
         //@Header("Authorization") authorization: String = "Bearer ${SpManager.getString(Constant.ACCESS_TOKEN_KEY)}"
     ): DeviceRecordResult
 
+    @GET("anti-bullying/keyword/page")
+    suspend fun getKeywordList(
+        @Query("current") current: Int = 1,
+        @Query("size") size: Int = 200,
+        @Query("orgId") orgId: Long? = MyApp.globalEventViewModel.schoolId?.toLong()
+    ): KeywordResult
 
     /**
      * 获取设备信息
@@ -103,7 +112,8 @@ interface ApiService {
     @GET("anti-bullying/device/page")
     suspend fun getAllDevices(
         @Query("current") current: Int = 1,
-        @Query("size") size: Int = 100
+        @Query("size") size: Int = 100,
+        @Query("orgId") orgId: Long? = MyApp.globalEventViewModel.schoolId?.toLong()
         // @Header("Authorization") authorization: String = "Bearer ${SpManager.getString(Constant.ACCESS_TOKEN_KEY)}"
     ): DeviceResult
 
@@ -155,4 +165,6 @@ interface ApiService {
 
     @PUT("anti-bullying/device/upgrades/{deviceId}")
     suspend fun upgradeDevice(@Path("deviceId") deviceId: Long): BaseResult
+
+
 }

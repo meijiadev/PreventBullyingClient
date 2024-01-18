@@ -18,7 +18,6 @@ import com.mj.preventbullying.client.app.MyApp
 import com.mj.preventbullying.client.R
 import com.mj.preventbullying.client.tool.SpManager
 import com.mj.preventbullying.client.databinding.FragmentMessageBinding
-import com.mj.preventbullying.client.http.result.Record
 import com.mj.preventbullying.client.tool.AudioPlayer
 import com.mj.preventbullying.client.ui.adapter.MessageAdapter
 import com.mj.preventbullying.client.ui.adapter.PENDING_STATUS
@@ -30,6 +29,7 @@ import com.mj.preventbullying.client.ui.dialog.InputMsgDialog
 import com.mj.preventbullying.client.ui.dialog.MessageProcessDialog
 import com.mj.preventbullying.client.ui.viewmodel.MessageViewModel
 import com.mj.preventbullying.client.webrtc.getUUID
+import com.mj.preventbullying.client.http.result.Record
 import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseMvFragment
 import kotlinx.coroutines.Dispatchers

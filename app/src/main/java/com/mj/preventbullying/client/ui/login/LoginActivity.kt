@@ -106,6 +106,7 @@ class LoginActivity : BaseMvActivity<ActivityLoginBinding, LoginViewModel>() {
             SpManager.putString(Constant.ACCOUNT_KEY, it.username)
             SpManager.putString(Constant.ACCOUNT_PASSWORD, passwordTv.text.toString())
             SpManager.putString(Constant.USER_PHONE_KEY, it.user_info.phone)
+           // SpManager.putString(Constant.ORG_ID_KEY, it.user_info.orgId)
             JPushUPSManager.turnOnPush(this) {
                 Logger.i("打开极光推送服务：$it")
             }

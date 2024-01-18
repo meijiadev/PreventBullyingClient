@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
 import com.chad.library.adapter4.BaseQuickAdapter
@@ -37,7 +38,7 @@ class TreeListAdapter : BaseQuickAdapter<TreeModel, QuickViewHolder>() {
         val left = item?.leave?.plus(1)?.times(30)
         // a+b => a.plus(b)
         // a*b => a.times(b)
-        val layoutParams = tvName.layoutParams as LinearLayout.LayoutParams
+        val layoutParams = tvName.layoutParams as RelativeLayout.LayoutParams
         layoutParams.leftMargin = left ?: 30
         tvName.layoutParams = layoutParams
         tvName.tag = position

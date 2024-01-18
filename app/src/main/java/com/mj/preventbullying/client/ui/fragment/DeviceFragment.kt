@@ -126,7 +126,6 @@ class DeviceFragment : BaseMvFragment<FragmentDeviceBinding, DeviceViewModel>() 
     }
 
     private fun getDevInfoList() {
-        mainViewModel?.getOrgList()
         mainViewModel?.getDevType()
     }
 
@@ -211,16 +210,15 @@ class DeviceFragment : BaseMvFragment<FragmentDeviceBinding, DeviceViewModel>() 
         }
 
 
-        mainViewModel?.orgTreeEvent?.observe(this) {
-            // 接收到组织树列表
-            val tree = it?.data
-            val gson = Gson()
-            val jsonStr = gson.toJson(tree)
-            treeList = gson.fromJson(jsonStr, object : TypeToken<List<TreeModel?>?>() {}.type)
-            Logger.i("转化之后的组织树：${treeList?.size}")
-            amendDevDialog?.setOrgData(treeList)
-        }
+//        mainViewModel?.orgTreeEvent?.observe(this) {
+//            // 接收到组织树列表
+//            treeList = it
+//            Logger.i("转化之后的组织树：${treeList?.size}")
+//            amendDevDialog?.setOrgData(treeList)
+//        }
         mainViewModel?.devTypeEvent?.observe(this) {
+            treeList = MyApp.globalEventViewModel.treeList
+            amendDevDialog?.setOrgData(treeList)
             typeList = it?.data as MutableList<DevType>?
             amendDevDialog?.setTypeData(typeList)
         }

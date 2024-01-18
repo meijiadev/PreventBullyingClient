@@ -17,6 +17,7 @@ object Constant {
     const val ACCOUNT_PASSWORD = "account_password"   // 密码
     const val USER_PHONE_KEY = "user_phone_key"               // 账号密码绑定的手机号码
     const val AUTO_LOGIN_KEY = "auto_login_key"    // 是否是自动登录 默认true
+    //const val ORG_ID_KEY = "org_id_key"              // 组织id
 
     var isNewAppVersion = false           // 是否有新版本app
     const val ALARM_PLAY_NAME_KEY = "alarm_audio_name_key"

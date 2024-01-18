@@ -21,6 +21,36 @@
             android:orientation="vertical">
 
             <RelativeLayout
+                android:id="@+id/cur_org_ly"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_50"
+                android:layout_marginTop="@dimen/dp_10"
+                android:background="@color/white">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/dp_15"
+                    android:layout_marginEnd="@dimen/dp_20"
+                    android:drawableRight="@mipmap/enter_right"
+                    android:gravity="center_vertical"
+                    android:text="当前组织"
+                    android:textSize="@dimen/sp_15" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/org_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/dp_40"
+                    android:text="xxx一中"
+                    android:textSize="@dimen/sp_15" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/update_app_ly"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_50"
@@ -60,8 +90,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_60"
                 android:layout_marginTop="@dimen/dp_10"
-                android:visibility="gone"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:visibility="gone">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="match_parent"

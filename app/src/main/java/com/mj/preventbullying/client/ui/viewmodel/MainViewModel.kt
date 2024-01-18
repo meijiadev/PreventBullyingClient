@@ -2,8 +2,11 @@ package com.mj.preventbullying.client.ui.viewmodel
 
 import android.util.ArrayMap
 import com.blackview.base.http.requestNoCheck
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.kunminx.architecture.ui.callback.UnPeekLiveData
 import com.mj.preventbullying.client.Constant
+import com.mj.preventbullying.client.foldtree.TreeModel
 import com.mj.preventbullying.client.tool.SpManager
 import com.mj.preventbullying.client.http.apiService
 import com.mj.preventbullying.client.http.result.DevTypeResult
@@ -16,9 +19,10 @@ import com.sjb.base.base.BaseViewModel
  * Describe : 主页的viewModel
  */
 class MainViewModel : BaseViewModel() {
-    var orgTreeEvent = UnPeekLiveData<OrgTreeResult>()
     var devTypeEvent = UnPeekLiveData<DevTypeResult>()
     val addDevEvent = UnPeekLiveData<Boolean>()
+
+
     fun refreshToken() {
         requestNoCheck({
             apiService.refreshToken()
@@ -35,18 +39,6 @@ class MainViewModel : BaseViewModel() {
         })
     }
 
-
-    /**
-     * 获取组织列表
-     */
-    fun getOrgList() {
-        requestNoCheck({
-            apiService.getOrgTree()
-        }, {
-            Logger.i("组织树查询结果：$it")
-            orgTreeEvent.postValue(it)
-        })
-    }
 
     /**
      * 获取设备型号列表
