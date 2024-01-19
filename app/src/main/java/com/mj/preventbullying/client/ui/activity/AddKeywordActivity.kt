@@ -1,8 +1,11 @@
 package com.mj.preventbullying.client.ui.activity
 
+import android.text.Editable
+import android.text.TextWatcher
 import com.mj.preventbullying.client.app.AppMvActivity
 import com.mj.preventbullying.client.app.MyApp
 import com.mj.preventbullying.client.databinding.ActivityKeywordAddBinding
+import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseViewModel
 
 /**
