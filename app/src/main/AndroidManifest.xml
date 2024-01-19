@@ -71,6 +71,7 @@
         <activity android:name=".ui.activity.AlarmAudioActivity" />
         <activity android:name=".ui.activity.DeviceConfigurationActivity"
             android:theme="@style/AppTheme"/>
+        <activity android:name=".ui.activity.AddKeywordActivity"/>
 
         <service
             android:name=".jpush.server.JPushService"

@@ -148,6 +148,17 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
             }
         }
 
+        binding.addDevice.setOnClickListener {
+            if (mFragment is DeviceFragment) {
+                Logger.i("点击添加设备")
+                requestBlePermission()
+            }
+            if (mFragment is KeywordManagerFragment) {
+                Logger.i("添加新的关键词")
+                startActivity(AddKeywordActivity::class.java)
+            }
+        }
+
     }
 
     private fun showOrgDialog(v: View) {
@@ -192,11 +203,6 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
 
 
     override fun initListener() {
-        binding.addDevice.setOnClickListener {
-            Logger.i("点击添加设备")
-            requestBlePermission()
-            // showAddDialog()
-        }
         // 登录状态
         MyApp.socketEventViewModel.loginStatusEvent.observe(this) {
             when (it) {
@@ -375,7 +381,8 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
     private fun switchFragment(target: Fragment) {
         if (target != null && target != mFragment) {
             val transaction = supportFragmentManager.beginTransaction()
-            binding.addDevice.visibility = if (target is DeviceFragment) View.VISIBLE else View.GONE
+            binding.addDevice.visibility =
+                if (target is DeviceFragment || target is KeywordManagerFragment) View.VISIBLE else View.GONE
             when (target) {
                 is MessageFragment -> {
                     binding.run {
