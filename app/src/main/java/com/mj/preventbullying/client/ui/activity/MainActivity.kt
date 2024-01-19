@@ -39,6 +39,7 @@ import com.mj.preventbullying.client.tool.requestBlePermission
 import com.mj.preventbullying.client.tool.requestLocationPermission
 import com.mj.preventbullying.client.tool.requestPermission
 import com.mj.preventbullying.client.ui.dialog.DevInfoDialog
+import com.mj.preventbullying.client.ui.dialog.ItemListDialog
 import com.mj.preventbullying.client.ui.dialog.MessageTipsDialog
 import com.mj.preventbullying.client.ui.fragment.DeviceFragment
 import com.mj.preventbullying.client.ui.fragment.KeywordManagerFragment
@@ -131,12 +132,13 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
             MyApp.socketEventViewModel.initSocket(userId, registerId)
         }
         MyApp.globalEventViewModel.getAppVersion()
-        binding.titleTv.text = MyApp.globalEventViewModel.schoolName
+        binding.titleTv.text = MyApp.globalEventViewModel.getSchoolName()
     }
 
     override fun initViewObservable() {
-        binding.spreadIv.setOnClickListener{
-
+        binding.spreadIv.setOnClickListener {
+            Logger.i("点击组织下拉框")
+            showOrgDialog(binding.titleLy)
         }
         binding.devServerIv.setOnClickListener {
             if (MyApp.socketEventViewModel.isConnected) {
@@ -147,6 +149,32 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
         }
 
     }
+
+    private fun showOrgDialog(v: View) {
+
+        val treeList = mutableListOf<TreeModel>()
+        MyApp.globalEventViewModel.treeList?.let { treeList.addAll(it) }
+        val location = IntArray(2)
+        v.getLocationOnScreen(location)
+        val y = location[1]
+        val itemListDialog = ItemListDialog(this).setOrgData(treeList).onOrgListener {
+            Logger.i("选择的组织:$it")
+            binding.titleTv.text = it.name
+            MyApp.globalEventViewModel.setSchoolName(it.name)
+            MyApp.globalEventViewModel.setSchoolId(it.id)
+            // SpManager.putString(Constant.ORG_ID_KEY, it.id)
+
+        }
+        XPopup.Builder(this)
+            .isDestroyOnDismiss(true) //对于只使用一次的弹窗，推荐设置这个
+            .hasShadowBg(false)
+            .hasBlurBg(false)
+            .isViewMode(true)
+            .offsetY(y + v.height)
+            .asCustom(itemListDialog)
+            .show()
+    }
+
 
     override fun initView() {
         switchFragment(messageFragment)
@@ -227,7 +255,7 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
             }
         }
         MyApp.globalEventViewModel.orgTreeEvent.observe(this) {
-            binding.titleTv.text = MyApp.globalEventViewModel.schoolName
+            binding.titleTv.text = MyApp.globalEventViewModel.getSchoolName()
         }
 
 
@@ -321,22 +349,18 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
     }
 
     fun onMessage(v: View) {
-        binding.titleTv.text = "消息通知"
         switchFragment(messageFragment)
     }
 
     fun onDevice(v: View) {
-        binding.titleTv.text = "设备管理"
         switchFragment(deviceFragment)
     }
 
     fun onKeyword(v: View) {
-        binding.titleTv.text = "关键词管理"
         switchFragment(keywordManagerFragment)
     }
 
     fun onMine(v: View) {
-        binding.titleTv.text = "我的"
         switchFragment(mineFragment)
     }
 

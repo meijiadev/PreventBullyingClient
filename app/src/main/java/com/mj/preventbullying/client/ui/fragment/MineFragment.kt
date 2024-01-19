@@ -79,8 +79,8 @@ class MineFragment : BaseMvFragment<FragmentMineBinding, SettingViewModel>() {
             phone = phone.substring(0, 3) + "****" + phone.substring(7, 11)
         }
         binding.phoneTv.text = phone
-        binding.orgTv.text = MyApp.globalEventViewModel.schoolName
-        Logger.i("当前的学校是：${MyApp.globalEventViewModel.schoolName}")
+        binding.orgTv.text = MyApp.globalEventViewModel.getSchoolName()
+        Logger.i("当前的学校是：${MyApp.globalEventViewModel.getSchoolName()}")
     }
 
 
@@ -143,8 +143,8 @@ class MineFragment : BaseMvFragment<FragmentMineBinding, SettingViewModel>() {
         val itemListDialog = ItemListDialog(requireContext()).setOrgData(treeList).onOrgListener {
             Logger.i("选择的组织")
             binding.orgTv.text = it.name
-            MyApp.globalEventViewModel.schoolName = it.name
-            MyApp.globalEventViewModel.schoolId = it.id
+            MyApp.globalEventViewModel.setSchoolName(it.name)
+            MyApp.globalEventViewModel.setSchoolId(it.id)
             // SpManager.putString(Constant.ORG_ID_KEY, it.id)
         }
         XPopup.Builder(requireContext())
@@ -225,9 +225,9 @@ class MineFragment : BaseMvFragment<FragmentMineBinding, SettingViewModel>() {
 
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
-        if (!hidden){
-            binding.orgTv.text = MyApp.globalEventViewModel.schoolName
-            Logger.i("当前的学校是：${MyApp.globalEventViewModel.schoolName}")
+        if (!hidden) {
+            binding.orgTv.text = MyApp.globalEventViewModel.getSchoolName()
+            Logger.i("当前的学校是：${MyApp.globalEventViewModel.getSchoolName()}")
         }
     }
 }

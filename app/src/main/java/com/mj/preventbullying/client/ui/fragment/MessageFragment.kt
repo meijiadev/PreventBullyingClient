@@ -53,6 +53,7 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
     private var curDataPage = 1   //当前获取第几页数据
     private var maxPage = 1       // 最大页数
 
+
     companion object {
         fun newInstance(): MessageFragment {
             val args = Bundle()
@@ -119,7 +120,13 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
                 MessageProcessDialog(requireContext())
                     .setToId(snCode).setCallListener {
                         if (currentState == PENDING_STATUS) {
-                            currentRecordId?.let { viewModel.recordProcess(it, "处理中", PROCESSING_STATUS) }
+                            currentRecordId?.let {
+                                viewModel.recordProcess(
+                                    it,
+                                    "处理中",
+                                    PROCESSING_STATUS
+                                )
+                            }
                         }
                     }
             XPopup.Builder(requireContext()).isViewMode(true)
@@ -272,6 +279,15 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
 
     override fun initListener() {
         viewModel.messageEvent.observe(this) {
+            if (it?.data?.records.isNullOrEmpty()) {
+                curDataPage = 1
+                val size = messageAdapter?.itemCount ?: 0
+                if (size > 0) {
+                    messageAdapter?.removeAtRange(0..<size)
+                }
+                binding.smartRefreshLayout.finishRefresh()
+                return@observe
+            }
             curDataPage = it.data?.current ?: 1
             maxPage = it.data?.pages ?: 1
             if (curDataPage + 1 > maxPage) {
@@ -335,6 +351,12 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
             viewModel.getAllDeviceRecords(curDataPage, curShowType)
             Logger.i("收到报警通知")
             isNotify = true
+        }
+
+        MyApp.globalEventViewModel.orgEvent.observe(this) {
+            if (!isHideFragment) {
+                viewModel.getAllDeviceRecords(1, curShowType)
+            }
         }
     }
 

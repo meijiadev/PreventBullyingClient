@@ -93,15 +93,14 @@ interface ApiService {
         @Query("current") current: Int = 1,
         @Query("size") size: Int = 20,
         @Query("state") state: String?,
-        @Query("orgId") orgId: Long? = MyApp.globalEventViewModel.schoolId?.toLong()
-        //@Header("Authorization") authorization: String = "Bearer ${SpManager.getString(Constant.ACCESS_TOKEN_KEY)}"
+        @Query("orgId") orgId: Long? = MyApp.globalEventViewModel.getSchoolId()?.toLong()
     ): DeviceRecordResult
 
     @GET("anti-bullying/keyword/page")
     suspend fun getKeywordList(
         @Query("current") current: Int = 1,
         @Query("size") size: Int = 200,
-        @Query("orgId") orgId: Long? = MyApp.globalEventViewModel.schoolId?.toLong()
+        @Query("orgId") orgId: Long? = MyApp.globalEventViewModel.getSchoolId()?.toLong()
     ): KeywordResult
 
     /**
@@ -113,7 +112,7 @@ interface ApiService {
     suspend fun getAllDevices(
         @Query("current") current: Int = 1,
         @Query("size") size: Int = 100,
-        @Query("orgId") orgId: Long? = MyApp.globalEventViewModel.schoolId?.toLong()
+        @Query("orgId") orgId: Long? = MyApp.globalEventViewModel.getSchoolId()?.toLong()
         // @Header("Authorization") authorization: String = "Bearer ${SpManager.getString(Constant.ACCESS_TOKEN_KEY)}"
     ): DeviceResult
 

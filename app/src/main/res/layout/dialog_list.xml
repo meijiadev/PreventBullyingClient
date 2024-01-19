@@ -11,11 +11,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/org_ll"
-        android:layout_marginStart="@dimen/dp_20"
+        android:layout_marginStart="@dimen/dp_10"
         android:layout_marginTop="@dimen/dp_5"
-        android:layout_marginEnd="@dimen/dp_20"
+        android:layout_marginEnd="@dimen/dp_10"
         app:shape_radius="@dimen/dp_10"
-        app:shape_solidColor="@color/common_line_color"
+        app:shape_strokeColor="@color/panda"
+        app:shape_solidColor="@color/white"
+        app:shape_strokeWidth="@dimen/dp_1"
         >
 
         <androidx.recyclerview.widget.RecyclerView

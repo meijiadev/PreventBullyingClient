@@ -35,6 +35,7 @@ class MyApp : Application(), ViewModelStoreOwner {
         lateinit var timerViewModel: TimerViewModel
         lateinit var webrtcSocketManager: WebrtcSocketManager
         lateinit var globalEventViewModel: GlobalEventViewModel
+
     }
 
     private lateinit var mAppViewModelStore: ViewModelStore

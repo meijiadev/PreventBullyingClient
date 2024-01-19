@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/dp_10"
+    >
+
+    <com.hjq.shape.layout.ShapeRelativeLayout
+        android:layout_width="@dimen/dp_165"
+        android:layout_height="@dimen/dp_130"
+        android:minHeight="@dimen/dp_40"
+        app:shape_radius="@dimen/dp_8"
+        app:shape_solidColor="@color/device_online">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/keyword_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_10"
+            android:textSize="@dimen/sp_15"
+            android:textStyle="bold"
+            android:text="救命，救命" />
+        <com.sjb.base.view.SwitchButton
+            android:id="@+id/enable_bt"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_20"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginEnd="@dimen/dp_5"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:layout_below="@id/keyword_tv"
+            android:layout_marginTop="@dimen/dp_5"
+            android:background="@color/common_line_color" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/intervention_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/keyword_tv"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_10"
+            android:gravity="center_vertical"
+            android:text="语音文案：\n收到求助，马上赶到 "
+            android:textSize="@dimen/sp_13" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/grade_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/intervention_tv"
+            android:layout_marginStart="@dimen/dp_10"
+            android:text="等级：严重"
+            android:textSize="@dimen/sp_15"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_5"
+            />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/amend_iv"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_30"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:layout_marginBottom="@dimen/dp_8"
+            android:layout_alignParentEnd="true"
+            android:scaleType="center"
+            android:src="@mipmap/amend_icon"
+
+            />
+
+
+
+    </com.hjq.shape.layout.ShapeRelativeLayout>
+
+</FrameLayout>

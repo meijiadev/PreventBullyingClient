@@ -31,7 +31,7 @@ import com.sjb.base.base.BaseMvFragment
 class DeviceFragment : BaseMvFragment<FragmentDeviceBinding, DeviceViewModel>() {
     private var deviceListAdapter: DeviceListAdapter? = null
     private var deviceList: MutableList<DeviceRecord>? = null
-
+    private var isHideFragment: Boolean = true
     private var mainViewModel: MainViewModel? = null
     private var treeList: MutableList<TreeModel>? = null
     private var typeList: MutableList<DevType>? = null
@@ -226,11 +226,17 @@ class DeviceFragment : BaseMvFragment<FragmentDeviceBinding, DeviceViewModel>() 
             viewModel.getAllDevices()
         }
 
+        MyApp.globalEventViewModel.orgEvent.observe(this) {
+            if (!isHideFragment) {
+                viewModel.getAllDevices()
+            }
+        }
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         Logger.i("是否隐藏：$hidden")
+        isHideFragment = hidden
         if (!hidden) {
             viewModel.getAllDevices()
         }

@@ -35,9 +35,14 @@ class GlobalEventViewModel : BaseViewModel() {
 
     var orgTreeEvent = UnPeekLiveData<MutableList<TreeModel>>()
 
-    var curOrgName: String? = null
-    var schoolName: String? = null
-    var schoolId: String? = null
+    /**
+     * 修改组织Id
+     */
+    var orgEvent = UnPeekLiveData<String>()
+
+
+    private var schoolName: String? = null
+    private var schoolId: String? = null
 
     fun getAppVersion() {
         requestNoCheck({
@@ -76,6 +81,29 @@ class GlobalEventViewModel : BaseViewModel() {
             schoolName = tree0?.name
             schoolId = tree0?.id
         }
+    }
+
+    /**
+     * 获取组织名称
+     */
+    fun getSchoolName(): String? {
+        return schoolName
+    }
+
+    fun setSchoolName(name: String) {
+        this.schoolName = name
+    }
+
+    /**
+     * 获取组织Id
+     */
+    fun getSchoolId(): String? {
+        return schoolId
+    }
+
+    fun setSchoolId(id: String) {
+        this.schoolId = id
+        orgEvent.postValue(id)
     }
 
 

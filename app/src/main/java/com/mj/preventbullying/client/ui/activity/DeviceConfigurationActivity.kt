@@ -61,7 +61,7 @@ class DeviceConfigurationActivity : AppMvActivity<ActivityDeviceConfigBinding, M
     private var curPosition: Int = 0
 
     // 设备注册相关页面
-    private var treeList: MutableList<TreeModel>? = null
+    private var treeList: MutableList<TreeModel>? = mutableListOf()
     private var typeList: MutableList<DevType>? = null
     private var deviceSn: String? = null
     private var curOrgId: Long = 0
@@ -252,7 +252,8 @@ class DeviceConfigurationActivity : AppMvActivity<ActivityDeviceConfigBinding, M
 
 
         viewModel.devTypeEvent.observe(this) {
-            treeList = MyApp.globalEventViewModel.treeList
+            treeList?.clear()
+            MyApp.globalEventViewModel.treeList?.let { it1 -> treeList?.addAll(it1) }
             typeList = it?.data as MutableList<DevType>?
         }
         viewModel.addDevEvent.observe(this) {

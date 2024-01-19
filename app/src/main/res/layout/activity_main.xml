@@ -28,6 +28,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dp_5"
                 android:gravity="center"
+                android:layout_gravity="center_vertical"
                 android:text="消息通知"
                 android:textSize="@dimen/sp_18"
                 android:textStyle="bold"
@@ -47,7 +48,6 @@
                 android:src="@mipmap/xl_icon"
                 android:layout_marginStart="@dimen/dp_5"
                 />
-
         </LinearLayout>
 
 
@@ -63,8 +63,6 @@
             android:scaleType="centerCrop"
             android:src="@mipmap/add_icon"
             android:visibility="visible" />
-
-
     </RelativeLayout>
 
 

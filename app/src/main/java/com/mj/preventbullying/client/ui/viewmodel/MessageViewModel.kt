@@ -22,18 +22,18 @@ class MessageViewModel : BaseViewModel() {
     val recordProcessedEvent = UnPeekLiveData<RecordProcessResult>()
     val getPreVieUrlEvent = UnPeekLiveData<PreviewAudioResult>()
 
-    /**
-     * 获取所有设备的报警记录
-     */
-    fun getAllDeviceRecords(curPage: Int? = null) {
-        Logger.i("去获取所有设备的报警记录")
-        requestNoCheck({
-            apiService.getAllRecords(state = null)
-        }, {
-            Logger.d("获取设备报警记录：$it")
-            messageEvent.postValue(it)
-        })
-    }
+//    /**
+//     * 获取所有设备的报警记录
+//     */
+//    fun getAllDeviceRecords(curPage: Int? = null) {
+//        Logger.i("去获取所有设备的报警记录")
+//        requestNoCheck({
+//            apiService.getAllRecords(state = null)
+//        }, {
+//            Logger.d("获取设备报警记录：$it")
+//            messageEvent.postValue(it)
+//        })
+//    }
 
     fun getAllDeviceRecords(curPage: Int, state: String? = null) {
         Logger.i("去获取设备的报警记录$curPage,state:$state")
