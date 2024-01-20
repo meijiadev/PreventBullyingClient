@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.mj.preventbullying.client.http.result.Record
 import com.mj.preventbullying.client.databinding.ItemMessageRecordNewBinding
+
 /**
  * Create by MJ on 2023/12/11.
  * Describe :
@@ -33,7 +34,7 @@ class MessageAdapter : BaseQuickAdapter<Record, MessageAdapter.VH>() {
             snTv.text = "SN-${item?.snCode}"
             locationTv.text = "${item?.org?.name} ${item?.location}"
             keywordTv.text = item?.keyword
-           // volumeTv.text = (item?.volume ?: "")
+            // volumeTv.text = (item?.volume ?: "")
             waringTimeTv.text = item?.waringTime
             when (item?.state) {
                 // 待处理

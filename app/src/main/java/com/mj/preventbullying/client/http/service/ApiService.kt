@@ -15,6 +15,7 @@ import com.mj.preventbullying.client.http.result.PreviewAudioResult
 import com.mj.preventbullying.client.http.result.RecordProcessResult
 import com.mj.preventbullying.client.http.result.RefreshTokenResult
 import com.mj.preventbullying.client.http.result.UpdateAppResult
+import com.mj.preventbullying.client.http.result.VoiceResult
 import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -164,6 +165,16 @@ interface ApiService {
 
     @PUT("anti-bullying/device/upgrades/{deviceId}")
     suspend fun upgradeDevice(@Path("deviceId") deviceId: Long): BaseResult
+
+    /**
+     * 获取语言播报文案的列表
+     */
+    @GET("anti-bullying/voice/page")
+    suspend fun getVoiceList(
+        @Query("current") current: Int = 1,
+        @Query("size") size: Int = 200,
+        @Query("orgId") orgId: Long? = MyApp.globalEventViewModel.getSchoolId()?.toLong()
+    ): VoiceResult
 
 
 }

@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter4.BaseQuickAdapter
-import com.mj.preventbullying.client.databinding.ItemDeviceNewListBinding
 import com.mj.preventbullying.client.databinding.ItemKeywordListBinding
 import com.mj.preventbullying.client.http.result.KRecord
 

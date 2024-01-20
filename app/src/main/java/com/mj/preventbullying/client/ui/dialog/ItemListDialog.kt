@@ -10,7 +10,9 @@ import com.mj.preventbullying.client.foldtree.TreeListAdapter
 import com.mj.preventbullying.client.foldtree.TreeModel
 import com.mj.preventbullying.client.http.result.DevType
 import com.mj.preventbullying.client.http.result.Org
+import com.mj.preventbullying.client.http.result.VRecord
 import com.mj.preventbullying.client.ui.adapter.DevTypeAdapter
+import com.mj.preventbullying.client.ui.adapter.VoiceAdapter
 import com.orhanobut.logger.Logger
 
 /**
@@ -24,62 +26,89 @@ class ItemListDialog(context: Context) : PositionPopupView(context) {
     // 设备注册相关页面
     private var orgList: MutableList<TreeModel>? = null
     private var typeList: MutableList<DevType>? = null
+    private var voiceList: List<VRecord>? = null
+
     private var treeAdapter: TreeListAdapter? = null
     private var devTypeAdapter: DevTypeAdapter? = null
+    private var voiceAdapter: VoiceAdapter? = null
 
     private var curOrgId: Long = 0
     override fun getImplLayoutId(): Int = R.layout.dialog_list
 
-    @SuppressLint("NotifyDataSetChanged")
     override fun onCreate() {
         super.onCreate()
-        treeAdapter = TreeListAdapter()
-        devTypeAdapter = DevTypeAdapter()
         val layoutManager = LinearLayoutManager(context)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         itemListRecycler.layoutManager = layoutManager
         Logger.i("初始化")
+
+        initOrgList()
+        initTypeList()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun initOrgList() {
         if (orgList != null) {
+            treeAdapter = TreeListAdapter()
             itemListRecycler.adapter = treeAdapter
             treeAdapter?.submitList(orgList)
+            treeAdapter?.setOnItemClickListener { adapter, view, position ->
+                val mode = orgList?.get(position)
+                if (mode?.children != null) {
+                    treeAdapter?.setOpenOrClose(orgList, position)
+                    treeAdapter?.notifyDataSetChanged()
+                } else {
+                    val org = orgList?.get(position)
+                    Logger.i("点击的项：${org.toString()}")
+                    //orgListTv.text = org?.name
+
+                    runCatching {
+                        curOrgId = org?.id?.toLong() ?: 0
+                    }.onFailure {
+                        Logger.e("error:${it.message}")
+                        curOrgId = 0
+                    }
+                    org?.let {
+                        orgSelectListener?.invoke(Org(org.id, org.name))
+                        dismiss()
+                    }
+
+                }
+            }
+
         }
+    }
+
+    /**
+     * 初始化设备类型
+     */
+    private fun initTypeList() {
         if (typeList != null) {
+            devTypeAdapter = DevTypeAdapter()
             itemListRecycler.adapter = devTypeAdapter
             devTypeAdapter?.submitList(typeList)
-        }
-        treeAdapter?.setOnItemClickListener { adapter, view, position ->
-            val mode = orgList?.get(position)
-            if (mode?.children != null) {
-                treeAdapter?.setOpenOrClose(orgList, position)
-                treeAdapter?.notifyDataSetChanged()
-            } else {
-                val org = orgList?.get(position)
-                Logger.i("点击的项：${org.toString()}")
-                //orgListTv.text = org?.name
-
-                runCatching {
-                    curOrgId = org?.id?.toLong() ?: 0
-                }.onFailure {
-                    Logger.e("error:${it.message}")
-                    curOrgId = 0
-                }
-                org?.let {
-                    orgSelectListener?.invoke(Org(org.id, org.name))
+            devTypeAdapter?.setOnItemClickListener { adapter, v, position ->
+                val type = typeList?.get(position)
+                type?.value?.let {
+                    devTypeListener?.invoke(it)
                     dismiss()
                 }
+                Logger.i("点击的项：${type}")
+            }
+
+        }
+
+    }
+
+    private fun initVoiceLayout() {
+        if (voiceList != null) {
+            voiceAdapter = VoiceAdapter()
+            itemListRecycler.adapter = voiceAdapter
+            voiceAdapter?.submitList(voiceList)
+            voiceAdapter?.setOnItemClickListener { adapter, v, position ->
 
             }
         }
-
-        devTypeAdapter?.setOnItemClickListener { adapter, v, position ->
-            val type = typeList?.get(position)
-            type?.value?.let {
-                devTypeListener?.invoke(it)
-                dismiss()
-            }
-            Logger.i("点击的项：${type}")
-        }
-
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -88,6 +117,7 @@ class ItemListDialog(context: Context) : PositionPopupView(context) {
         treeAdapter?.submitList(data)
         treeAdapter?.notifyDataSetChanged()
         typeList = null
+        voiceList = null
         this.orgList = data
     }
 
@@ -99,11 +129,24 @@ class ItemListDialog(context: Context) : PositionPopupView(context) {
         devTypeAdapter?.submitList(types)
         devTypeAdapter?.notifyDataSetChanged()
         orgList = null
+        voiceList = null
         this.typeList = types
     }
 
+    /**
+     * 设置语音播报的列表
+     */
+    fun setVoiceList(voices: List<VRecord>?): ItemListDialog = apply {
+        orgList = null
+        typeList = null
+        this.voiceList = voices
+    }
+
+
     private var orgSelectListener: ((org: Org) -> Unit)? = null
     private var devTypeListener: ((type: String) -> Unit)? = null
+
+    private var voiceListener: (() -> Unit)? = null
 
     /**
      * 监听组织列表
@@ -117,5 +160,9 @@ class ItemListDialog(context: Context) : PositionPopupView(context) {
      */
     fun onTypeListener(listener: ((type: String) -> Unit)): ItemListDialog = apply {
         this.devTypeListener = listener
+    }
+
+    fun onVoiceListener(listener: (() -> Unit)): ItemListDialog = apply {
+        this.voiceListener = listener
     }
 }

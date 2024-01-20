@@ -29,13 +29,12 @@ import com.mj.preventbullying.client.ui.dialog.InputMsgDialog
 import com.mj.preventbullying.client.ui.dialog.MessageProcessDialog
 import com.mj.preventbullying.client.ui.viewmodel.MessageViewModel
 import com.mj.preventbullying.client.webrtc.getUUID
-import com.mj.preventbullying.client.http.result.Record
 import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseMvFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-
+import com.mj.preventbullying.client.http.result.Record
 /**
  * Create by MJ on 2023/12/11.
  * Describe :
