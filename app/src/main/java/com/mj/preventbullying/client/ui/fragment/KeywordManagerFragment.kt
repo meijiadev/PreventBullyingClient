@@ -102,6 +102,11 @@ class KeywordManagerFragment : BaseMvFragment<FragmentKeywordManagerBinding, Key
                 .popupAnimation(PopupAnimation.TranslateFromBottom).asCustom(tipsDialog).show()
 
         }
+
+        keywordAdapter?.addOnItemChildClickListener(R.id.amend_iv) { adapter, view, position ->
+
+
+        }
     }
 
     override fun initView() {
