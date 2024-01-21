@@ -166,7 +166,7 @@ fun <T> BaseViewModel.requestNoCheck(
     block: suspend () -> T,
     success: (T) -> Unit,
     error: (AppException) -> Unit = {},
-    isShowDialog: Boolean = true,
+    isShowDialog: Boolean = false,
     loadingMessage: String = "请求网络中..."
 ): Job {
     Logger.i("access token:${SpManager.getString(Constant.ACCESS_TOKEN_KEY)}")
@@ -178,13 +178,13 @@ fun <T> BaseViewModel.requestNoCheck(
             block()
         }.onSuccess {
             //网络请求成功 关闭弹窗
-            uiChangeLiveData.dismissDialogEvent.postValue(null)
+            uiChangeLiveData.dismissDialogEvent.postValue(true)
             //成功回调
             success(it)
         }.onFailure {
             Logger.e("${it.message}")
             //网络请求异常 关闭弹窗
-            uiChangeLiveData.dismissDialogEvent.postValue(null)
+            uiChangeLiveData.dismissDialogEvent.postValue(true)
             error(ExceptionHandle.handleException(it))
             if (it is HttpException) {
                 it.response()?.errorBody()?.string()?.apply {

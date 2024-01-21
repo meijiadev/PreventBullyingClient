@@ -17,6 +17,7 @@ import com.mj.preventbullying.client.http.result.RefreshTokenResult
 import com.mj.preventbullying.client.http.result.UpdateAppResult
 import com.mj.preventbullying.client.http.result.VoiceResult
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -176,5 +177,33 @@ interface ApiService {
         @Query("orgId") orgId: Long? = MyApp.globalEventViewModel.getSchoolId()?.toLong()
     ): VoiceResult
 
+    /**
+     * 新增关键字
+     */
+    @POST("anti-bullying/keyword")
+    suspend fun addKeyword(
+        @Body params: ArrayMap<Any, Any>
+    ): BaseResult
 
+    @POST("anti-bullying/voice")
+    suspend fun addVoice(
+        @Body params: ArrayMap<Any, Any>
+    ): BaseResult
+
+    @PUT("anti-bullying/keyword/{keywordId}/")
+    suspend fun enableKeyword(
+        @Query("enabled") enabled: Boolean,
+        @Path("keywordId") keywordId: Long
+    ): BaseResult
+
+
+    @PUT("anti-bullying/keyword")
+    suspend fun editKeyword(
+        @Body params: ArrayMap<Any, Any>
+    ): BaseResult
+
+    @DELETE("anti-bullying/keyword/{keywordId}")
+    suspend fun deleteKeyword(
+        @Path("keywordId") keywordId: Long
+    ): BaseResult
 }

@@ -14,7 +14,7 @@ open class BaseViewModel : ViewModel() {
     companion object {
         class UIChangeLiveData : UnPeekLiveData<Void>() {
             val showDialogEvent = UnPeekLiveData<String>()
-            val dismissDialogEvent = UnPeekLiveData<Void>()
+            val dismissDialogEvent = UnPeekLiveData<Boolean>()
             val finishEvent = UnPeekLiveData<Void>()
             val uiMessageEvent = UnPeekLiveData<UIMessage>()
             val toastEvent = UnPeekLiveData<String>()

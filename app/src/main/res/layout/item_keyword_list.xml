@@ -66,11 +66,23 @@
             android:layout_width="@dimen/dp_30"
             android:layout_height="@dimen/dp_30"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="@dimen/dp_10"
+            android:layout_marginEnd="@dimen/dp_5"
+            android:layout_marginBottom="@dimen/dp_8"
+           android:layout_toLeftOf="@id/delete_iv"
+            android:scaleType="center"
+            android:src="@mipmap/amend_icon"
+
+            />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/delete_iv"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_30"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="@dimen/dp_5"
             android:layout_marginBottom="@dimen/dp_8"
             android:layout_alignParentEnd="true"
             android:scaleType="center"
-            android:src="@mipmap/amend_icon"
+            android:src="@mipmap/delete_icon"
 
             />
 

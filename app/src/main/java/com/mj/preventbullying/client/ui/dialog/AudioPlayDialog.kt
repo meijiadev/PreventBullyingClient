@@ -79,6 +79,7 @@ class AudioPlayDialog(context: Context) : CenterPopupView(context),
                 AudioPlayer.instance.seekTo(seekBar?.progress ?: 0)
 
             }
+
         })
         initDuration()
     }

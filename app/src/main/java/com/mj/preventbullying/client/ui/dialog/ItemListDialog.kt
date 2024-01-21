@@ -2,6 +2,7 @@ package com.mj.preventbullying.client.ui.dialog
 
 import android.annotation.SuppressLint
 import android.content.Context
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lxj.xpopup.core.PositionPopupView
@@ -13,6 +14,7 @@ import com.mj.preventbullying.client.http.result.Org
 import com.mj.preventbullying.client.http.result.VRecord
 import com.mj.preventbullying.client.ui.adapter.DevTypeAdapter
 import com.mj.preventbullying.client.ui.adapter.VoiceAdapter
+import com.mj.preventbullying.client.ui.view.MaxHeightRecyclerView
 import com.orhanobut.logger.Logger
 
 /**
@@ -21,7 +23,8 @@ import com.orhanobut.logger.Logger
  */
 
 class ItemListDialog(context: Context) : PositionPopupView(context) {
-    private val itemListRecycler: RecyclerView by lazy { findViewById(R.id.list_item_recycler) }
+    private val itemListRecycler: MaxHeightRecyclerView by lazy { findViewById(R.id.list_item_recycler) }
+    private val addIv: AppCompatImageView by lazy { findViewById(R.id.add_iv) }
 
     // 设备注册相关页面
     private var orgList: MutableList<TreeModel>? = null
@@ -44,6 +47,7 @@ class ItemListDialog(context: Context) : PositionPopupView(context) {
 
         initOrgList()
         initTypeList()
+        initVoiceLayout()
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -106,8 +110,18 @@ class ItemListDialog(context: Context) : PositionPopupView(context) {
             itemListRecycler.adapter = voiceAdapter
             voiceAdapter?.submitList(voiceList)
             voiceAdapter?.setOnItemClickListener { adapter, v, position ->
-
+                voiceList?.get(position)?.let {
+                    voiceListener?.invoke(it)
+                    dismiss()
+                }
             }
+            addIv.visibility = VISIBLE
+            addIv.setOnClickListener {
+                addVoiceListener?.invoke()
+                dismiss()
+            }
+        } else {
+            addIv.visibility = GONE
         }
     }
 
@@ -146,7 +160,9 @@ class ItemListDialog(context: Context) : PositionPopupView(context) {
     private var orgSelectListener: ((org: Org) -> Unit)? = null
     private var devTypeListener: ((type: String) -> Unit)? = null
 
-    private var voiceListener: (() -> Unit)? = null
+    private var voiceListener: ((v: VRecord) -> Unit)? = null
+
+    private var addVoiceListener: (() -> Unit)? = null
 
     /**
      * 监听组织列表
@@ -162,7 +178,11 @@ class ItemListDialog(context: Context) : PositionPopupView(context) {
         this.devTypeListener = listener
     }
 
-    fun onVoiceListener(listener: (() -> Unit)): ItemListDialog = apply {
+    fun onVoiceListener(listener: ((v: VRecord) -> Unit)): ItemListDialog = apply {
         this.voiceListener = listener
+    }
+
+    fun onAddVListener(listener: () -> Unit): ItemListDialog = apply {
+        this.addVoiceListener = listener
     }
 }

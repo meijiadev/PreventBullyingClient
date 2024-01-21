@@ -49,13 +49,13 @@ abstract class BaseMvActivity<V : ViewBinding, VM : BaseViewModel> : AppCompatAc
         initListener()
         initViewObservable()
         viewModel.uiChangeLiveData.showDialogEvent.observe(this) {
-            //showLoadingExt()
+            showLoadingExt()
             Logger.i("打开弹窗")
         }
 
         viewModel.uiChangeLiveData.dismissDialogEvent.observe(this) {
-           // dismissLoadingExt()
             Logger.i("关闭弹窗")
+            dismissLoadingExt()
         }
     }
 

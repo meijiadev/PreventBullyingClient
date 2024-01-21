@@ -1,8 +1,12 @@
 package com.mj.preventbullying.client.ui.viewmodel
 
+import android.util.ArrayMap
 import com.blackview.base.http.requestNoCheck
+import com.hjq.toast.ToastUtils
 import com.kunminx.architecture.ui.callback.UnPeekLiveData
+import com.mj.preventbullying.client.app.MyApp
 import com.mj.preventbullying.client.http.apiService
+import com.mj.preventbullying.client.http.result.KRecord
 import com.mj.preventbullying.client.http.result.KeywordResult
 import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseViewModel
@@ -14,6 +18,8 @@ import com.sjb.base.base.BaseViewModel
 
 class KeywordViewModel : BaseViewModel() {
     var keywordEvent = UnPeekLiveData<KeywordResult>()
+    var enableKeywordEvent = UnPeekLiveData<Boolean>()
+    var deleteKeywordEvent = UnPeekLiveData<Boolean>()
 
     fun getKeywords() {
         requestNoCheck({
@@ -26,5 +32,34 @@ class KeywordViewModel : BaseViewModel() {
                 Logger.e("关键字列表获取失败")
             }
         })
+    }
+
+    fun enableKeyword(kRecord: KRecord, enable: Boolean) {
+        val params = ArrayMap<Any, Any>()
+        params["keywordId"] = kRecord.keywordId
+        params["keyword"] = kRecord.keyword
+        params["enabled"] = enable
+        params["matchType"] = kRecord.matchType
+        params["credibility"] = kRecord.credibility
+        params["voiceId"] = kRecord.voice.id
+        params["orgId"] = MyApp.globalEventViewModel.getSchoolId() ?: 0
+        requestNoCheck({
+            // apiService.enableKeyword(keywordId, enable)
+            apiService.editKeyword(params)
+        }, {
+            enableKeywordEvent.postValue(it.success)
+        }, {
+            enableKeywordEvent.postValue(false)
+        }, true)
+    }
+
+    fun deleteKeyword(keywordId: Long) {
+        requestNoCheck({
+            apiService.deleteKeyword(keywordId)
+        }, {
+            deleteKeywordEvent.postValue(it.success)
+        }, {
+            deleteKeywordEvent.postValue(false)
+        }, true)
     }
 }

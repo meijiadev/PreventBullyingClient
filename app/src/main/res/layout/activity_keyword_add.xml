@@ -115,6 +115,7 @@
                 />
 
             <com.hjq.shape.view.ShapeTextView
+                android:id="@+id/serious_tv"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/dp_30"
                 android:layout_gravity="center_vertical"
@@ -127,6 +128,7 @@
                 app:shape_solidColor="@color/white" />
 
             <com.hjq.shape.view.ShapeTextView
+                android:id="@+id/common_tv"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/dp_30"
                 android:layout_gravity="center_vertical"
@@ -139,6 +141,7 @@
                 app:shape_solidColor="@color/gold" />
 
             <com.hjq.shape.view.ShapeTextView
+                android:id="@+id/slight_tv"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/dp_30"
                 android:layout_gravity="center_vertical"
@@ -181,6 +184,7 @@
                 />
 
             <com.hjq.shape.view.ShapeTextView
+                android:id="@+id/accuracy_tv"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/dp_30"
                 android:layout_gravity="center_vertical"
@@ -193,6 +197,7 @@
                 app:shape_solidColor="@color/white" />
 
             <com.hjq.shape.view.ShapeTextView
+                android:id="@+id/common_sensitivity_tv"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/dp_30"
                 android:layout_gravity="center_vertical"
@@ -205,6 +210,7 @@
                 app:shape_solidColor="@color/gold" />
 
             <com.hjq.shape.view.ShapeTextView
+                android:id="@+id/fast_sensitivity_tv"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/dp_30"
                 android:layout_gravity="center_vertical"
@@ -226,6 +232,52 @@
 
 
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/seekbar_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sensitivity_ll"
+            android:layout_marginTop="@dimen/dp_15"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatSeekBar
+                android:id="@+id/seekbar_sen"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dp_30"
+                android:layout_marginStart="@dimen/dp_20"
+                android:layout_weight="1" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/number_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_30"
+                android:layout_marginEnd="@dimen/dp_20"
+                android:gravity="center_vertical"
+                android:text="1000"
+                android:textSize="@dimen/sp_15" />
+        </LinearLayout>
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_30"
+            android:layout_below="@id/seekbar_ll"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_10"
+            android:text="是否启用："
+            android:gravity="center_vertical"
+            android:textSize="@dimen/sp_15" />
+
+        <com.sjb.base.view.SwitchButton
+            android:id="@+id/enable_bt"
+            android:layout_width="@dimen/dp_60"
+            android:layout_height="@dimen/dp_30"
+            android:layout_below="@id/seekbar_ll"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_toRightOf="@id/text" />
 
 
         <com.hjq.shape.view.ShapeTextView

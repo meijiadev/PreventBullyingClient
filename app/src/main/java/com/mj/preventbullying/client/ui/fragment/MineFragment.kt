@@ -25,11 +25,9 @@ import com.mj.preventbullying.client.ui.dialog.AmendPasswordDialog
 import com.mj.preventbullying.client.ui.dialog.ItemListDialog
 import com.mj.preventbullying.client.ui.dialog.UpdateAppDialog
 import com.mj.preventbullying.client.ui.login.LoginActivity
-import com.mj.preventbullying.client.ui.viewmodel.MainViewModel
 import com.mj.preventbullying.client.ui.viewmodel.SettingViewModel
 import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseMvFragment
-import com.sjb.base.base.BaseViewModel
 import com.sjb.base.view.SwitchButton
 
 /**
