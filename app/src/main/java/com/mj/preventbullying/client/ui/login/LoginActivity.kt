@@ -22,6 +22,7 @@ import com.mj.preventbullying.client.app.MyApp
 import com.mj.preventbullying.client.tool.SpManager
 import com.mj.preventbullying.client.databinding.ActivityLoginBinding
 import com.mj.preventbullying.client.http.service.ApiService
+import com.mj.preventbullying.client.tool.ActivityManager
 import com.mj.preventbullying.client.tool.requestPermission
 import com.mj.preventbullying.client.ui.activity.MainActivity
 import com.orhanobut.logger.Logger
@@ -48,6 +49,7 @@ class LoginActivity : BaseMvActivity<ActivityLoginBinding, LoginViewModel>() {
     companion object {
 
         fun toLoginActivity(context: Context) {
+            ActivityManager.getInstance().finishAllActivities()
             val intent = Intent(context, LoginActivity::class.java)
             if (context is Application) {
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
@@ -106,7 +108,7 @@ class LoginActivity : BaseMvActivity<ActivityLoginBinding, LoginViewModel>() {
             SpManager.putString(Constant.ACCOUNT_KEY, it.username)
             SpManager.putString(Constant.ACCOUNT_PASSWORD, passwordTv.text.toString())
             SpManager.putString(Constant.USER_PHONE_KEY, it.user_info.phone)
-           // SpManager.putString(Constant.ORG_ID_KEY, it.user_info.orgId)
+            // SpManager.putString(Constant.ORG_ID_KEY, it.user_info.orgId)
             JPushUPSManager.turnOnPush(this) {
                 Logger.i("打开极光推送服务：$it")
             }

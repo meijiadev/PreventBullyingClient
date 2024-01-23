@@ -41,7 +41,7 @@ interface ApiService {
         private const val BASE_HTTP_URL_ZYQ = "http://cloud.zyq0407.com:8080/"       // 开发环境
         const val API = "api/"
         private var isDevVersion = true
-        private var isTestVersion = false
+        private var isTestVersion = true   // 是否是测试环境
         fun getHostUrl(): String {
             //  isDevVersion = SpManager.getBoolean(Constant.SERVICE_URL_KEY, true)
             return if (isTestVersion) {

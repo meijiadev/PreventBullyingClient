@@ -85,7 +85,7 @@
             android:id="@+id/volume_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_45"
+            android:layout_marginStart="@dimen/dp_35"
             android:textColor="@color/common_cancel_text_color"
             android:textSize="@dimen/sp_10"
             app:layout_constraintStart_toStartOf="parent"

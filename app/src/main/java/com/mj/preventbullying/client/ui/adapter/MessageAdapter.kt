@@ -34,7 +34,7 @@ class MessageAdapter : BaseQuickAdapter<Record, MessageAdapter.VH>() {
             snTv.text = "SN-${item?.snCode}"
             locationTv.text = "${item?.org?.name} ${item?.location}"
             keywordTv.text = item?.keyword
-            // volumeTv.text = (item?.volume ?: "")
+            volumeTv.text = "${item?.volume}|${item?.credibility}"
             waringTimeTv.text = item?.waringTime
             when (item?.state) {
                 // 待处理

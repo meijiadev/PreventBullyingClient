@@ -36,6 +36,7 @@ import com.mj.preventbullying.client.databinding.ActivityMainBinding
 import com.mj.preventbullying.client.foldtree.TreeModel
 import com.mj.preventbullying.client.http.result.AppData
 import com.mj.preventbullying.client.http.result.DevType
+import com.mj.preventbullying.client.jpush.NotifyExtras
 import com.mj.preventbullying.client.jpush.receive.JPushExtraMessage
 import com.mj.preventbullying.client.tool.NetworkUtil
 import com.mj.preventbullying.client.tool.SpManager
@@ -138,7 +139,7 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
         }
         postDelayed({
             MyApp.globalEventViewModel.getAppVersion()
-        },1500)
+        }, 1500)
         binding.titleTv.text = MyApp.globalEventViewModel.getSchoolName()
     }
 
@@ -272,6 +273,19 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
         }
         MyApp.globalEventViewModel.orgTreeEvent.observe(this) {
             binding.titleTv.text = MyApp.globalEventViewModel.getSchoolName()
+        }
+        MyApp.globalEventViewModel.notifyMsgEvent.observe(this) {
+            val notifyContent = it.notificationContent
+            val jsonStr = it.notificationExtras
+            val extras = Gson().fromJson(jsonStr, NotifyExtras::class.java)
+            Logger.i("接收到的消息：$extras")
+            if (extras.pushType == "Alarm") {
+                switchFragment(messageFragment)
+            } else if (extras.pushType == "State") {
+                switchFragment(messageFragment)
+            }
+
+
         }
 
 
