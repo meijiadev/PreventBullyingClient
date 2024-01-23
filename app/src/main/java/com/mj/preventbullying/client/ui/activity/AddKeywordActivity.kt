@@ -10,6 +10,7 @@ import com.mj.preventbullying.client.R
 import com.mj.preventbullying.client.app.AppMvActivity
 import com.mj.preventbullying.client.app.MyApp
 import com.mj.preventbullying.client.databinding.ActivityKeywordAddBinding
+import com.mj.preventbullying.client.http.result.KRecord
 import com.mj.preventbullying.client.http.result.VRecord
 import com.mj.preventbullying.client.tool.dismissLoadingExt
 import com.mj.preventbullying.client.tool.showLoadingExt
@@ -39,8 +40,14 @@ class AddKeywordActivity : AppMvActivity<ActivityKeywordAddBinding, AddViewModel
 
     private var level = LEVEL_COMMON
     private var sensitivity = SENSITIVITY_COMMON
-    private var progress = 1100
-    private var voiceId: Long? = null
+    private var voiceId: String? = null
+    private var voiceText: String? = null
+    private var keyword: String? = null
+    private var keywordId: String? = null
+    private var enable = false
+    private var matchType: String? = null
+    private var credibility: Int = 1100
+    private var isEdit = false
     override fun getViewBinding(): ActivityKeywordAddBinding {
         return ActivityKeywordAddBinding.inflate(layoutInflater)
     }
@@ -50,13 +57,34 @@ class AddKeywordActivity : AppMvActivity<ActivityKeywordAddBinding, AddViewModel
             //深色字体
             statusBarDarkFont(true)
         }
-        binding.titleLl.titleTv.text = "新增关键词"
+        isEdit = intent.getBooleanExtra("isEdit", false)
+        if (isEdit) {
+            keyword = intent.getStringExtra("keyword")
+            keywordId = intent.getStringExtra("keywordId")
+            enable = intent.getBooleanExtra("enable", false)
+            matchType = intent.getStringExtra("matchType")
+            credibility = intent.getIntExtra("credibility", 1100)
+            voiceId = intent.getStringExtra("voiceId")
+            voiceText = intent.getStringExtra("voiceName")
+            level = intent.getIntExtra("level", SENSITIVITY_COMMON)
+            binding.titleLl.titleTv.text = "编辑关键词"
+        } else {
+            binding.titleLl.titleTv.text = "新增关键词"
+        }
         binding.orgListTv.text = MyApp.globalEventViewModel.getSchoolName()
         viewModel.getVoiceList()
     }
 
     override fun initData() {
-
+        if (isEdit) {
+            binding.apply {
+                keywordEt.setText(keyword)
+                officialTv.text = voiceText
+                initLevelView()
+                initSSView()
+                binding.enableBt.setChecked(enable)
+            }
+        }
 
     }
 
@@ -93,8 +121,8 @@ class AddKeywordActivity : AppMvActivity<ActivityKeywordAddBinding, AddViewModel
                 restoreSSDefault()
                 accuracyTv.shapeDrawableBuilder.setSolidColor(getColor(com.sjb.base.R.color.gold))
                     .intoBackground()
-                progress = 1300
-                seekbarSen.progress = progress
+                credibility = 1300
+                seekbarSen.progress = credibility
 
             }
             commonSensitivityTv.setOnClickListener {
@@ -102,28 +130,42 @@ class AddKeywordActivity : AppMvActivity<ActivityKeywordAddBinding, AddViewModel
                 restoreSSDefault()
                 commonSensitivityTv.shapeDrawableBuilder.setSolidColor(getColor(com.sjb.base.R.color.gold))
                     .intoBackground()
-                progress = 1100
-                seekbarSen.progress = progress
+                credibility = 1100
+                seekbarSen.progress = credibility
             }
             fastSensitivityTv.setOnClickListener {
                 sensitivity = SENSITIVITY_FAST
                 restoreSSDefault()
                 fastSensitivityTv.shapeDrawableBuilder.setSolidColor(getColor(com.sjb.base.R.color.gold))
                     .intoBackground()
-                progress = 1000
-                seekbarSen.progress = progress
+                credibility = 1000
+                seekbarSen.progress = credibility
 
             }
 
             confirmTv.setOnClickListener {
-                val keyword = keywordEt.text.toString().trim()
-                if (keyword.isEmpty() || voiceId == null) {
+                keyword = keywordEt.text.toString().trim()
+                if (keyword.isNullOrEmpty() || voiceId == null) {
                     toast("请先填写相关信息！")
                     return@setOnClickListener
                 }
-                val enable = enableBt.isChecked()
-                viewModel.addKeyword(keyword, enable, progress, voiceId, level)
-                showLoadingExt()
+                enable = enableBt.isChecked()
+                if (!isEdit) {
+                    viewModel.addKeyword(keyword!!, enable, credibility, voiceId?.toLong(), level)
+                    showLoadingExt()
+                } else {
+                    if (keywordId != null && keyword != null && voiceId != null) {
+                        viewModel.amendKeyword(
+                            keywordId!!,
+                            keyword!!,
+                            enable,
+                            matchType,
+                            credibility,
+                            voiceId?.toLong()
+                        )
+
+                    }
+                }
             }
         }
     }
@@ -147,13 +189,46 @@ class AddKeywordActivity : AppMvActivity<ActivityKeywordAddBinding, AddViewModel
         }
     }
 
+    private fun initLevelView() {
+        restoreLevelDefault()
+        when (level) {
+            LEVEL_SERIOUS -> binding.seriousTv.shapeDrawableBuilder.setSolidColor(getColor(com.sjb.base.R.color.gold))
+                .intoBackground()
+
+            LEVEL_COMMON -> binding.commonTv.shapeDrawableBuilder.setSolidColor(getColor(com.sjb.base.R.color.gold))
+                .intoBackground()
+
+            LEVEL_SLIGHT -> binding.slightTv.shapeDrawableBuilder.setSolidColor(getColor(com.sjb.base.R.color.gold))
+                .intoBackground()
+        }
+    }
+
+    private fun initSSView() {
+        restoreSSDefault()
+        if (credibility < 1100) {
+            binding.fastSensitivityTv.shapeDrawableBuilder.setSolidColor(getColor(com.sjb.base.R.color.gold))
+                .intoBackground()
+        }
+        if (credibility in 1100..1299) {
+            binding.commonSensitivityTv.shapeDrawableBuilder.setSolidColor(getColor(com.sjb.base.R.color.gold))
+                .intoBackground()
+        }
+
+        if (credibility >= 1300) {
+            binding.accuracyTv.shapeDrawableBuilder.setSolidColor(getColor(com.sjb.base.R.color.gold))
+                .intoBackground()
+        }
+        binding.seekbarSen.progress = credibility
+        binding.numberTv.text = credibility.toString()
+    }
+
     private fun showVoiceDialog(v: View) {
         val location = IntArray(2)
         v.getLocationOnScreen(location)
         val y = location[1]
         val itemListDialog = ItemListDialog(this).setVoiceList(voiceList).onVoiceListener {
             binding.officialTv.text = it.text
-            voiceId = it.voiceId.toLong()
+            voiceId = it.voiceId
         }.onAddVListener {
             showAddVoiceDialog()
         }
@@ -183,7 +258,7 @@ class AddKeywordActivity : AppMvActivity<ActivityKeywordAddBinding, AddViewModel
     override fun initView() {
         binding.apply {
             seekbarSen.max = 2000
-            seekbarSen.progress = progress
+            seekbarSen.progress = if (credibility > 2000) 2000 else credibility
             seekbarSen.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
                     //Logger.i("$p1,$p2")
@@ -202,6 +277,8 @@ class AddKeywordActivity : AppMvActivity<ActivityKeywordAddBinding, AddViewModel
                             seekbarSen.progress = 700
                             toast("灵敏度尽量大于700以上")
                         }
+                        credibility = it.progress
+                        initSSView()
                     }
                 }
             })
@@ -233,6 +310,14 @@ class AddKeywordActivity : AppMvActivity<ActivityKeywordAddBinding, AddViewModel
                 toast("语音文案新增失败")
             }
 
+        }
+        viewModel.amendKeywordEvent.observe(this) {
+            if (it == true) {
+                toast("修改成功")
+                finish()
+            } else {
+                toast("修改失败！")
+            }
         }
     }
 

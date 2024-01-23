@@ -1,5 +1,6 @@
 package com.mj.preventbullying.client.ui.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,10 +11,12 @@ import com.lxj.xpopup.enums.PopupAnimation
 import com.mj.preventbullying.client.R
 import com.mj.preventbullying.client.app.MyApp
 import com.mj.preventbullying.client.databinding.FragmentKeywordManagerBinding
+import com.mj.preventbullying.client.ui.activity.AddKeywordActivity
 import com.mj.preventbullying.client.ui.adapter.KeywordAdapter
 import com.mj.preventbullying.client.ui.dialog.MessageTipsDialog
 import com.mj.preventbullying.client.ui.viewmodel.KeywordViewModel
 import com.mj.preventbullying.client.ui.viewmodel.MainViewModel
+import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseMvFragment
 import com.sjb.base.view.SwitchButton
 
@@ -104,7 +107,19 @@ class KeywordManagerFragment : BaseMvFragment<FragmentKeywordManagerBinding, Key
         }
 
         keywordAdapter?.addOnItemChildClickListener(R.id.amend_iv) { adapter, view, position ->
-
+            adapter.getItem(position)?.apply {
+                val intent = Intent(mActivity, AddKeywordActivity::class.java)
+                intent.putExtra("keyword", keyword)
+                intent.putExtra("keywordId", keywordId)
+                intent.putExtra("enable", enabled)
+                intent.putExtra("matchType", matchType)
+                intent.putExtra("credibility", credibility)
+                intent.putExtra("voiceId", voice.id)
+                intent.putExtra("voiceName", voice.name)
+                intent.putExtra("isEdit", true)
+                intent.putExtra("level", level)
+                startActivity(intent)
+            }
 
         }
     }
@@ -150,5 +165,13 @@ class KeywordManagerFragment : BaseMvFragment<FragmentKeywordManagerBinding, Key
         if (!hidden) {
             viewModel.getKeywords()
         }
+        Logger.i("是否可见：$hidden")
+    }
+
+    override fun onResume() {
+        if (!isFirstFragment)
+            viewModel.getKeywords()
+        super.onResume()
+        //Logger.i("onResume")
     }
 }

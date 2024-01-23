@@ -29,6 +29,7 @@ abstract class BaseMvFragment<V : ViewBinding, VM : BaseViewModel> : Fragment(),
     protected lateinit var binding: V
     protected lateinit var viewModel: VM
     protected lateinit var mActivity: AppCompatActivity
+    protected var isFirstFragment = true
 
     abstract fun getViewBinding(inflater: LayoutInflater, parent: ViewGroup?): V
 
@@ -70,6 +71,10 @@ abstract class BaseMvFragment<V : ViewBinding, VM : BaseViewModel> : Fragment(),
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        isFirstFragment = false
+    }
 
     /**
      *创建ViewModel对象

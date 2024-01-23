@@ -34,6 +34,7 @@
             android:padding="@dimen/dp_5"
             android:scrollbars="vertical"
             android:textSize="@dimen/sp_15"
+            android:textColor="@color/black"
             app:shape_radius="@dimen/dp_8"
             app:shape_solidColor="@color/common_line_color"
             app:shape_strokeColor="@color/common_line_color"

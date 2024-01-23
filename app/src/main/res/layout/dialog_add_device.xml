@@ -55,6 +55,7 @@
                 android:hint="请输入SN码（必填）"
                 android:paddingStart="@dimen/dp_8"
                 android:textSize="@dimen/sp_13"
+                android:textColor="@color/black"
                 android:background="@null"
                 />
 
@@ -125,6 +126,7 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:hint="请选择组织（必填）"
+                android:textColor="@color/black"
                 android:paddingStart="@dimen/dp_8"
                 android:paddingEnd="@dimen/dp_18"
                 android:textSize="@dimen/sp_13" />
@@ -166,6 +168,7 @@
                 android:layout_height="@dimen/dp_40"
                 android:gravity="center_vertical"
                 android:hint="请选择设备型号（必填）"
+                android:textColor="@color/black"
                 android:paddingStart="@dimen/dp_8"
                 android:textSize="@dimen/sp_13"
                 android:layout_weight="1"
@@ -202,6 +205,7 @@
             android:hint="请输入位置（必填）"
             android:paddingStart="@dimen/dp_8"
             android:textSize="@dimen/sp_13"
+            android:textColor="@color/black"
             app:shape_radius="@dimen/dp_10"
             app:shape_strokeColor="@color/common_line_color"
             app:shape_strokeWidth="@dimen/dp_1" />
@@ -228,6 +232,7 @@
             android:hint="请输入描述(非必填)"
             android:paddingStart="@dimen/dp_8"
             android:textSize="@dimen/sp_13"
+            android:textColor="@color/black"
             app:shape_radius="@dimen/dp_10"
             app:shape_strokeColor="@color/common_line_color"
             app:shape_strokeWidth="@dimen/dp_1" />

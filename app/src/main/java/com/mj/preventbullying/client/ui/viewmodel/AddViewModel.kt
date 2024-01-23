@@ -18,6 +18,7 @@ class AddViewModel : BaseViewModel() {
     var voiceListEvent = UnPeekLiveData<List<VRecord>>()
     var addKeywordEvent = UnPeekLiveData<Boolean>()
     var addVoiceEvent = UnPeekLiveData<Boolean>()
+    var amendKeywordEvent = UnPeekLiveData<Boolean>()
 
     /**
      * 获取语音文案的列表
@@ -54,6 +55,34 @@ class AddViewModel : BaseViewModel() {
             addKeywordEvent.postValue(it.success)
 
         })
+    }
+
+    /**
+     * 修改关键词
+     */
+    fun amendKeyword(
+        keywordId: String,
+        keyword: String,
+        enable: Boolean,
+        matchType: String?,
+        credibility: Int,
+        voiceId: Long?
+    ) {
+        val params = ArrayMap<Any, Any>()
+        params["keywordId"] = keywordId
+        params["keyword"] = keyword
+        params["enabled"] = enable
+        params["matchType"] = matchType
+        params["credibility"] = credibility
+        params["voiceId"] = voiceId
+        params["orgId"] = MyApp.globalEventViewModel.getSchoolId() ?: 0
+        requestNoCheck({
+            apiService.editKeyword(params)
+        }, {
+            amendKeywordEvent.postValue(it.success)
+        }, {
+            amendKeywordEvent.postValue(false)
+        }, true)
     }
 
     fun addVoice(

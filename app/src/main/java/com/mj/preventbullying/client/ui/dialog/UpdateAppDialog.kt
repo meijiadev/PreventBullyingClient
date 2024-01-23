@@ -25,6 +25,7 @@ class UpdateAppDialog(context: Context) : CenterPopupView(context) {
     private val tvUpdateDetails: AppCompatTextView by lazy { findViewById(R.id.tv_update_details) }
 
     private val pbUpdateProgress: ProgressBar by lazy { findViewById(R.id.pb_update_progress) }
+    private val progressTv: AppCompatTextView by lazy { findViewById(R.id.progress_tv) }
 
     private val tvNext: AppCompatTextView by lazy { findViewById(R.id.tv_update_close) }
     private val tvUpdate: AppCompatTextView by lazy { findViewById(R.id.tv_update_update) }
@@ -56,6 +57,7 @@ class UpdateAppDialog(context: Context) : CenterPopupView(context) {
             val msg = tvUpdate.text.toString()
             if (msg == "立刻更新") {
                 pbUpdateProgress.visibility = View.VISIBLE
+                progressTv.visibility=View.VISIBLE
                 tvNext.visibility = View.GONE
                 tvUpdate.text = "正在下载"
                 updateAppListener?.invoke()
@@ -75,6 +77,7 @@ class UpdateAppDialog(context: Context) : CenterPopupView(context) {
 
     fun setProgress(curProgress: Int) {
         pbUpdateProgress.progress = curProgress
+        progressTv.text = curProgress.toString()
         if (curProgress == 100) {
             tvUpdate.text = "下载完成"
         }

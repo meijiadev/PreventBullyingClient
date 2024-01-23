@@ -6,6 +6,7 @@ data class KeywordResult(
     val msg: Any,
     val success: Boolean
 )
+
 data class KData(
     val countId: Any,
     val current: Int,
@@ -24,7 +25,7 @@ data class KRecord(
     val enabled: Boolean,
     val keyword: String,
     val keywordId: String,
-    val lastUpdateTime: String,
+    val lastUpdateTime: String?,
     val level: Int,
     val matchType: String,
     val org: Org,

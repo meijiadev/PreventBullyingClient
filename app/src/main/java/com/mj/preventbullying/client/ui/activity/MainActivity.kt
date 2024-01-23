@@ -15,6 +15,8 @@ import androidx.lifecycle.lifecycleScope
 import cn.jpush.android.api.BasicPushNotificationBuilder
 import cn.jpush.android.api.JPushInterface
 import cn.jpush.android.ups.JPushUPSManager
+import com.azhon.appupdate.listener.OnDownloadListenerAdapter
+import com.azhon.appupdate.manager.DownloadManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.gyf.immersionbar.ktx.immersionBar
@@ -26,11 +28,13 @@ import com.lxj.xpopup.enums.PopupAnimation
 import com.mj.preventbullying.client.BuildConfig
 import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.Constant.USER_ID_KEY
+import com.mj.preventbullying.client.Constant.isNewAppVersion
 import com.mj.preventbullying.client.R
 import com.mj.preventbullying.client.app.AppMvActivity
 import com.mj.preventbullying.client.app.MyApp
 import com.mj.preventbullying.client.databinding.ActivityMainBinding
 import com.mj.preventbullying.client.foldtree.TreeModel
+import com.mj.preventbullying.client.http.result.AppData
 import com.mj.preventbullying.client.http.result.DevType
 import com.mj.preventbullying.client.jpush.receive.JPushExtraMessage
 import com.mj.preventbullying.client.tool.NetworkUtil
@@ -41,6 +45,7 @@ import com.mj.preventbullying.client.tool.requestPermission
 import com.mj.preventbullying.client.ui.dialog.DevInfoDialog
 import com.mj.preventbullying.client.ui.dialog.ItemListDialog
 import com.mj.preventbullying.client.ui.dialog.MessageTipsDialog
+import com.mj.preventbullying.client.ui.dialog.UpdateAppDialog
 import com.mj.preventbullying.client.ui.fragment.DeviceFragment
 import com.mj.preventbullying.client.ui.fragment.KeywordManagerFragment
 import com.mj.preventbullying.client.ui.fragment.MessageFragment
@@ -131,7 +136,9 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
         if (userId != null && registerId != null) {
             MyApp.socketEventViewModel.initSocket(userId, registerId)
         }
-        MyApp.globalEventViewModel.getAppVersion()
+        postDelayed({
+            MyApp.globalEventViewModel.getAppVersion()
+        },1500)
         binding.titleTv.text = MyApp.globalEventViewModel.getSchoolName()
     }
 
@@ -257,7 +264,10 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
             Logger.i("收到更新信息:$it")
             val versionCode = it?.data?.versionCode
             if (versionCode != null) {
-                Constant.isNewAppVersion = it.data.versionCode > BuildConfig.VERSION_CODE
+                isNewAppVersion = it.data.versionCode > BuildConfig.VERSION_CODE
+                if (isNewAppVersion) {
+                    showUpdateDialog(it.data)
+                }
             }
         }
         MyApp.globalEventViewModel.orgTreeEvent.observe(this) {
@@ -266,6 +276,41 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
 
 
     }
+
+    private var updateAppDialog: UpdateAppDialog? = null
+
+    /**
+     * 显示更新app的dialog
+     */
+    private fun showUpdateDialog(app: AppData) {
+        updateAppDialog = UpdateAppDialog(this).setUpdateMsg(app).setUpdateAppListener {
+            val manager = DownloadManager.Builder(this).run {
+                apkUrl(app.fileUrl)
+                apkName(app.fileName)
+                smallIcon(R.mipmap.app_icon)
+                onDownloadListener(listenerAdapter)
+                build()
+            }
+            manager.download()
+        }
+        XPopup.Builder(this)
+            .isViewMode(true)
+            .popupAnimation(PopupAnimation.TranslateFromBottom)
+            .dismissOnTouchOutside(false)
+            .dismissOnBackPressed(false)
+            .asCustom(updateAppDialog)
+            .show()
+    }
+
+    private val listenerAdapter: OnDownloadListenerAdapter = object : OnDownloadListenerAdapter() {
+
+        override fun downloading(max: Int, progress: Int) {
+            val curr = (progress / max.toDouble() * 100.0).toInt()
+            Logger.i("当前下载进度：$curr")
+            updateAppDialog?.setProgress(curr)
+        }
+    }
+
 
     /**
      * 获取蓝牙扫描、连接的权限

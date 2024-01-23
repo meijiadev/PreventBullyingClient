@@ -200,6 +200,7 @@
             android:hint="请输入位置（必填）"
             android:paddingStart="@dimen/dp_8"
             android:textSize="@dimen/sp_13"
+            android:textColor="@color/black"
             app:shape_radius="@dimen/dp_12"
             app:shape_solidColor="@color/white"
             app:shape_strokeWidth="@dimen/dp_1" />
@@ -216,6 +217,7 @@
             android:hint="请输入描述(非必填)"
             android:paddingStart="@dimen/dp_8"
             android:textSize="@dimen/sp_13"
+            android:textColor="@color/black"
             app:shape_radius="@dimen/dp_12"
             app:shape_solidColor="@color/white" />
 

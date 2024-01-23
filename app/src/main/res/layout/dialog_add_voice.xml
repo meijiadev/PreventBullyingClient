@@ -43,6 +43,7 @@
             android:hint="请输入语音播报文案"
             android:paddingStart="@dimen/dp_10"
             android:textSize="@dimen/sp_13"
+            android:textColor="@color/black"
             app:shape_radius="@dimen/dp_5"
             app:shape_strokeColor="@color/common_line_color"
             app:shape_strokeWidth="@dimen/dp_1" />
@@ -69,6 +70,7 @@
             android:gravity="center"
             android:inputType="number"
             android:paddingStart="@dimen/dp_10"
+            android:textColor="@color/black"
             android:text="1"
             android:textSize="@dimen/sp_13"
             app:shape_radius="@dimen/dp_5"

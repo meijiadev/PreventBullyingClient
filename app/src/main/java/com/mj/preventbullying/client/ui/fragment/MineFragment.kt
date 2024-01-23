@@ -36,8 +36,6 @@ import com.sjb.base.view.SwitchButton
  */
 
 class MineFragment : BaseMvFragment<FragmentMineBinding, SettingViewModel>() {
-    private var appUpdateResult: UpdateAppResult? = null
-
 
     // 设备注册相关页面
     private var treeList: MutableList<TreeModel>? = null
@@ -68,7 +66,6 @@ class MineFragment : BaseMvFragment<FragmentMineBinding, SettingViewModel>() {
         } else {
             View.GONE
         }
-        MyApp.globalEventViewModel.getAppVersion()
         binding.serviceTv.text = ApiService.getHostUrl()
         var phone = SpManager.getString(Constant.USER_PHONE_KEY)
         if (phone.isNullOrEmpty()) {
@@ -116,13 +113,7 @@ class MineFragment : BaseMvFragment<FragmentMineBinding, SettingViewModel>() {
         })
 
         binding.updateAppLy.setOnClickListener {
-            if (Constant.isNewAppVersion) {
-                appUpdateResult?.data?.let {
-                    showUpdateDialog(it)
-                }
-            } else {
-                toast("暂无新版本")
-            }
+            MyApp.globalEventViewModel.getAppVersion()
         }
 
         binding.curOrgLy.setOnClickListener {
@@ -159,7 +150,7 @@ class MineFragment : BaseMvFragment<FragmentMineBinding, SettingViewModel>() {
     private var updateAppDialog: UpdateAppDialog? = null
 
     /**
-     * 显示dialog
+     * 显示更新app的dialog
      */
     private fun showUpdateDialog(app: AppData) {
         updateAppDialog = UpdateAppDialog(requireContext()).setUpdateMsg(app).setUpdateAppListener {
@@ -214,10 +205,7 @@ class MineFragment : BaseMvFragment<FragmentMineBinding, SettingViewModel>() {
     }
 
     override fun initListener() {
-        MyApp.globalEventViewModel.updateAppEvent.observe(this) {
-            appUpdateResult = it
-            Logger.i("获取更新信息：$it")
-        }
+
 
     }
 
