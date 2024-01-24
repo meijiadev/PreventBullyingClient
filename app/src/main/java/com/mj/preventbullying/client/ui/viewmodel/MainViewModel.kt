@@ -19,9 +19,6 @@ import com.sjb.base.base.BaseViewModel
  * Describe : 主页的viewModel
  */
 class MainViewModel : BaseViewModel() {
-    var devTypeEvent = UnPeekLiveData<DevTypeResult>()
-    val addDevEvent = UnPeekLiveData<Boolean>()
-
 
     fun refreshToken() {
         requestNoCheck({
@@ -36,47 +33,6 @@ class MainViewModel : BaseViewModel() {
             }
         }, {
             Logger.e("refresh token error:${it.message}")
-        })
-    }
-
-
-    /**
-     * 获取设备型号列表
-     */
-    fun getDevType() {
-        requestNoCheck({
-            apiService.getDevType()
-        }, {
-            Logger.i("获取设备型号列表：$it")
-            devTypeEvent.postValue(it)
-        })
-    }
-
-    fun addDev(
-        sn: String,
-        // name: String,
-        orgID: Long,
-        devType: String,
-        location: String,
-        des: String?
-    ) {
-        val params = ArrayMap<Any, Any>()
-        params["name"] = "校园防欺凌设备"
-        params["snCode"] = sn
-        params["orgId"] = orgID
-        params["location"] = location
-        params["modelCode"] = devType
-        params["description"] = des
-        requestNoCheck({
-            apiService.addDevice(params)
-        }, {
-            if (it.success) {
-                Logger.i("添加设备成功！")
-                addDevEvent.postValue(true)
-            } else {
-                Logger.i("设备添加失败！")
-                addDevEvent.postValue(false)
-            }
         })
     }
 

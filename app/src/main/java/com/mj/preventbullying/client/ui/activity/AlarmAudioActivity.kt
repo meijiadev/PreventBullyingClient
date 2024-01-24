@@ -32,10 +32,10 @@ class AlarmAudioActivity : AppMvActivity<ActivityAlarmAudioBinding, BaseViewMode
     }
 
     override fun initParam() {
-        immersionBar {
-            //深色字体
-            statusBarDarkFont(true)
-        }
+//        immersionBar {
+//            //深色字体
+//            statusBarDarkFont(true)
+//        }
     }
 
     override fun initData() {

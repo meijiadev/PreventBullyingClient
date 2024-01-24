@@ -53,10 +53,6 @@ class AddKeywordActivity : AppMvActivity<ActivityKeywordAddBinding, AddViewModel
     }
 
     override fun initParam() {
-        immersionBar {
-            //深色字体
-            statusBarDarkFont(true)
-        }
         isEdit = intent.getBooleanExtra("isEdit", false)
         if (isEdit) {
             keyword = intent.getStringExtra("keyword")

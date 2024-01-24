@@ -86,157 +86,157 @@
             app:shape_solidColor="@color/gold" />
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/register_dev_rl"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        android:layout_below="@id/title_ly"
-        >
+<!--    <RelativeLayout-->
+<!--        android:id="@+id/register_dev_rl"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:visibility="gone"-->
+<!--        android:layout_below="@id/title_ly"-->
+<!--        >-->
 
-        <com.hjq.shape.layout.ShapeLinearLayout
-            android:id="@+id/sn_ll"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_45"
-            android:layout_marginStart="@dimen/dp_10"
-            android:layout_marginTop="@dimen/dp_10"
-            android:layout_marginEnd="@dimen/dp_10"
-            android:orientation="horizontal"
-            app:shape_radius="@dimen/dp_12"
-            app:shape_solidColor="@color/white">
+<!--        <com.hjq.shape.layout.ShapeLinearLayout-->
+<!--            android:id="@+id/sn_ll"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="@dimen/dp_45"-->
+<!--            android:layout_marginStart="@dimen/dp_10"-->
+<!--            android:layout_marginTop="@dimen/dp_10"-->
+<!--            android:layout_marginEnd="@dimen/dp_10"-->
+<!--            android:orientation="horizontal"-->
+<!--            app:shape_radius="@dimen/dp_12"-->
+<!--            app:shape_solidColor="@color/white">-->
 
-            <EditText
-                android:id="@+id/sn_et"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@null"
-                android:hint="请输入SN码（必填）"
-                android:paddingStart="@dimen/dp_8"
-                android:textSize="@dimen/sp_13" />
+<!--            <EditText-->
+<!--                android:id="@+id/sn_et"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="1"-->
+<!--                android:background="@null"-->
+<!--                android:hint="请输入SN码（必填）"-->
+<!--                android:paddingStart="@dimen/dp_8"-->
+<!--                android:textSize="@dimen/sp_13" />-->
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/scan_code_iv"
-                android:layout_width="@dimen/dp_38"
-                android:layout_height="@dimen/dp_38"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="@dimen/dp_3"
-                android:src="@mipmap/icon_scan_code" />
-        </com.hjq.shape.layout.ShapeLinearLayout>
-
-
-        <com.hjq.shape.layout.ShapeLinearLayout
-            android:id="@+id/org_ll"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_45"
-            android:layout_below="@id/sn_ll"
-            android:layout_marginStart="@dimen/dp_10"
-            android:layout_marginTop="@dimen/dp_10"
-            android:layout_marginEnd="@dimen/dp_10"
-            android:orientation="horizontal"
-            app:shape_radius="@dimen/dp_12"
-            app:shape_solidColor="@color/white">
-
-            <com.hjq.shape.view.ShapeTextView
-                android:id="@+id/org_list_tv"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/dp_2"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:hint="请选择组织（必填）"
-                android:paddingStart="@dimen/dp_8"
-                android:paddingEnd="@dimen/dp_18"
-                android:textSize="@dimen/sp_13" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/org_enter_iv"
-                android:layout_width="@dimen/dp_40"
-                android:layout_height="@dimen/dp_40"
-                android:scaleType="center"
-                android:src="@mipmap/enter" />
-        </com.hjq.shape.layout.ShapeLinearLayout>
+<!--            <androidx.appcompat.widget.AppCompatImageView-->
+<!--                android:id="@+id/scan_code_iv"-->
+<!--                android:layout_width="@dimen/dp_38"-->
+<!--                android:layout_height="@dimen/dp_38"-->
+<!--                android:layout_gravity="center_vertical"-->
+<!--                android:layout_marginEnd="@dimen/dp_3"-->
+<!--                android:src="@mipmap/icon_scan_code" />-->
+<!--        </com.hjq.shape.layout.ShapeLinearLayout>-->
 
 
-        <com.hjq.shape.layout.ShapeLinearLayout
-            android:id="@+id/dev_type_ll"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_45"
-            android:layout_below="@id/org_ll"
-            android:layout_marginStart="@dimen/dp_10"
-            android:layout_marginTop="@dimen/dp_10"
-            android:layout_marginEnd="@dimen/dp_10"
-            android:orientation="horizontal"
-            app:shape_radius="@dimen/dp_12"
-            app:shape_solidColor="@color/white">
+<!--        <com.hjq.shape.layout.ShapeLinearLayout-->
+<!--            android:id="@+id/org_ll"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="@dimen/dp_45"-->
+<!--            android:layout_below="@id/sn_ll"-->
+<!--            android:layout_marginStart="@dimen/dp_10"-->
+<!--            android:layout_marginTop="@dimen/dp_10"-->
+<!--            android:layout_marginEnd="@dimen/dp_10"-->
+<!--            android:orientation="horizontal"-->
+<!--            app:shape_radius="@dimen/dp_12"-->
+<!--            app:shape_solidColor="@color/white">-->
 
-            <com.hjq.shape.view.ShapeTextView
-                android:id="@+id/dev_type_tv"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/dp_40"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:hint="请选择设备型号（必填）"
-                android:paddingStart="@dimen/dp_8"
-                android:textSize="@dimen/sp_13" />
+<!--            <com.hjq.shape.view.ShapeTextView-->
+<!--                android:id="@+id/org_list_tv"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_margin="@dimen/dp_2"-->
+<!--                android:layout_weight="1"-->
+<!--                android:gravity="center_vertical"-->
+<!--                android:hint="请选择组织（必填）"-->
+<!--                android:paddingStart="@dimen/dp_8"-->
+<!--                android:paddingEnd="@dimen/dp_18"-->
+<!--                android:textSize="@dimen/sp_13" />-->
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/type_enter_iv"
-                android:layout_width="@dimen/dp_40"
-                android:layout_height="@dimen/dp_40"
-                android:scaleType="center"
-                android:src="@mipmap/enter" />
-        </com.hjq.shape.layout.ShapeLinearLayout>
-
-
-        <com.hjq.shape.view.ShapeEditText
-            android:id="@+id/location_et"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_45"
-            android:layout_below="@id/dev_type_ll"
-            android:layout_marginStart="@dimen/dp_10"
-            android:layout_marginTop="@dimen/dp_10"
-            android:layout_marginEnd="@dimen/dp_10"
-            android:hint="请输入位置（必填）"
-            android:paddingStart="@dimen/dp_8"
-            android:textSize="@dimen/sp_13"
-            android:textColor="@color/black"
-            app:shape_radius="@dimen/dp_12"
-            app:shape_solidColor="@color/white"
-            app:shape_strokeWidth="@dimen/dp_1" />
+<!--            <androidx.appcompat.widget.AppCompatImageView-->
+<!--                android:id="@+id/org_enter_iv"-->
+<!--                android:layout_width="@dimen/dp_40"-->
+<!--                android:layout_height="@dimen/dp_40"-->
+<!--                android:scaleType="center"-->
+<!--                android:src="@mipmap/enter" />-->
+<!--        </com.hjq.shape.layout.ShapeLinearLayout>-->
 
 
-        <com.hjq.shape.view.ShapeEditText
-            android:id="@+id/des_et"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_45"
-            android:layout_below="@id/location_et"
-            android:layout_marginStart="@dimen/dp_10"
-            android:layout_marginTop="@dimen/dp_10"
-            android:layout_marginEnd="@dimen/dp_10"
-            android:hint="请输入描述(非必填)"
-            android:paddingStart="@dimen/dp_8"
-            android:textSize="@dimen/sp_13"
-            android:textColor="@color/black"
-            app:shape_radius="@dimen/dp_12"
-            app:shape_solidColor="@color/white" />
+<!--        <com.hjq.shape.layout.ShapeLinearLayout-->
+<!--            android:id="@+id/dev_type_ll"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="@dimen/dp_45"-->
+<!--            android:layout_below="@id/org_ll"-->
+<!--            android:layout_marginStart="@dimen/dp_10"-->
+<!--            android:layout_marginTop="@dimen/dp_10"-->
+<!--            android:layout_marginEnd="@dimen/dp_10"-->
+<!--            android:orientation="horizontal"-->
+<!--            app:shape_radius="@dimen/dp_12"-->
+<!--            app:shape_solidColor="@color/white">-->
 
-        <com.hjq.shape.view.ShapeTextView
-            android:id="@+id/confirm_tv"
-            android:layout_width="@dimen/dp_120"
-            android:layout_height="@dimen/dp_45"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="@dimen/dp_40"
-            android:layout_marginBottom="@dimen/dp_30"
-            android:gravity="center"
-            android:text="确定"
-            android:textColor="@color/black"
-            android:textSize="@dimen/sp_15"
-            app:shape_radius="@dimen/dp_15"
-            app:shape_solidColor="@color/gold" />
+<!--            <com.hjq.shape.view.ShapeTextView-->
+<!--                android:id="@+id/dev_type_tv"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="@dimen/dp_40"-->
+<!--                android:layout_weight="1"-->
+<!--                android:gravity="center_vertical"-->
+<!--                android:hint="请选择设备型号（必填）"-->
+<!--                android:paddingStart="@dimen/dp_8"-->
+<!--                android:textSize="@dimen/sp_13" />-->
 
-    </RelativeLayout>
+<!--            <androidx.appcompat.widget.AppCompatImageView-->
+<!--                android:id="@+id/type_enter_iv"-->
+<!--                android:layout_width="@dimen/dp_40"-->
+<!--                android:layout_height="@dimen/dp_40"-->
+<!--                android:scaleType="center"-->
+<!--                android:src="@mipmap/enter" />-->
+<!--        </com.hjq.shape.layout.ShapeLinearLayout>-->
+
+
+<!--        <com.hjq.shape.view.ShapeEditText-->
+<!--            android:id="@+id/location_et"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="@dimen/dp_45"-->
+<!--            android:layout_below="@id/dev_type_ll"-->
+<!--            android:layout_marginStart="@dimen/dp_10"-->
+<!--            android:layout_marginTop="@dimen/dp_10"-->
+<!--            android:layout_marginEnd="@dimen/dp_10"-->
+<!--            android:hint="请输入位置（必填）"-->
+<!--            android:paddingStart="@dimen/dp_8"-->
+<!--            android:textSize="@dimen/sp_13"-->
+<!--            android:textColor="@color/black"-->
+<!--            app:shape_radius="@dimen/dp_12"-->
+<!--            app:shape_solidColor="@color/white"-->
+<!--            app:shape_strokeWidth="@dimen/dp_1" />-->
+
+
+<!--        <com.hjq.shape.view.ShapeEditText-->
+<!--            android:id="@+id/des_et"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="@dimen/dp_45"-->
+<!--            android:layout_below="@id/location_et"-->
+<!--            android:layout_marginStart="@dimen/dp_10"-->
+<!--            android:layout_marginTop="@dimen/dp_10"-->
+<!--            android:layout_marginEnd="@dimen/dp_10"-->
+<!--            android:hint="请输入描述(非必填)"-->
+<!--            android:paddingStart="@dimen/dp_8"-->
+<!--            android:textSize="@dimen/sp_13"-->
+<!--            android:textColor="@color/black"-->
+<!--            app:shape_radius="@dimen/dp_12"-->
+<!--            app:shape_solidColor="@color/white" />-->
+
+<!--        <com.hjq.shape.view.ShapeTextView-->
+<!--            android:id="@+id/confirm_tv"-->
+<!--            android:layout_width="@dimen/dp_120"-->
+<!--            android:layout_height="@dimen/dp_45"-->
+<!--            android:layout_centerHorizontal="true"-->
+<!--            android:layout_alignParentBottom="true"-->
+<!--            android:layout_marginEnd="@dimen/dp_40"-->
+<!--            android:layout_marginBottom="@dimen/dp_30"-->
+<!--            android:gravity="center"-->
+<!--            android:text="确定"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:textSize="@dimen/sp_15"-->
+<!--            app:shape_radius="@dimen/dp_15"-->
+<!--            app:shape_solidColor="@color/gold" />-->
+
+<!--    </RelativeLayout>-->
 
 
 </RelativeLayout>

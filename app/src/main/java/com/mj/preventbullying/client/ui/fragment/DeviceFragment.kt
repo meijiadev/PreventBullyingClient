@@ -1,23 +1,19 @@
 package com.mj.preventbullying.client.ui.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import com.chad.library.adapter4.BaseQuickAdapter
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.enums.PopupAnimation
 import com.mj.preventbullying.client.R
 import com.mj.preventbullying.client.app.MyApp
 import com.mj.preventbullying.client.databinding.FragmentDeviceBinding
-import com.mj.preventbullying.client.foldtree.TreeModel
-import com.mj.preventbullying.client.http.result.DevType
 import com.mj.preventbullying.client.http.result.DeviceRecord
-import com.mj.preventbullying.client.ui.viewmodel.MainViewModel
+import com.mj.preventbullying.client.ui.activity.AddDeviceActivity
 import com.mj.preventbullying.client.ui.adapter.DeviceListAdapter
-import com.mj.preventbullying.client.ui.dialog.DevInfoDialog
 import com.mj.preventbullying.client.ui.dialog.MessageTipsDialog
 import com.mj.preventbullying.client.ui.viewmodel.DeviceViewModel
 import com.orhanobut.logger.Logger
@@ -32,9 +28,7 @@ class DeviceFragment : BaseMvFragment<FragmentDeviceBinding, DeviceViewModel>() 
     private var deviceListAdapter: DeviceListAdapter? = null
     private var deviceList: MutableList<DeviceRecord>? = null
     private var isHideFragment: Boolean = true
-    private var mainViewModel: MainViewModel? = null
-    private var treeList: MutableList<TreeModel>? = null
-    private var typeList: MutableList<DevType>? = null
+
 
     companion object {
         fun newInstance(): DeviceFragment {
@@ -54,8 +48,6 @@ class DeviceFragment : BaseMvFragment<FragmentDeviceBinding, DeviceViewModel>() 
 
     override fun initParam() {
         viewModel.getAllDevices()
-        mainViewModel = getActivityViewModel(MainViewModel::class.java)
-
     }
 
     override fun initData() {
@@ -94,7 +86,14 @@ class DeviceFragment : BaseMvFragment<FragmentDeviceBinding, DeviceViewModel>() 
         }
         deviceListAdapter?.addOnItemChildClickListener(R.id.amend_iv) { adapter, view, position ->
             val devMsg = deviceList?.get(position)
-            showDialogInfo(devMsg)
+            val intent = Intent(mActivity, AddDeviceActivity::class.java)
+            intent.putExtra("isAddDevice", false)
+            intent.putExtra("snCode", devMsg?.snCode)
+            intent.putExtra("deviceType", devMsg?.modelCode)
+            intent.putExtra("location", devMsg?.location)
+            intent.putExtra("desc", devMsg?.description)
+            intent.putExtra("deviceId", devMsg?.deviceId)
+            startActivity(intent)
         }
 
         deviceListAdapter?.addOnItemChildClickListener(R.id.upgrade_device_iv) { adapter, view, position ->
@@ -117,56 +116,6 @@ class DeviceFragment : BaseMvFragment<FragmentDeviceBinding, DeviceViewModel>() 
                 .asCustom(tipsDialog)
                 .show()
         }
-
-//        deviceListAdapter?.setOnItemLongClickListener { adapter, view, position ->
-//
-//            true
-//        }
-
-    }
-
-    private fun getDevInfoList() {
-        mainViewModel?.getDevType()
-    }
-
-    private var amendDevDialog: DevInfoDialog? = null
-    private fun showDialogInfo(dev: DeviceRecord?) {
-        getDevInfoList()
-        amendDevDialog =
-            DevInfoDialog(requireContext()).setOnListener(object : DevInfoDialog.AddDevListener {
-
-                override fun onCancel() {
-
-                }
-
-                override fun onConfirm(
-                    sn: String,
-                    //name: String,
-                    orgId: Long,
-                    orgName: String,
-                    location: String,
-                    modelCode: String,
-                    desc: String?
-                ) {
-                    dev?.let {
-                        viewModel.amendDev(dev.deviceId, sn, orgId, modelCode, location, desc)
-                    }
-                }
-
-
-            })
-                .setOrgData(treeList)
-                .setTypeData(typeList)
-                .setTitleMsg("修改设备信息")
-                .setAmendData(dev)
-        XPopup.Builder(requireContext())
-            .isViewMode(true)
-            .dismissOnTouchOutside(false)
-            .dismissOnBackPressed(false)
-            .isDestroyOnDismiss(true)
-            .popupAnimation(PopupAnimation.TranslateFromBottom)
-            .asCustom(amendDevDialog)
-            .show()
 
     }
 
@@ -202,26 +151,7 @@ class DeviceFragment : BaseMvFragment<FragmentDeviceBinding, DeviceViewModel>() 
                 toast("设备修改失败，请重试")
             }
         }
-        mainViewModel?.addDevEvent?.observe(this) {
-            if (it) {
-                viewModel.getAllDevices()
-            }
 
-        }
-
-
-//        mainViewModel?.orgTreeEvent?.observe(this) {
-//            // 接收到组织树列表
-//            treeList = it
-//            Logger.i("转化之后的组织树：${treeList?.size}")
-//            amendDevDialog?.setOrgData(treeList)
-//        }
-        mainViewModel?.devTypeEvent?.observe(this) {
-            treeList = MyApp.globalEventViewModel.treeList
-            amendDevDialog?.setOrgData(treeList)
-            typeList = it?.data as MutableList<DevType>?
-            amendDevDialog?.setTypeData(typeList)
-        }
         MyApp.globalEventViewModel.notifyMsgEvent.observe(this) {
             viewModel.getAllDevices()
         }
@@ -240,5 +170,12 @@ class DeviceFragment : BaseMvFragment<FragmentDeviceBinding, DeviceViewModel>() 
         if (!hidden) {
             viewModel.getAllDevices()
         }
+    }
+
+    override fun onResume() {
+        if (!isFirstFragment)
+            viewModel.getAllDevices()
+        super.onResume()
+        //Logger.i("onResume")
     }
 }

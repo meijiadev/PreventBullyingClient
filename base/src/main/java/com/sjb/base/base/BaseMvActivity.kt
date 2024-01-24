@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
 import com.gyf.immersionbar.BarHide
 import com.gyf.immersionbar.ImmersionBar
+import com.gyf.immersionbar.ktx.immersionBar
 import com.lxj.xpopup.XPopup
 import com.orhanobut.logger.Logger
 import com.sjb.base.action.HandlerAction
@@ -64,8 +65,10 @@ abstract class BaseMvActivity<V : ViewBinding, VM : BaseViewModel> : AppCompatAc
      * 状态栏沉浸
      */
     private fun initStatus() {
-        ImmersionBar.with(this) // 默认状态栏字体颜色为黑色
-            .init()
+        immersionBar {
+            //深色字体
+            statusBarDarkFont(true)
+        }
     }
 
     /**

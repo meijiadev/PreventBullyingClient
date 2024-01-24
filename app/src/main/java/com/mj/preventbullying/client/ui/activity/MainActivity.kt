@@ -84,10 +84,10 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
     override fun initParam() {
         // 获取组织列表
         MyApp.globalEventViewModel.getOrgList()
-        immersionBar {
-            //深色字体
-            statusBarDarkFont(true)
-        }
+//        immersionBar {
+//            //深色字体
+//            statusBarDarkFont(true)
+//        }
         requestPermission()
         // 设置通知的样式
         val builder = BasicPushNotificationBuilder(this)
@@ -256,10 +256,6 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
                         .intoBackground()
                 }
             }
-        }
-
-        viewModel.addDevEvent.observe(this) {
-            toast("设备添加成功！")
         }
 
         MyApp.globalEventViewModel.updateAppEvent.observe(this) {

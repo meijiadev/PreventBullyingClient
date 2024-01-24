@@ -25,6 +25,12 @@
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_LOGS"
+        tools:ignore="ProtectedPermissions" />
     <!--    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>-->
 
     <application
@@ -71,6 +77,7 @@
         <activity android:name=".ui.activity.AlarmAudioActivity" />
         <activity android:name=".ui.activity.DeviceConfigurationActivity"
             android:theme="@style/AppTheme"/>
+        <activity android:name=".ui.activity.AddDeviceActivity"/>
         <activity android:name=".ui.activity.AddKeywordActivity"/>
 
         <service

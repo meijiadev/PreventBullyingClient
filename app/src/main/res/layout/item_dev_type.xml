@@ -5,11 +5,12 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_30"
+        android:layout_height="@dimen/dp_40"
         android:textColor="@color/black"
         android:id="@+id/dev_type_tv"
         android:textSize="@dimen/sp_13"
         android:paddingStart="@dimen/dp_10"
+        android:gravity="center_vertical"
         />
     <View
         android:layout_width="match_parent"

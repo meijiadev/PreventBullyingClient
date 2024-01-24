@@ -72,7 +72,9 @@ class MyApp : Application(), ViewModelStoreOwner {
         BleManager.getInstance()
             .enableLog(false)
             .setReConnectCount(2, 5000).operateTimeout = 5000
+
     }
+
 
     /**
      * 获取作用域在Application的ViewModel对象
@@ -99,5 +101,18 @@ class MyApp : Application(), ViewModelStoreOwner {
 
     }
 
+    /**
+     * 集成 bugly
+     */
+//    private fun initBugly(context: Context) {
+//        Logger.i("集成腾讯bugly-start")
+//        val appId = "ae65b5200c"
+//        val appKey = "21a828b7-815d-4db9-9442-1f1aadbff99a"
+//        val builder = BuglyBuilder(appId, appKey)
+//        builder.logLevel = BuglyLogLevel.LEVEL_DEBUG // 设置日志打印级别，级别可从BuglyLogLevel中获取
+//        builder.appVersionType = BuglyAppVersionMode.DEBUG
+//        val isSuccess = Bugly.init(context, builder)
+//        Logger.i("集成腾讯bugly-end:$isSuccess")
+//    }
 
 }

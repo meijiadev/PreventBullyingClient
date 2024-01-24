@@ -14,11 +14,32 @@ import java.util.UUID
 /**
  * Created by Excalibur on 2017/5/30.
  */
-class ChatService {
+class ChatService private constructor() {
+
+    companion object {
+        private const val NAME = "PREVENT"
+
+        // UUID-->通用唯一识别码，能唯一地辨识咨询
+        private val MY_UUID = UUID.fromString(
+            "00001101-0000-1000-8000-00805F9B34FB"
+        )
+
+        //串口
+        const val STATE_NONE = 0
+        const val STATE_LISTEN = 1
+        const val STATE_CONNECTING = 2
+        const val STATE_CONNECTED = 3
+
+        val instance: ChatService by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
+            ChatService()
+        }
+    }
+
     private val mAdapter: BluetoothAdapter
     private var mConnectThread: ConnectThread? = null
     private var mConnectedThread: ConnectedThread? = null
     private var mState: Int
+
 
     init {
         mAdapter = BluetoothAdapter.getDefaultAdapter()
@@ -255,20 +276,6 @@ class ChatService {
 
     }
 
-    companion object {
-        private const val NAME = "PREVENT"
-
-        // UUID-->通用唯一识别码，能唯一地辨识咨询
-        private val MY_UUID = UUID.fromString(
-            "00001101-0000-1000-8000-00805F9B34FB"
-        )
-
-        //串口
-        const val STATE_NONE = 0
-        const val STATE_LISTEN = 1
-        const val STATE_CONNECTING = 2
-        const val STATE_CONNECTED = 3
-    }
 
     // 蓝牙通信建立成功
     private var onConnected: ((data: Boolean) -> Unit)? = null

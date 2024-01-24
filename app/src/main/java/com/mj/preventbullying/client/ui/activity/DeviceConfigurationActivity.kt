@@ -19,22 +19,16 @@ import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.enums.PopupAnimation
 import com.mj.preventbullying.client.R
 import com.mj.preventbullying.client.app.AppMvActivity
-import com.mj.preventbullying.client.app.MyApp
 import com.mj.preventbullying.client.bletooth.BleData
 import com.mj.preventbullying.client.bletooth.BleTooth
 import com.mj.preventbullying.client.bletooth.ChatService
 import com.mj.preventbullying.client.databinding.ActivityDeviceConfigBinding
-import com.mj.preventbullying.client.foldtree.TreeListAdapter
-import com.mj.preventbullying.client.foldtree.TreeModel
-import com.mj.preventbullying.client.http.result.DevType
 import com.mj.preventbullying.client.http.service.ApiService
 import com.mj.preventbullying.client.tool.dismissLoadingExt
 import com.mj.preventbullying.client.tool.showLoadingExt
 import com.mj.preventbullying.client.ui.adapter.BleToothAdapter
-import com.mj.preventbullying.client.ui.adapter.DevTypeAdapter
-import com.mj.preventbullying.client.ui.dialog.ItemListDialog
-import com.mj.preventbullying.client.ui.viewmodel.MainViewModel
 import com.orhanobut.logger.Logger
+import com.sjb.base.base.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -47,7 +41,7 @@ import kotlinx.coroutines.launch
  * 3、配置设备参数
  */
 
-class DeviceConfigurationActivity : AppMvActivity<ActivityDeviceConfigBinding, MainViewModel>() {
+class DeviceConfigurationActivity : AppMvActivity<ActivityDeviceConfigBinding, BaseViewModel>() {
 
     private var bleAdapter: BluetoothAdapter? = null
 
@@ -60,12 +54,6 @@ class DeviceConfigurationActivity : AppMvActivity<ActivityDeviceConfigBinding, M
     private lateinit var chatService: ChatService
     private var curPosition: Int = 0
 
-    // 设备注册相关页面
-    private var treeList: MutableList<TreeModel>? = mutableListOf()
-    private var typeList: MutableList<DevType>? = null
-    private var deviceSn: String? = null
-    private var curOrgId: Long = 0
-
 
     override fun getViewBinding(): ActivityDeviceConfigBinding {
         return ActivityDeviceConfigBinding.inflate(layoutInflater)
@@ -73,10 +61,6 @@ class DeviceConfigurationActivity : AppMvActivity<ActivityDeviceConfigBinding, M
 
     override fun initParam() {
         binding.titleLy.titleTv.text = "设备配网"
-        immersionBar {
-            //深色字体
-            statusBarDarkFont(true)
-        }
     }
 
     override fun initData() {
@@ -84,17 +68,8 @@ class DeviceConfigurationActivity : AppMvActivity<ActivityDeviceConfigBinding, M
         filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
         registerReceiver(mReceiver, filter)
         bleAdapter = BluetoothAdapter.getDefaultAdapter()
-        chatService = ChatService()
-        getDevInfoList()
+        chatService = ChatService.instance
 
-    }
-
-    /**
-     * 获取组织列表和设备类型
-     */
-    private fun getDevInfoList() {
-        //viewModel.getOrgList()
-        viewModel.getDevType()
     }
 
     override fun initView() {
@@ -142,71 +117,6 @@ class DeviceConfigurationActivity : AppMvActivity<ActivityDeviceConfigBinding, M
         }
 
         /**********************************设备注册页面业务***************************/
-        binding.run {
-            orgLl.setOnClickListener {
-                showOrgDialog(it)
-            }
-
-            devTypeLl.setOnClickListener {
-                showTypeDialog(it)
-            }
-
-            confirmTv.setOnClickListener {
-                val sn = snEt.text.toString()
-                // val name = nameEt.text.toString()
-                val orgMsg = orgListTv.text.toString()
-                val devType = devTypeTv.text.toString()
-                val location = locationEt.text.toString()
-                val desc = desEt.text.toString()
-                if (sn.isEmpty() || orgMsg.isEmpty() || devType.isEmpty() || location.isEmpty()) {
-                    toast("请按照指示填写必填信息")
-                } else {
-                    viewModel.addDev(sn, curOrgId, devType, location, desc)
-                    showLoadingExt(R.string.add_device_ing)
-                }
-            }
-        }
-    }
-
-    /**
-     * 显示组织列表弹窗
-     */
-    private fun showOrgDialog(v: View) {
-        val location = IntArray(2)
-        v.getLocationOnScreen(location)
-        val y = location[1]
-        val itemListDialog = ItemListDialog(this).setOrgData(treeList).onOrgListener {
-            Logger.i("选择的组织")
-            binding.orgListTv.text = it.name
-            curOrgId = it.id.toLong()
-        }
-        XPopup.Builder(this)
-            .isDestroyOnDismiss(true) //对于只使用一次的弹窗，推荐设置这个
-            .hasShadowBg(false)
-            .hasBlurBg(false)
-            .offsetY(y + v.height)
-            .asCustom(itemListDialog)
-            .show()
-    }
-
-    /**
-     * 显示设备的类型列表
-     */
-    private fun showTypeDialog(v: View) {
-        val location = IntArray(2)
-        v.getLocationOnScreen(location)
-        val y = location[1]
-        val itemListDialog = ItemListDialog(this).setDevType(typeList).onTypeListener {
-            Logger.i("选择的类型")
-            binding.devTypeTv.text = it
-        }
-        XPopup.Builder(this)
-            .isDestroyOnDismiss(true) //对于只使用一次的弹窗，推荐设置这个
-            .hasShadowBg(false)
-            .hasBlurBg(false)
-            .offsetY(y + v.height)
-            .asCustom(itemListDialog)
-            .show()
     }
 
 
@@ -232,40 +142,21 @@ class DeviceConfigurationActivity : AppMvActivity<ActivityDeviceConfigBinding, M
         chatService.onSnListener {
             lifecycleScope.launch(Dispatchers.Main) {
                 dismissLoadingExt()
-                deviceSn = it
-                binding.networkConfigLl.visibility = View.GONE
-                binding.registerDevRl.visibility = View.VISIBLE
-                binding.snEt.setText(deviceSn)
+                val sn = it
+                val intent = Intent(this@DeviceConfigurationActivity, AddDeviceActivity::class.java)
+                intent.putExtra("isAddDevice", true)
+                intent.putExtra("snCode", sn)
+                startActivity(intent)
+                finish()
             }
         }
 
-        chatService.onDevRegister {
-            toast("设备已注册成功！")
-            dismissLoadingExt()
-            finish()
-        }
         chatService.onDevHasRegister {
             toast("该设备已经配置过，无需再配置！")
             dismissLoadingExt()
 
         }
 
-
-        viewModel.devTypeEvent.observe(this) {
-            treeList?.clear()
-            MyApp.globalEventViewModel.treeList?.let { it1 -> treeList?.addAll(it1) }
-            typeList = it?.data as MutableList<DevType>?
-        }
-        viewModel.addDevEvent.observe(this) {
-            if (it) {
-                toast("设备添加成功！")
-                val data = BleData(2, ApiService.getHostUrl(), deviceSn)
-                val jsonStr = Gson().toJson(data)
-                chatService.write(jsonStr.toByteArray())
-            } else {
-                dismissLoadingExt()
-            }
-        }
 
     }
 
@@ -301,7 +192,6 @@ class DeviceConfigurationActivity : AppMvActivity<ActivityDeviceConfigBinding, M
         if (bleAdapter != null) {
             bleAdapter?.cancelDiscovery()
         }
-        chatService.stop()
         unregisterReceiver(mReceiver)
     }
 

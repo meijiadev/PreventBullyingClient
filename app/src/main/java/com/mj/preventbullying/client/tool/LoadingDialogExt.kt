@@ -6,7 +6,6 @@ import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.impl.LoadingPopupView
 import com.mj.preventbullying.client.R
 import com.orhanobut.logger.Logger
-import com.tencent.bugly.crashreport.CrashReport
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -45,7 +44,6 @@ fun AppCompatActivity.showLoadingExt(message: Int = R.string.common_loading) {
                 Logger.i("打开等待框")
             }.onFailure {
                 Logger.e(it.toString())
-                CrashReport.postCatchedException(it)
             }
         }
     }

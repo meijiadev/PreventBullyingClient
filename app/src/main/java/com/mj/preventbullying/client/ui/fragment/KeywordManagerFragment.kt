@@ -15,7 +15,6 @@ import com.mj.preventbullying.client.ui.activity.AddKeywordActivity
 import com.mj.preventbullying.client.ui.adapter.KeywordAdapter
 import com.mj.preventbullying.client.ui.dialog.MessageTipsDialog
 import com.mj.preventbullying.client.ui.viewmodel.KeywordViewModel
-import com.mj.preventbullying.client.ui.viewmodel.MainViewModel
 import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseMvFragment
 import com.sjb.base.view.SwitchButton
@@ -37,7 +36,6 @@ class KeywordManagerFragment : BaseMvFragment<FragmentKeywordManagerBinding, Key
     }
 
     private var isHideFragment: Boolean = true
-    private var mainViewModel: MainViewModel? = null
 
     // private var curOrgId: String? = null
     private var keywordAdapter: KeywordAdapter? = null
@@ -54,7 +52,6 @@ class KeywordManagerFragment : BaseMvFragment<FragmentKeywordManagerBinding, Key
     }
 
     override fun initParam() {
-        mainViewModel = getActivityViewModel(MainViewModel::class.java)
         //curOrgId = SpManager.getString(Constant.ORG_ID_KEY)
         viewModel.getKeywords()
     }

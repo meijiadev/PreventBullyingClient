@@ -16,6 +16,9 @@ pluginManagement {
         jcenter()
         // 阿里云云效仓库（Gradle 插件）：https://maven.aliyun.com/mvn/guide
         maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
+
+        maven { url 'https://repo1.maven.org/maven2/' }
+
     }
 
 }
@@ -36,6 +39,7 @@ dependencyResolutionManagement {
         jcenter()
         // 阿里云云效仓库（Gradle 插件）：https://maven.aliyun.com/mvn/guide
         maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
+        maven { url 'https://repo1.maven.org/maven2/' }
     }
 }
 

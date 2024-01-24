@@ -19,8 +19,7 @@
             android:layout_marginStart="@dimen/dp_5"
             android:layout_marginTop="@dimen/dp_10"
             android:text="校园防欺凌设备 AM100"
-            android:textSize="@dimen/sp_13"
-             />
+            android:textSize="@dimen/sp_13" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/location_tv"
@@ -29,6 +28,7 @@
             android:layout_below="@id/name_tv"
             android:layout_marginStart="@dimen/dp_10"
             android:layout_marginTop="@dimen/dp_8"
+            android:singleLine="true"
             android:text="惠州一中|二楼综合办公室"
             android:textSize="@dimen/sp_11" />
 
