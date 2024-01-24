@@ -58,10 +58,10 @@ class SwitchButton @JvmOverloads constructor(
     private var checked: Boolean = false
 
     /** 开启状态背景色 */
-    private var accentColor: Int = Color.parseColor("#4BD763")
+    private var accentColor: Int = Color.parseColor("#FFD700")
 
     /** 开启状态按钮描边色 */
-    private var primaryDarkColor: Int = Color.parseColor("#3AC652")
+    private var primaryDarkColor: Int = Color.parseColor("#FFD700")
 
     /** 关闭状态描边色 */
     private var offColor: Int = Color.parseColor("#E3E3E3")

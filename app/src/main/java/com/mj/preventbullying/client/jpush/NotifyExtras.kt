@@ -8,5 +8,5 @@ package com.mj.preventbullying.client.jpush
 data class NotifyExtras(
     val pushType: String,
     val recordId: String?,
-    val snCOde: String?
+    val snCode: String?
 )

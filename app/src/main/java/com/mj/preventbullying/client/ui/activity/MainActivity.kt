@@ -46,6 +46,7 @@ import com.mj.preventbullying.client.tool.requestPermission
 import com.mj.preventbullying.client.ui.dialog.DevInfoDialog
 import com.mj.preventbullying.client.ui.dialog.ItemListDialog
 import com.mj.preventbullying.client.ui.dialog.MessageTipsDialog
+import com.mj.preventbullying.client.ui.dialog.NotifyDialog
 import com.mj.preventbullying.client.ui.dialog.UpdateAppDialog
 import com.mj.preventbullying.client.ui.fragment.DeviceFragment
 import com.mj.preventbullying.client.ui.fragment.KeywordManagerFragment
@@ -280,16 +281,35 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
             val extras = Gson().fromJson(jsonStr, NotifyExtras::class.java)
             Logger.i("接收到的消息：$extras")
             if (extras.pushType == "Alarm") {
+                Logger.i("设备报警")
                 switchFragment(messageFragment)
             } else if (extras.pushType == "State") {
-                switchFragment(messageFragment)
+                Logger.i("设备状态报警")
+                switchFragment(deviceFragment)
+                lifecycleScope.launch {
+                    delay(800)
+                    showNotifyMsg(notifyContent)
+                }
             }
-
-
         }
+    }
 
+    private var msgDialog: NotifyDialog? = null
+    private fun showNotifyMsg(msg: String) {
+        if (msgDialog?.isShow == true) {
+            msgDialog?.dismiss()
+        }
+        msgDialog = NotifyDialog(this).setMsg(msg)
+        XPopup.Builder(this)
+
+            .isDestroyOnDismiss(true) //对于只使用一次的弹窗，推荐设置这个
+            .isCenterHorizontal(true)
+            .offsetY(400)
+            .asCustom(msgDialog)
+            .show()
 
     }
+
 
     private var updateAppDialog: UpdateAppDialog? = null
 
