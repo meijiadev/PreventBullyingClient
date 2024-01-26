@@ -31,6 +31,7 @@ class WebrtcSocketManager : BaseViewModel() {
     private var snCode: String? = null
     private var toId: String? = null
     private var uuid: String? = null
+    private var recordId: String? = null
 
     // 被呼叫或者呼叫别人
     var callEvent = UnPeekLiveData<Boolean>()
@@ -47,7 +48,8 @@ class WebrtcSocketManager : BaseViewModel() {
     /**
      * 创建webrtc的通道
      */
-    fun createWebrtcSc(snCode: String?, toId: String?, uuid: String?) {
+    fun createWebrtcSc(snCode: String?, toId: String?, uuid: String?, recordId: String) {
+        this.recordId = recordId
         // if (webrtcSocket == null) {
         this.snCode = snCode
         this.toId = toId
@@ -136,7 +138,6 @@ class WebrtcSocketManager : BaseViewModel() {
             })
         }
         release()
-        voiceCallEvent.postValue(CALL_HANG_UP)
     }
 
     fun release() {
@@ -144,6 +145,7 @@ class WebrtcSocketManager : BaseViewModel() {
         releaseWebrtc()
         webrtcSocket?.disconnect()
         webrtcSocket = null
+        voiceCallEvent.postValue(CALL_HANG_UP)
     }
 
     private fun releaseWebrtc() {
@@ -239,7 +241,7 @@ class WebrtcSocketManager : BaseViewModel() {
             webRtcManager = WebRtcManager(MyApp.context)
             viewModelScope.launch {
                 delay(100)
-                MyApp.socketEventViewModel.call(toId, uuid)
+                MyApp.socketEventViewModel.call(recordId, uuid)
             }
 
         }

@@ -1,16 +1,20 @@
 package com.mj.preventbullying.client.webrtc
 
+import android.util.ArrayMap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.blackview.base.http.requestNoCheck
 import com.google.gson.Gson
 import com.hjq.toast.ToastUtils
 import com.kunminx.architecture.ui.callback.UnPeekLiveData
 import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.app.MyApp
+import com.mj.preventbullying.client.http.apiService
 import com.mj.preventbullying.client.tool.SpManager
 import com.mj.preventbullying.client.http.service.ApiService
 import com.orhanobut.logger.Logger
 import com.sjb.base.action.HandlerAction
+import com.sjb.base.base.BaseViewModel
 import io.socket.client.Ack
 import io.socket.client.IO
 import io.socket.client.Socket
@@ -34,6 +38,8 @@ const val CALL_HANG_UP = 4
 // 重新拨打一次
 const val RESTART_CALL = 5 // 重新发起通话
 
+const val CALL_BUSY = 6    //占线中...
+
 // 有其他人登录
 const val LOGIN_STATUS_ANTHER = 1
 const val LOGIN_STATUS_FORCE_LOGOUT = 2
@@ -43,12 +49,8 @@ const val OPPOSITE_OFF_LINE = "offline"
 const val OPPOSITE_BUSY = "busy"
 var isAnswer: Boolean = false       // 是否有回复
 
-class SocketEventViewModel : ViewModel(), HandlerAction {
-//
-//
-//    // 被呼叫或者呼叫别人
-//    var callEvent = UnPeekLiveData<Boolean>()
-//
+class SocketEventViewModel : BaseViewModel(), HandlerAction {
+
     /**
      * 语音电话当前状态
      */
@@ -57,7 +59,6 @@ class SocketEventViewModel : ViewModel(), HandlerAction {
     // 是否有其他人登录
     var loginStatusEvent = UnPeekLiveData<Int>()
 
-    var toId: String = "SN012345678901"
     private var mSocket: Socket? = null
 
     private var userId: String? = null
@@ -131,44 +132,72 @@ class SocketEventViewModel : ViewModel(), HandlerAction {
     /**
      * 拨打设备语音
      */
-    fun call(toId: String?, uuid: String?) {
-        Logger.i("call ,toId:$toId,uuid:$uuid")
-        toId?.let {
-            this.toId = toId
-            val message = Message("call", userId, toId, null, uuid)
-            mSocket?.emit("call", Gson().toJson(message), Ack { ack ->
-                if (ack?.isEmpty() == true) {
-                    Logger.i("ack为空")
-                    isAnswer = false
-                    MyApp.webrtcSocketManager.sendHangUp()
-                    ToastUtils.show("语音连接无响应，请重试！")
-                } else {
-                    Logger.i("接收ack:${ack[0].toString()}")
-                    val status = ack[0].toString()
-                    if (status == OPPOSITE_OFF_LINE) {
-                        Logger.i("设备已掉线无法拨通")
-                        MyApp.webrtcSocketManager.sendHangUp(false)
-                        ToastUtils.show("设备已掉线，无法拨通！")
-                    } else if (status == OPPOSITE_BUSY) {
-                        MyApp.webrtcSocketManager.sendHangUp(false)
-                        ToastUtils.show("设备已占线，其他用户正在连线！")
-                        Logger.i("设备已占线，其他用户在连线")
-                    } else {
-                        voiceCallEvent.postValue(CALLING_STATUS)
-                        viewModelScope.launch(Dispatchers.IO) {
-                            isAnswer = false
-                            // 等待30s
-                            delay(30 * 1000)
-                            if (!isAnswer) {
-                                MyApp.webrtcSocketManager.sendHangUp()
-                                ToastUtils.show("语音连接无响应，请重试！")
-                            }
+    fun call(recordId: String?, uuid: String?) {
+        val params = ArrayMap<Any, Any>()
+        params["recordId"] = recordId
+        params["tx"] = uuid
+        requestNoCheck(
+            {
+                apiService.callDevice(params)
+            }, {
+                if (it.success) {
+                    voiceCallEvent.postValue(CALLING_STATUS)
+                    viewModelScope.launch(Dispatchers.IO) {
+                        isAnswer = false
+                        // 等待30s
+                        delay(30 * 1000)
+                        if (!isAnswer) {
+                            MyApp.webrtcSocketManager.release()
+                            ToastUtils.show("语音连接无响应，请重试！")
                         }
                     }
+                } else {
+                    isAnswer = false
+                    MyApp.webrtcSocketManager.release()
+                    ToastUtils.show(it.msg)
                 }
-
-            })
-        }
+            }, {
+                isAnswer = false
+                MyApp.webrtcSocketManager.release()
+                ToastUtils.show("语音连接错误，请重试！")
+            }
+        )
+        //Logger.i("call ,toId:$toId,uuid:$uuid")
+//        toId?.let {
+//            val message = Message("call", userId, toId, null, uuid)
+//            mSocket?.emit("call", Gson().toJson(message), Ack { ack ->
+//                if (ack?.isEmpty() == true) {
+//                    Logger.i("ack为空")
+//                    isAnswer = false
+//                    MyApp.webrtcSocketManager.sendHangUp()
+//                    ToastUtils.show("语音连接无响应，请重试！")
+//                } else {
+//                    Logger.i("接收ack:${ack[0].toString()}")
+//                    val status = ack[0].toString()
+//                    if (status == OPPOSITE_OFF_LINE) {
+//                        Logger.i("设备已掉线无法拨通")
+//                        MyApp.webrtcSocketManager.sendHangUp(false)
+//                        ToastUtils.show("设备已掉线，无法拨通！")
+//                    } else if (status == OPPOSITE_BUSY) {
+//                        MyApp.webrtcSocketManager.sendHangUp(false)
+//                        ToastUtils.show("设备已占线，其他用户正在连线！")
+//                        Logger.i("设备已占线，其他用户在连线")
+//                    } else {
+//                        voiceCallEvent.postValue(CALLING_STATUS)
+//                        viewModelScope.launch(Dispatchers.IO) {
+//                            isAnswer = false
+//                            // 等待30s
+//                            delay(30 * 1000)
+//                            if (!isAnswer) {
+//                                MyApp.webrtcSocketManager.sendHangUp()
+//                                ToastUtils.show("语音连接无响应，请重试！")
+//                            }
+//                        }
+//                    }
+//                }
+//
+//            })
+//        }
     }
 
 
@@ -182,7 +211,7 @@ class SocketEventViewModel : ViewModel(), HandlerAction {
                     Logger.i("on call ${it[0]}")
                     // CallSingleActivity.openActivity(App.instance?.applicationContext, toId, false, false)
                     // 对方发送的参数 snCodeId toId
-                    toId = message?.sendFrom.toString()
+                    // toId = message?.sendFrom.toString()
 //                    Logger.i("来电了：snCode:${it[1]},to:${it[1]}")
                 }
             }

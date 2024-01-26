@@ -67,9 +67,9 @@ class MessageViewModel : BaseViewModel() {
     /**
      * 获取播放的音频url
      */
-    fun getAudioPreUrl(fileId: String) {
+    fun getAudioPreUrl(recordId: String) {
         requestNoCheck({
-            apiService.getPreviewPcm(fileId)
+            apiService.getPreviewPcm(recordId = recordId)
         }, {
             Logger.i("获取预览得 音频地址：$it")
             getPreVieUrlEvent.postValue(it)

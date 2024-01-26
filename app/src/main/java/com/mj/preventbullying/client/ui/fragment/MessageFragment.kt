@@ -35,6 +35,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.mj.preventbullying.client.http.result.Record
+
 /**
  * Create by MJ on 2023/12/11.
  * Describe :
@@ -109,11 +110,14 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
             currentState = record?.state
             //val fileId = messageList?.get(position)?.fileId
             Logger.i("去处理消息")
-            lifecycleScope.launch(Dispatchers.Main) {
-                MyApp.webrtcSocketManager.createWebrtcSc(
-                    SpManager.getString(Constant.USER_ID_KEY),
-                    snCode, getUUID()
-                )
+            currentRecordId?.let {
+                lifecycleScope.launch(Dispatchers.Main) {
+                    MyApp.webrtcSocketManager.createWebrtcSc(
+                        SpManager.getString(Constant.USER_ID_KEY),
+                        snCode, getUUID(),
+                        it
+                    )
+                }
             }
             val messageProcessDialog =
                 MessageProcessDialog(requireContext())
@@ -145,9 +149,8 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
             val record = messageAdapter?.getItem(position)
             currentRecordId = record?.recordId
             currentState = record?.state
-            val fileId = record?.fileId
-            fileId?.let {
-                viewModel.getAudioPreUrl(fileId)
+            currentRecordId?.let {
+                viewModel.getAudioPreUrl(it)
             }
         }
         // 处理按钮

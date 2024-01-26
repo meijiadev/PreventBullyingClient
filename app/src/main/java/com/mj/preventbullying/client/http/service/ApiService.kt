@@ -129,9 +129,10 @@ interface ApiService {
     ): RecordProcessResult
 
 
-    @GET("admin/sys-file/generatePreviewUrl")
+    @POST("anti-bullying//record/{recordId}/voice/preview")
     suspend fun getPreviewPcm(
-        @Query("fileId") fileId: String
+        @Path("recordId") recordId: String,
+        @Query("download") download: Boolean = false
         //@Header("Authorization") authorization: String = "Bearer ${SpManager.getString(Constant.ACCESS_TOKEN_KEY)}"
     ): PreviewAudioResult
 
@@ -206,5 +207,13 @@ interface ApiService {
     @DELETE("anti-bullying/keyword/{keywordId}")
     suspend fun deleteKeyword(
         @Path("keywordId") keywordId: Long
+    ): BaseResult
+
+    /**
+     * 拨打设备
+     */
+    @POST("anti-bullying/record/talkback")
+    suspend fun callDevice(
+        @Body params: ArrayMap<Any, Any>
     ): BaseResult
 }
