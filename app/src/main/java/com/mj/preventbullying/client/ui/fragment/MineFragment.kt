@@ -9,6 +9,7 @@ import com.azhon.appupdate.listener.OnDownloadListenerAdapter
 import com.azhon.appupdate.manager.DownloadManager
 import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.enums.PopupAnimation
+import com.mj.preventbullying.client.BuildConfig
 import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.R
 import com.mj.preventbullying.client.app.MyApp
@@ -205,6 +206,16 @@ class MineFragment : BaseMvFragment<FragmentMineBinding, SettingViewModel>() {
     }
 
     override fun initListener() {
+        MyApp.globalEventViewModel.updateAppEvent.observe(this) {
+            Logger.i("收到更新信息:$it")
+            val versionCode = it?.data?.versionCode
+            if (versionCode != null) {
+                Constant.isNewAppVersion = it.data.versionCode > BuildConfig.VERSION_CODE
+                if (!Constant.isNewAppVersion) {
+                    toast("暂无新版本！")
+                }
+            }
+        }
 
 
     }

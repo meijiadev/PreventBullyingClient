@@ -265,6 +265,8 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
                 isNewAppVersion = it.data.versionCode > BuildConfig.VERSION_CODE
                 if (isNewAppVersion) {
                     showUpdateDialog(it.data)
+                } else {
+                    //toast("已经是最新版本")
                 }
             }
         }

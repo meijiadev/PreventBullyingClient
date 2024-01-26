@@ -42,7 +42,6 @@ class MessageAdapter : BaseQuickAdapter<Record, MessageAdapter.VH>() {
                     processTv.text = "待处理"
                     processTv.shapeDrawableBuilder.setSolidColor(context.getColor(com.sjb.base.R.color.red))
                         .intoBackground()
-                    //R.mipmap.pending_icon
                     processBt.visibility = View.VISIBLE
                 }
                 // 处理中
@@ -50,8 +49,6 @@ class MessageAdapter : BaseQuickAdapter<Record, MessageAdapter.VH>() {
                     processTv.text = "处理中"
                     processTv.shapeDrawableBuilder.setSolidColor(context.getColor(com.sjb.base.R.color.gold))
                         .intoBackground()
-                    //goProcessTv.visibility = View.GONE
-                    //R.mipmap.processing_icon
                     processBt.visibility = View.VISIBLE
                 }
                 // 已处理
@@ -59,8 +56,6 @@ class MessageAdapter : BaseQuickAdapter<Record, MessageAdapter.VH>() {
                     processTv.text = "已处理"
                     processTv.shapeDrawableBuilder.setSolidColor(context.getColor(com.sjb.base.R.color.green))
                         .intoBackground()
-                    //goProcessTv.visibility = View.GONE
-                    //R.mipmap.processed_icon
                     processBt.visibility = View.GONE
                 }
                 // 已忽略
@@ -69,15 +64,10 @@ class MessageAdapter : BaseQuickAdapter<Record, MessageAdapter.VH>() {
                     processTv.shapeDrawableBuilder.setSolidColor(context.getColor(com.sjb.base.R.color.gray))
                         .intoBackground()
                     processBt.visibility = View.GONE
-                    // goProcessTv.visibility = View.GONE
-                    //R.mipmap.ignore_icon
                 }
 
                 else -> null
             }
-//            resource?.let {
-//                statusIv.setImageResource(it)
-//            }
 
         }
     }

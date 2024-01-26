@@ -1,8 +1,10 @@
 package com.mj.preventbullying.client.app
 
 import android.annotation.SuppressLint
+import android.app.ActivityManager
 import android.app.Application
 import android.content.Context
+import android.os.Process
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
@@ -14,7 +16,6 @@ import com.hjq.toast.ToastLogInterceptor
 import com.hjq.toast.ToastUtils
 import com.hjq.toast.style.WhiteToastStyle
 import com.mj.preventbullying.client.Constant
-import com.mj.preventbullying.client.tool.ActivityManager
 import com.mj.preventbullying.client.tool.SpManager
 import com.mj.preventbullying.client.ui.viewmodel.GlobalEventViewModel
 import com.mj.preventbullying.client.ui.viewmodel.TimerViewModel
@@ -46,7 +47,20 @@ class MyApp : Application(), ViewModelStoreOwner {
     private lateinit var mApplicationProvider: ViewModelProvider
     override fun onCreate() {
         super.onCreate()
-        context = this
+        //在Application中的onCreate方法中
+        //规避app启动后执行俩次
+        val processName = getProcessName(this, Process.myPid())
+        if (processName != null) {
+            val defaultProcess = processName == "com.mj.preventbullying.client"
+            if (defaultProcess) {
+                //当前应用的初始化
+                context = this
+                init()
+            }
+        }
+    }
+
+    private fun init() {
         val formatStrategy = PrettyFormatStrategy
             .newBuilder()
             .showThreadInfo(false)
@@ -54,27 +68,30 @@ class MyApp : Application(), ViewModelStoreOwner {
             .tag("MJ-prevent")
             .build()
         Logger.addLogAdapter(AndroidLogAdapter(formatStrategy))
+        Logger.i("启动-start-1")
         SpManager.init(this)
         // 初始化吐司
         ToastUtils.init(this, WhiteToastStyle())
-        ActivityManager.getInstance().init(this)
+        com.mj.preventbullying.client.tool.ActivityManager.getInstance().init(this)
         // 设置调试模式
         // 设置 Toast 拦截器
         ToastUtils.setInterceptor(ToastLogInterceptor())
+        Logger.i("启动-start-2")
+        initJGPush()
+        Logger.i("启动-start-3")
+        BleManager.getInstance().init(this)
+        BleManager.getInstance()
+            .enableLog(false)
+            .setReConnectCount(2, 5000).operateTimeout = 5000
+        Logger.i("启动-start-4")
         mAppViewModelStore = ViewModelStore()
         mApplicationProvider = ViewModelProvider(this)
         timerViewModel = getApplicationViewModel(TimerViewModel::class.java)
         socketEventViewModel = getApplicationViewModel(SocketEventViewModel::class.java)
         webrtcSocketManager = getApplicationViewModel(WebrtcSocketManager::class.java)
         globalEventViewModel = getApplicationViewModel(GlobalEventViewModel::class.java)
-        initJGPush()
-        BleManager.getInstance().init(this)
-        BleManager.getInstance()
-            .enableLog(false)
-            .setReConnectCount(2, 5000).operateTimeout = 5000
-
+        Logger.i("启动-start-5")
     }
-
 
     /**
      * 获取作用域在Application的ViewModel对象
@@ -97,22 +114,26 @@ class MyApp : Application(), ViewModelStoreOwner {
             SpManager.putString(Constant.REGISTER_ID_KEY, JPushInterface.getRegistrationID(this))
             Logger.e("initJGPush: ${it.token},registerID:${JPushInterface.getRegistrationID(this)}")
         }
-
-
     }
 
     /**
-     * 集成 bugly
+     * @param cxt
+     * @param pid
+     * @return 获取进程名称
      */
-//    private fun initBugly(context: Context) {
-//        Logger.i("集成腾讯bugly-start")
-//        val appId = "ae65b5200c"
-//        val appKey = "21a828b7-815d-4db9-9442-1f1aadbff99a"
-//        val builder = BuglyBuilder(appId, appKey)
-//        builder.logLevel = BuglyLogLevel.LEVEL_DEBUG // 设置日志打印级别，级别可从BuglyLogLevel中获取
-//        builder.appVersionType = BuglyAppVersionMode.DEBUG
-//        val isSuccess = Bugly.init(context, builder)
-//        Logger.i("集成腾讯bugly-end:$isSuccess")
-//    }
+    @SuppressLint("ServiceCast")
+    fun getProcessName(cxt: Context, pid: Int): String? {
+        val am = cxt.getSystemService(ACTIVITY_SERVICE) as ActivityManager
+        val runningApps: List<android.app.ActivityManager.RunningAppProcessInfo> =
+            am.runningAppProcesses
+                ?: return null
+        for (procInfo in runningApps) {
+            if (procInfo.pid === pid) {
+                return procInfo.processName
+            }
+        }
+        return null
+    }
+
 
 }
