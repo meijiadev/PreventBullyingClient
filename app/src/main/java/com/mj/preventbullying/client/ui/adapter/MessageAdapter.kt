@@ -43,6 +43,7 @@ class MessageAdapter : BaseQuickAdapter<Record, MessageAdapter.VH>() {
                     processTv.shapeDrawableBuilder.setSolidColor(context.getColor(com.sjb.base.R.color.red))
                         .intoBackground()
                     processBt.visibility = View.VISIBLE
+                    callTv.visibility=View.VISIBLE
                 }
                 // 处理中
                 PROCESSING_STATUS -> {
@@ -50,6 +51,7 @@ class MessageAdapter : BaseQuickAdapter<Record, MessageAdapter.VH>() {
                     processTv.shapeDrawableBuilder.setSolidColor(context.getColor(com.sjb.base.R.color.gold))
                         .intoBackground()
                     processBt.visibility = View.VISIBLE
+                    callTv.visibility=View.VISIBLE
                 }
                 // 已处理
                 PROCESSED_STATUS -> {
@@ -57,6 +59,7 @@ class MessageAdapter : BaseQuickAdapter<Record, MessageAdapter.VH>() {
                     processTv.shapeDrawableBuilder.setSolidColor(context.getColor(com.sjb.base.R.color.green))
                         .intoBackground()
                     processBt.visibility = View.GONE
+                    callTv.visibility=View.GONE
                 }
                 // 已忽略
                 PROCESSED_IGNORE -> {
@@ -64,6 +67,7 @@ class MessageAdapter : BaseQuickAdapter<Record, MessageAdapter.VH>() {
                     processTv.shapeDrawableBuilder.setSolidColor(context.getColor(com.sjb.base.R.color.gray))
                         .intoBackground()
                     processBt.visibility = View.GONE
+                    callTv.visibility=View.GONE
                 }
 
                 else -> null
