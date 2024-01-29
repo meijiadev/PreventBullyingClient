@@ -11,6 +11,9 @@ import com.chad.library.adapter4.BaseQuickAdapter
 import com.chad.library.adapter4.QuickAdapterHelper
 import com.chad.library.adapter4.loadState.LoadState
 import com.chad.library.adapter4.loadState.trailing.TrailingLoadStateAdapter
+import com.hjq.permissions.OnPermissionCallback
+import com.hjq.permissions.Permission
+import com.hjq.permissions.XXPermissions
 import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.enums.PopupAnimation
 import com.mj.preventbullying.client.Constant
@@ -102,43 +105,46 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
     override fun initViewObservable() {
         // 对讲
         messageAdapter?.addOnItemChildClickListener(R.id.call_tv) { adapter, view, position ->
-            processPosition = position
-            val record = messageAdapter?.getItem(position)
-            Logger.i("当前点击的参数：$position,${record}")
-            val snCode = record?.snCode
-            currentRecordId = record?.recordId
-            currentState = record?.state
-            //val fileId = messageList?.get(position)?.fileId
-            Logger.i("去处理消息")
-            currentRecordId?.let {
-                lifecycleScope.launch(Dispatchers.Main) {
-                    MyApp.webrtcSocketManager.createWebrtcSc(
-                        SpManager.getString(Constant.USER_ID_KEY),
-                        snCode, getUUID(),
-                        it
-                    )
-                }
-            }
-            val messageProcessDialog =
-                MessageProcessDialog(requireContext())
-                    .setToId(snCode).setCallListener {
-//                        if (currentState == PENDING_STATUS) {
-//                            currentRecordId?.let {
-//                                viewModel.recordProcess(
-//                                    it,
-//                                    "处理中",
-//                                    PROCESSING_STATUS
-//                                )
-//                            }
-//                        }
+            XXPermissions.with(this).permission(Permission.RECORD_AUDIO)
+                .request(object : OnPermissionCallback {
+                    override fun onGranted(permissions: MutableList<String>?, all: Boolean) {
+                        if (all) {
+                            processPosition = position
+                            val record = messageAdapter?.getItem(position)
+                            Logger.i("当前点击的参数：$position,${record}")
+                            val snCode = record?.snCode
+                            currentRecordId = record?.recordId
+                            currentState = record?.state
+                            //val fileId = messageList?.get(position)?.fileId
+                            Logger.i("去处理消息")
+                            currentRecordId?.let {
+                                lifecycleScope.launch(Dispatchers.Main) {
+                                    MyApp.webrtcSocketManager.createWebrtcSc(
+                                        SpManager.getString(Constant.USER_ID_KEY),
+                                        snCode, getUUID(),
+                                        it
+                                    )
+                                }
+                            }
+                            val messageProcessDialog =
+                                MessageProcessDialog(requireContext())
+                                    .setToId(snCode).setCallListener {
+                                    }
+                            XPopup.Builder(requireContext()).isViewMode(true)
+                                .isDestroyOnDismiss(true)
+                                .dismissOnBackPressed(false)
+                                .dismissOnTouchOutside(false)
+                                .popupAnimation(PopupAnimation.TranslateFromBottom)
+                                .asCustom(messageProcessDialog)
+                                .show()
+                        }
                     }
-            XPopup.Builder(requireContext()).isViewMode(true)
-                .isDestroyOnDismiss(true)
-                .dismissOnBackPressed(false)
-                .dismissOnTouchOutside(false)
-                .popupAnimation(PopupAnimation.TranslateFromBottom)
-                .asCustom(messageProcessDialog)
-                .show()
+
+                    override fun onDenied(permissions: MutableList<String>?, never: Boolean) {
+                        super.onDenied(permissions, never)
+                        toast("请前往应用权限页面打开该应用的麦克风权限才能使用语音对讲功能！")
+                    }
+                })
 
         }
 

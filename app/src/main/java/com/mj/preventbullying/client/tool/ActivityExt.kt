@@ -19,7 +19,6 @@ import com.orhanobut.logger.Logger
 fun AppCompatActivity.requestPermission() {
     XXPermissions.with(this)
         // .permission(Permission.MANAGE_EXTERNAL_STORAGE)
-        .permission(Permission.RECORD_AUDIO)
         .permission(Permission.ACCESS_FINE_LOCATION)
         .permission(Permission.ACCESS_COARSE_LOCATION)
         .request(object : OnPermissionCallback {
