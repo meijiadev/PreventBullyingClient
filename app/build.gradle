@@ -12,8 +12,8 @@ android {
         applicationId "com.mj.preventbullying.client"
         minSdk 24
         targetSdk 34
-        versionCode 10
-        versionName "3.1.2"
+        versionCode 11
+        versionName "3.2.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -148,5 +148,6 @@ dependencies {
     implementation 'io.github.azhon:appupdate:4.3.2'
     implementation 'io.github.jeremyliao:live-event-bus-x:1.8.0'
     implementation 'com.github.Jasonchenlijian:FastBle:2.4.0'
+
 
 }

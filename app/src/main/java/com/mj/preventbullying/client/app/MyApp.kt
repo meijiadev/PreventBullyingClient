@@ -68,7 +68,7 @@ class MyApp : Application(), ViewModelStoreOwner {
             .tag("MJ-prevent")
             .build()
         Logger.addLogAdapter(AndroidLogAdapter(formatStrategy))
-        Logger.i("启动-start-1")
+//        Logger.i("启动-start-1")
         SpManager.init(this)
         // 初始化吐司
         ToastUtils.init(this, WhiteToastStyle())
@@ -76,21 +76,21 @@ class MyApp : Application(), ViewModelStoreOwner {
         // 设置调试模式
         // 设置 Toast 拦截器
         ToastUtils.setInterceptor(ToastLogInterceptor())
-        Logger.i("启动-start-2")
+        //Logger.i("启动-start-2")
         initJGPush()
-        Logger.i("启动-start-3")
+        //Logger.i("启动-start-3")
         BleManager.getInstance().init(this)
         BleManager.getInstance()
             .enableLog(false)
             .setReConnectCount(2, 5000).operateTimeout = 5000
-        Logger.i("启动-start-4")
+        //Logger.i("启动-start-4")
         mAppViewModelStore = ViewModelStore()
         mApplicationProvider = ViewModelProvider(this)
         timerViewModel = getApplicationViewModel(TimerViewModel::class.java)
         socketEventViewModel = getApplicationViewModel(SocketEventViewModel::class.java)
         webrtcSocketManager = getApplicationViewModel(WebrtcSocketManager::class.java)
         globalEventViewModel = getApplicationViewModel(GlobalEventViewModel::class.java)
-        Logger.i("启动-start-5")
+        //Logger.i("启动-start-5")
     }
 
     /**

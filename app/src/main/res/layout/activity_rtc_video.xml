@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/title_tv"
+        layout="@layout/layout_title" />
+
+    <org.webrtc.SurfaceViewRenderer
+        android:id="@+id/rtc_video"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_300"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title_tv" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
