@@ -22,6 +22,7 @@ import com.mj.preventbullying.client.tool.ActivityManager
 import com.mj.preventbullying.client.tool.NetworkUtil
 import com.mj.preventbullying.client.tool.SpManager
 import com.mj.preventbullying.client.ui.activity.AlarmAudioActivity
+import com.mj.preventbullying.client.ui.activity.RtcVideoActivity
 import com.mj.preventbullying.client.ui.dialog.AmendPasswordDialog
 import com.mj.preventbullying.client.ui.dialog.ItemListDialog
 import com.mj.preventbullying.client.ui.dialog.UpdateAppDialog
@@ -119,6 +120,10 @@ class MineFragment : BaseMvFragment<FragmentMineBinding, SettingViewModel>() {
 
         binding.curOrgLy.setOnClickListener {
             showOrgDialog(it)
+        }
+
+        binding.aboutLy.setOnClickListener {
+            startActivity(RtcVideoActivity::class.java)
         }
     }
 

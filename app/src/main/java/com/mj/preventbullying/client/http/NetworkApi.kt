@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit
 val apiService: ApiService by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED){
     NetworkApi.INSTANCE.getApi(ApiService::class.java, ApiService.getHostUrl()+ApiService.API)
 }
+
 class NetworkApi : BaseNetworkApi() {
 
     companion object {

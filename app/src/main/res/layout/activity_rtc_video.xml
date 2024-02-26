@@ -11,7 +11,7 @@
     <org.webrtc.SurfaceViewRenderer
         android:id="@+id/rtc_video"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_300"
+        android:layout_height="@dimen/dp_280"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title_tv" />
