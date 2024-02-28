@@ -44,7 +44,6 @@ class ItemListDialog(context: Context) : PositionPopupView(context) {
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         itemListRecycler.layoutManager = layoutManager
         Logger.i("初始化")
-
         initOrgList()
         initTypeList()
         initVoiceLayout()

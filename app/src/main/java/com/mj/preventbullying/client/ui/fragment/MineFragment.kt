@@ -1,5 +1,6 @@
 package com.mj.preventbullying.client.ui.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -59,6 +60,7 @@ class MineFragment : BaseMvFragment<FragmentMineBinding, SettingViewModel>() {
     }
 
 
+    @SuppressLint("SetTextI18n")
     override fun initData() {
         binding.ipTv.text = NetworkUtil.getIPAddress(true)
         val isAutoLogin = SpManager.getBoolean(Constant.AUTO_LOGIN_KEY, true)
@@ -68,7 +70,8 @@ class MineFragment : BaseMvFragment<FragmentMineBinding, SettingViewModel>() {
         } else {
             View.GONE
         }
-        binding.serviceTv.text = ApiService.getHostUrl()
+        binding.serviceTv.text =
+            ApiService.getHostUrl().substring(0, 10) + "****" + ApiService.getHostUrl().substring(14)
         var phone = SpManager.getString(Constant.USER_PHONE_KEY)
         if (phone.isNullOrEmpty()) {
             phone = "未绑定手机号码"
@@ -82,14 +85,12 @@ class MineFragment : BaseMvFragment<FragmentMineBinding, SettingViewModel>() {
 
 
     override fun initViewObservable() {
-
         binding.phoneNumberLy.setOnClickListener {
             toast("暂不支持修改手机号码")
         }
         binding.msgToneLy.setOnClickListener {
             startActivity(AlarmAudioActivity::class.java)
         }
-
         binding.passwordLy.setOnClickListener {
             val passwordDialog = AmendPasswordDialog(requireContext())
             XPopup.Builder(requireContext()).isViewMode(true)
@@ -128,7 +129,7 @@ class MineFragment : BaseMvFragment<FragmentMineBinding, SettingViewModel>() {
     }
 
     /**
-     *
+     * 显示组织弹窗
      */
     private fun showOrgDialog(v: View) {
         treeList = MyApp.globalEventViewModel.treeList

@@ -75,7 +75,9 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".ui.activity.AddDeviceActivity" />
         <activity android:name=".ui.activity.AddKeywordActivity" />
-        <activity android:name=".ui.activity.RtcVideoActivity" />
+        <activity android:name=".ui.activity.RtcVideoActivity"
+            android:screenOrientation="landscape"
+           />
 
         <service
             android:name=".jpush.server.JPushService"

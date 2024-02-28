@@ -1,15 +1,17 @@
-package com.mj.preventbullying.client.ui.activity
+package com.mj.preventbullying.client.ui.dialog
 
 import android.content.Context
-import com.google.gson.Gson
-import com.mj.preventbullying.client.app.AppMvActivity
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.lifecycle.lifecycleScope
+import com.hjq.shape.view.ShapeTextView
+import com.lxj.xpopup.core.CenterPopupView
+import com.mj.preventbullying.client.R
 import com.mj.preventbullying.client.app.MyApp
-import com.mj.preventbullying.client.databinding.ActivityRtcVideoBinding
 import com.orhanobut.logger.Logger
-import com.sjb.base.base.BaseViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import okhttp3.Call
 import okhttp3.Callback
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -30,62 +32,61 @@ import org.webrtc.RtpReceiver
 import org.webrtc.RtpTransceiver
 import org.webrtc.SdpObserver
 import org.webrtc.SessionDescription
+import org.webrtc.SurfaceViewRenderer
 import org.webrtc.VideoTrack
 import java.io.IOException
 import kotlin.concurrent.thread
 
-
 /**
- * Create by MJ on 2024/2/20.
- * Describe : webrtc 视频流 播放
+ * Create by MJ on 2024/2/27.
+ * Describe :
  */
 
-class RtcVideoActivity : AppMvActivity<ActivityRtcVideoBinding, BaseViewModel>() {
+class RtcVideoDialog(context: Context) : CenterPopupView(context) {
+    private val closeTv: ShapeTextView by lazy { findViewById(R.id.close_tv) }
+    private val fullTv: ShapeTextView by lazy { findViewById(R.id.full_tv) }
+    private val rtcVideo: SurfaceViewRenderer by lazy { findViewById(R.id.rtc_video) }
 
     private var peerConnection: PeerConnection? = null
     private var peerConnectionFactory: PeerConnectionFactory? = null
     private var eglBaseContext: EglBase.Context? = null
     private var videoTrack: VideoTrack? = null
 
-    override fun getViewBinding(): ActivityRtcVideoBinding {
-        return ActivityRtcVideoBinding.inflate(layoutInflater)
+    override fun getImplLayoutId(): Int {
+        return R.layout.dialog_rtc_video
     }
 
-    override fun initParam() {
 
-    }
+    override fun onCreate() {
+        super.onCreate()
 
-    override fun initData() {
+        closeTv.setOnClickListener {
+            dismiss()
+        }
+        fullTv.setOnClickListener {
+            dismiss()
+            onFull?.invoke()
+        }
         initPeer()
     }
 
-    override fun initViewObservable() {
+    private var onFull: (() -> Unit)? = null
 
+    fun onFullListener(listener: (() -> Unit)): RtcVideoDialog = apply {
+        this.onFull = listener
     }
 
-    override fun initView() {
-
-    }
-
-    override fun initListener() {
-        binding.backIv.setOnClickListener {
-            finish()
-        }
-    }
 
     private fun initPeer() {
         eglBaseContext = EglBase.create().eglBaseContext
         // 初始化 surfaceViewRenderer
-        binding.rtcVideo.init(eglBaseContext, null)
-        binding.rtcVideo.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FILL)
-        binding.rtcVideo.setEnableHardwareScaler(true)
-        binding.rtcVideo.setZOrderMediaOverlay(true)
+        rtcVideo.init(eglBaseContext, null)
+        rtcVideo.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FILL)
+        rtcVideo.setEnableHardwareScaler(true)
+        rtcVideo.setZOrderMediaOverlay(true)
         createPeer()
     }
 
-    /**
-     * 创建wrtc直播
-     */
     private fun createPeer() {
         // 初始化PeerConnection
         PeerConnectionFactory.initialize(
@@ -134,7 +135,7 @@ class RtcVideoActivity : AppMvActivity<ActivityRtcVideoBinding, BaseViewModel>()
 
                     override fun onAddStream(p0: MediaStream?) {
                         videoTrack = p0?.videoTracks?.get(0)
-                        videoTrack?.addSink(binding.rtcVideo)
+                        videoTrack?.addSink(rtcVideo)
                     }
 
                     override fun onRemoveStream(p0: MediaStream?) {
@@ -194,7 +195,6 @@ class RtcVideoActivity : AppMvActivity<ActivityRtcVideoBinding, BaseViewModel>()
 
     }
 
-
     fun setRemoteDescription(sdp: String) {
         val remoteSdp = SessionDescription(SessionDescription.Type.ANSWER, sdp)
         peerConnection?.setRemoteDescription(sdpObserver, remoteSdp)
@@ -221,7 +221,7 @@ class RtcVideoActivity : AppMvActivity<ActivityRtcVideoBinding, BaseViewModel>()
                     override fun onResponse(call: Call, response: Response) {
                         val sdp = response.body?.string()
                         Logger.i("请求成功返回：$sdp")
-                        runOnUiThread {
+                        lifecycleScope.launch(Dispatchers.Main) {
                             if (sdp != null) {
                                 setRemoteDescription(sdp)
                             }
@@ -237,28 +237,10 @@ class RtcVideoActivity : AppMvActivity<ActivityRtcVideoBinding, BaseViewModel>()
         }
     }
 
-
-    override fun onPause() {
-        super.onPause()
-    }
-
-
-    override fun onResume() {
-        super.onResume()
-    }
-
-    override fun onStop() {
-        super.onStop()
+    override fun onDismiss() {
+        super.onDismiss()
         release()
-        // 暂停视频流
-        Logger.i("onStop-暂停视频流")
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-        Logger.i("onRestart")
-        // 恢复视频流
-        createPeer()
+        Logger.i("dialog is destroy")
     }
 
     private fun release() {
@@ -270,7 +252,9 @@ class RtcVideoActivity : AppMvActivity<ActivityRtcVideoBinding, BaseViewModel>()
             peerConnectionFactory?.dispose()
             peerConnectionFactory = null
         }
-        binding.rtcVideo.clearImage()
+        rtcVideo.clearImage()
 
     }
+
+
 }

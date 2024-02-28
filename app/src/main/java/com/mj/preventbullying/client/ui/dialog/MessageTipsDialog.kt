@@ -32,8 +32,6 @@ class MessageTipsDialog(context: Context) : CenterPopupView(context) {
             listener?.onConfirm()
             dismiss()
         }
-
-
     }
 
     fun setListener(listener: OnListener): MessageTipsDialog = apply {

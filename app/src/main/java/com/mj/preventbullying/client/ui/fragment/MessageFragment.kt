@@ -38,6 +38,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.mj.preventbullying.client.http.result.Record
+import com.mj.preventbullying.client.ui.activity.RtcVideoActivity
+import com.mj.preventbullying.client.ui.dialog.MessageTipsDialog
+import com.mj.preventbullying.client.ui.dialog.RtcVideoDialog
 
 /**
  * Create by MJ on 2023/12/11.
@@ -179,6 +182,24 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
                 .show()
         }
 
+        messageAdapter?.addOnItemChildClickListener(R.id.check_monitor_bt) { adapter, view, position ->
+            processPosition = position
+            val tipsDialog =
+                MessageTipsDialog(requireContext()).setTitle("查看当前设备关联的监控画面？")
+                    .setListener(object : MessageTipsDialog.OnListener {
+                        override fun onCancel() {
+
+                        }
+
+                        override fun onConfirm() {
+                            showRtcVideo()
+                        }
+                    })
+            XPopup.Builder(requireContext()).isViewMode(true)
+                .popupAnimation(PopupAnimation.TranslateFromBottom).asCustom(tipsDialog).show()
+
+        }
+
 
 
         binding.allMessageTv.setOnClickListener {
@@ -217,6 +238,20 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
                 .intoBackground()
             filtrationMsgTp(PROCESSING_STATUS)
         }
+    }
+
+    private fun showRtcVideo() {
+        val rtcVideoDialog = RtcVideoDialog(requireContext()).onFullListener {
+            startActivity(RtcVideoActivity::class.java)
+        }
+        XPopup.Builder(requireContext())
+            .isViewMode(true)
+            .isDestroyOnDismiss(true)
+            .dismissOnBackPressed(false)
+            .dismissOnTouchOutside(false)
+            .popupAnimation(PopupAnimation.TranslateFromBottom)
+            .asCustom(rtcVideoDialog)
+            .show()
     }
 
     private fun resetMessageBt() {
