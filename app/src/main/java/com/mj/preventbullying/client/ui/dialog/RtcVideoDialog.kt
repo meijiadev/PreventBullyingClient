@@ -51,6 +51,7 @@ class RtcVideoDialog(context: Context) : CenterPopupView(context) {
     private var peerConnectionFactory: PeerConnectionFactory? = null
     private var eglBaseContext: EglBase.Context? = null
     private var videoTrack: VideoTrack? = null
+    private var videoUrl: String? = null
 
     override fun getImplLayoutId(): Int {
         return R.layout.dialog_rtc_video
@@ -74,6 +75,11 @@ class RtcVideoDialog(context: Context) : CenterPopupView(context) {
 
     fun onFullListener(listener: (() -> Unit)): RtcVideoDialog = apply {
         this.onFull = listener
+    }
+
+
+    fun setVideoUrl(url: String): RtcVideoDialog = apply {
+        this.videoUrl = url
     }
 
 
@@ -136,6 +142,7 @@ class RtcVideoDialog(context: Context) : CenterPopupView(context) {
                     override fun onAddStream(p0: MediaStream?) {
                         videoTrack = p0?.videoTracks?.get(0)
                         videoTrack?.addSink(rtcVideo)
+                        Logger.i("addStream")
                     }
 
                     override fun onRemoveStream(p0: MediaStream?) {
@@ -177,7 +184,7 @@ class RtcVideoDialog(context: Context) : CenterPopupView(context) {
             if (p0?.type == SessionDescription.Type.OFFER) {
                 peerConnection?.setLocalDescription(this, p0)
                 val sdpJson = p0.description
-                getSrs(sdpJson)
+                getSrs(sdpJson, videoUrl)
             }
         }
 
@@ -200,7 +207,10 @@ class RtcVideoDialog(context: Context) : CenterPopupView(context) {
         peerConnection?.setRemoteDescription(sdpObserver, remoteSdp)
     }
 
-    fun getSrs(sdpJson: String) {
+    fun getSrs(sdpJson: String, url: String?) {
+        if (url == null) {
+            return
+        }
         thread {
             try {
                 Logger.i("sdp:$sdpJson")
@@ -208,7 +218,7 @@ class RtcVideoDialog(context: Context) : CenterPopupView(context) {
                 val requestBody = RequestBody.create(mediaType, sdpJson)
                 val client = OkHttpClient().newBuilder().build()
                 val request = Request.Builder()
-                    .url("http://192.168.1.240:1985/rtc/v1/whep/?app=live&stream=123456789")
+                    .url(url)
                     .method("POST", requestBody)
                     .build()
                 val call = client.newCall(request)

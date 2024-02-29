@@ -21,6 +21,7 @@ class MessageViewModel : BaseViewModel() {
     val messageEvent = UnPeekLiveData<DeviceRecordResult>()
     val recordProcessedEvent = UnPeekLiveData<RecordProcessResult>()
     val getPreVieUrlEvent = UnPeekLiveData<PreviewAudioResult>()
+    val rtcVideoUrlEvent = UnPeekLiveData<String>()
 
 //    /**
 //     * 获取所有设备的报警记录
@@ -74,7 +75,16 @@ class MessageViewModel : BaseViewModel() {
             Logger.i("获取预览得 音频地址：$it")
             getPreVieUrlEvent.postValue(it)
         })
+    }
 
+    fun getRtcVideoUrl(recordId: String) {
+        requestNoCheck({
+            apiService.getRtcVideoUrl(recordId)
+        }, {
+            Logger.i("获取绑定摄像头返回结果")
+            val url = it.data.webrtcUrl
+            rtcVideoUrlEvent.postValue(url)
+        })
     }
 
 

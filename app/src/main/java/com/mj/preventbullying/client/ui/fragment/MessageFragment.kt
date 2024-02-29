@@ -1,6 +1,7 @@
 package com.mj.preventbullying.client.ui.fragment
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -184,19 +185,9 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
 
         messageAdapter?.addOnItemChildClickListener(R.id.check_monitor_bt) { adapter, view, position ->
             processPosition = position
-            val tipsDialog =
-                MessageTipsDialog(requireContext()).setTitle("查看当前设备关联的监控画面？")
-                    .setListener(object : MessageTipsDialog.OnListener {
-                        override fun onCancel() {
-
-                        }
-
-                        override fun onConfirm() {
-                            showRtcVideo()
-                        }
-                    })
-            XPopup.Builder(requireContext()).isViewMode(true)
-                .popupAnimation(PopupAnimation.TranslateFromBottom).asCustom(tipsDialog).show()
+            val record = messageAdapter?.getItem(position)
+            currentRecordId = record?.recordId
+            currentRecordId?.let { viewModel.getRtcVideoUrl(it) }
 
         }
 
@@ -240,10 +231,12 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
         }
     }
 
-    private fun showRtcVideo() {
+    private fun showRtcVideo(url:String) {
         val rtcVideoDialog = RtcVideoDialog(requireContext()).onFullListener {
-            startActivity(RtcVideoActivity::class.java)
-        }
+            val intent=Intent(mActivity,RtcVideoActivity::class.java)
+            intent.putExtra("videoUrl",url)
+            startActivity(intent)
+        }.setVideoUrl(url)
         XPopup.Builder(requireContext())
             .isViewMode(true)
             .isDestroyOnDismiss(true)
@@ -400,6 +393,21 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
             if (!isHideFragment) {
                 viewModel.getAllDeviceRecords(1, curShowType)
             }
+        }
+        viewModel.rtcVideoUrlEvent.observe(this) {
+            val tipsDialog =
+                MessageTipsDialog(requireContext()).setTitle("查看当前设备关联的监控画面？")
+                    .setListener(object : MessageTipsDialog.OnListener {
+                        override fun onCancel() {
+
+                        }
+
+                        override fun onConfirm() {
+                            showRtcVideo(it)
+                        }
+                    })
+            XPopup.Builder(requireContext()).isViewMode(true)
+                .popupAnimation(PopupAnimation.TranslateFromBottom).asCustom(tipsDialog).show()
         }
     }
 

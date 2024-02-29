@@ -1,7 +1,6 @@
 package com.mj.preventbullying.client.ui.activity
 
-import android.content.Context
-import com.google.gson.Gson
+
 import com.mj.preventbullying.client.app.AppMvActivity
 import com.mj.preventbullying.client.app.MyApp
 import com.mj.preventbullying.client.databinding.ActivityRtcVideoBinding
@@ -9,7 +8,6 @@ import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseViewModel
 import okhttp3.Call
 import okhttp3.Callback
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -46,13 +44,14 @@ class RtcVideoActivity : AppMvActivity<ActivityRtcVideoBinding, BaseViewModel>()
     private var peerConnectionFactory: PeerConnectionFactory? = null
     private var eglBaseContext: EglBase.Context? = null
     private var videoTrack: VideoTrack? = null
+    private var videoUrl: String? = null
 
     override fun getViewBinding(): ActivityRtcVideoBinding {
         return ActivityRtcVideoBinding.inflate(layoutInflater)
     }
 
     override fun initParam() {
-
+        videoUrl = intent.getStringExtra("videoUrl")
     }
 
     override fun initData() {
@@ -69,6 +68,7 @@ class RtcVideoActivity : AppMvActivity<ActivityRtcVideoBinding, BaseViewModel>()
 
     override fun initListener() {
         binding.backIv.setOnClickListener {
+            Logger.i("退出rtc全屏")
             finish()
         }
     }
@@ -135,6 +135,7 @@ class RtcVideoActivity : AppMvActivity<ActivityRtcVideoBinding, BaseViewModel>()
                     override fun onAddStream(p0: MediaStream?) {
                         videoTrack = p0?.videoTracks?.get(0)
                         videoTrack?.addSink(binding.rtcVideo)
+                        Logger.i("addStream")
                     }
 
                     override fun onRemoveStream(p0: MediaStream?) {
@@ -201,6 +202,9 @@ class RtcVideoActivity : AppMvActivity<ActivityRtcVideoBinding, BaseViewModel>()
     }
 
     fun getSrs(sdpJson: String) {
+        if (videoUrl == null) {
+            return
+        }
         thread {
             try {
                 Logger.i("sdp:$sdpJson")
@@ -208,7 +212,7 @@ class RtcVideoActivity : AppMvActivity<ActivityRtcVideoBinding, BaseViewModel>()
                 val requestBody = RequestBody.create(mediaType, sdpJson)
                 val client = OkHttpClient().newBuilder().build()
                 val request = Request.Builder()
-                    .url("http://192.168.1.240:1985/rtc/v1/whep/?app=live&stream=123456789")
+                    .url(videoUrl!!)
                     .method("POST", requestBody)
                     .build()
                 val call = client.newCall(request)
