@@ -66,10 +66,13 @@
     </RelativeLayout>
 
 
-    <FrameLayout
-        android:id="@+id/fragment_container"
+    <androidx.fragment.app.FragmentContainerView
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:id="@+id/navHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:navGraph="@navigation/nav_graph_home"
+        app:defaultNavHost="false"
         android:layout_above="@id/layout_bottom"
         android:layout_below="@id/title_ly" />
 

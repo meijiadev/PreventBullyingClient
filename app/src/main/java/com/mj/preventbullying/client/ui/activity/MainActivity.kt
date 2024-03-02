@@ -12,6 +12,10 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavOptions
+import androidx.navigation.fragment.NavHostFragment
 import cn.jpush.android.api.BasicPushNotificationBuilder
 import cn.jpush.android.api.JPushInterface
 import cn.jpush.android.ups.JPushUPSManager
@@ -73,6 +77,9 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
     private val keywordManagerFragment by lazy { KeywordManagerFragment.newInstance() }
     private val mineFragment by lazy { MineFragment.newInstance() }
     private var jPushExtraMessage: JPushExtraMessage? = null
+    private lateinit var navHostFragment: NavHostFragment
+    private lateinit var navController: NavController
+    private lateinit var builder: NavOptions.Builder
 
 
     override fun getViewBinding(): ActivityMainBinding {
@@ -197,6 +204,17 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
 
 
     override fun initView() {
+
+        navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
+        navController = navHostFragment.navController
+        //设置导航配置
+        builder = NavOptions.Builder().setLaunchSingleTop(true).setRestoreState(true)
+        builder.setPopUpTo(
+            navController.graph.findStartDestination().id,
+            inclusive = false,
+            saveState = true
+        )
         switchFragment(messageFragment)
         lifecycleScope.launch {
             delay(200)
@@ -457,11 +475,11 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
      */
     private fun switchFragment(target: Fragment) {
         if (target != null && target != mFragment) {
-            val transaction = supportFragmentManager.beginTransaction()
             binding.addDevice.visibility =
                 if (target is DeviceFragment || target is KeywordManagerFragment) View.VISIBLE else View.GONE
             when (target) {
                 is MessageFragment -> {
+                    navController.navigate(R.id.message_fragment, null, builder.build())
                     binding.run {
                         messageIv.setImageResource(R.mipmap.message_icon_select)
                         deviceManagerIv.setImageResource(R.mipmap.dev_manager)
@@ -471,6 +489,7 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
                 }
 
                 is DeviceFragment -> {
+                    navController.navigate(R.id.dev_fragment, null, builder.build())
                     binding.run {
                         messageIv.setImageResource(R.mipmap.message_icon)
                         deviceManagerIv.setImageResource(R.mipmap.dev_manager_select)
@@ -480,6 +499,7 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
                 }
 
                 is KeywordManagerFragment -> {
+                    navController.navigate(R.id.keyword_fragment, null, builder.build())
                     binding.run {
                         messageIv.setImageResource(R.mipmap.message_icon)
                         deviceManagerIv.setImageResource(R.mipmap.dev_manager)
@@ -489,6 +509,7 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
                 }
 
                 is MineFragment -> {
+                    navController.navigate(R.id.mine_fragment, null, builder.build())
                     binding.run {
                         messageIv.setImageResource(R.mipmap.message_icon)
                         deviceManagerIv.setImageResource(R.mipmap.dev_manager)
@@ -496,14 +517,6 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
                         mineIv.setImageResource(R.mipmap.mine_icon_select)
                     }
                 }
-            }
-            // 先判断该fragment 是否已经被添加到管理器
-            if (!target.isAdded) {
-                transaction.hide(mFragment).add(R.id.fragment_container, target)
-                    .commitAllowingStateLoss()
-            } else {
-                // 添加的fragment 直接显示
-                transaction.hide(mFragment).show(target).commitAllowingStateLoss()
             }
             mFragment = target
 

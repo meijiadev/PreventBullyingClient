@@ -355,15 +355,6 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
                             val audioPlayDialog =
                                 AudioPlayDialog(requireContext()).setPlayUrl(data.url)
                                     .setAudioPLayerStartListener {
-//                                        if (currentState == PENDING_STATUS) {
-//                                            currentRecordId?.let {
-//                                                viewModel.recordProcess(
-//                                                    it,
-//                                                    "处理中",
-//                                                    PROCESSING_STATUS
-//                                                )
-//                                            }
-//                                        }
                                     }
                             XPopup.Builder(requireContext())
                                 .isViewMode(true)

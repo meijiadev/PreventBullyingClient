@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_home"
+    app:startDestination="@id/message_fragment">
+
+    <fragment
+        android:id="@+id/message_fragment"
+        android:name="com.mj.preventbullying.client.ui.fragment.MessageFragment"
+        android:label="MessageFragment"
+        tools:layout="@layout/fragment_message" />
+    <fragment
+        android:id="@+id/dev_fragment"
+        android:name="com.mj.preventbullying.client.ui.fragment.DeviceFragment"
+        android:label="DevFragment"
+        tools:layout="@layout/fragment_device" />
+
+    <fragment
+        android:id="@+id/keyword_fragment"
+        android:name="com.mj.preventbullying.client.ui.fragment.KeywordManagerFragment"
+        android:label="KeywordFragment"
+        tools:layout="@layout/fragment_keyword_manager" />
+    <fragment
+        android:id="@+id/mine_fragment"
+        android:name="com.mj.preventbullying.client.ui.fragment.MineFragment"
+        android:label="MineFragment"
+        tools:layout="@layout/fragment_mine" />
+
+
+</navigation>

@@ -142,7 +142,7 @@ class RtcVideoDialog(context: Context) : CenterPopupView(context) {
                     override fun onAddStream(p0: MediaStream?) {
                         videoTrack = p0?.videoTracks?.get(0)
                         videoTrack?.addSink(rtcVideo)
-                        Logger.i("addStream")
+
                     }
 
                     override fun onRemoveStream(p0: MediaStream?) {
