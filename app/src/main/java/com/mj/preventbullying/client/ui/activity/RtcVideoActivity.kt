@@ -139,7 +139,7 @@ class RtcVideoActivity : AppMvActivity<ActivityRtcVideoBinding, BaseViewModel>()
                     }
 
                     override fun onRemoveStream(p0: MediaStream?) {
-
+                        Logger.i("onRemoveStream")
                     }
 
                     override fun onDataChannel(p0: DataChannel?) {

@@ -226,4 +226,7 @@ interface ApiService {
 
     @GET("anti-bullying/record/{recordId}/streamUrl")
     suspend fun getRtcVideoUrl(@Path("recordId") recordId: String): VideoUrlResult
+
+    @GET("anti-bullying/camera/{sn}/streamHeartbeat")
+    suspend fun streamHeartbeat(@Path("sn") sn: String)
 }

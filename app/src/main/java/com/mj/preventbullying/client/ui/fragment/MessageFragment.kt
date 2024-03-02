@@ -268,21 +268,6 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
     @SuppressLint("NotifyDataSetChanged")
     private fun filtrationMsgTp(type: String?) {
         curShowType = type
-//        if (type == "null") {
-//            messageAdapter?.submitList(messageList)
-//            messageAdapter?.notifyDataSetChanged()
-//            return
-//        }
-//        val list = mutableListOf<Record>()
-//        messageList.let {
-//            for (record in it) {
-//                if (record.state == type) {
-//                    list.add(record)
-//                }
-//            }
-//            messageAdapter?.submitList(list)
-//            messageAdapter?.notifyDataSetChanged()
-//        }
         viewModel.getAllDeviceRecords(1, curShowType)
     }
 
@@ -293,24 +278,25 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
             curDataPage = 1
             viewModel.getAllDeviceRecords(curDataPage, curShowType)
         }
-        //  AudioPlayer.instance.addListener(this)
     }
 
 
     override fun onResume() {
         super.onResume()
-
+        Logger.i("on resume")
     }
 
     override fun onStop() {
         super.onStop()
         AudioPlayer.instance.pause()
+        Logger.i("on stop")
     }
 
     override fun onDestroy() {
         super.onDestroy()
         //  AudioPlayer.instance.removeListener(this)
         AudioPlayer.instance.stop()
+        Logger.i("on destroy")
     }
 
     override fun initListener() {
