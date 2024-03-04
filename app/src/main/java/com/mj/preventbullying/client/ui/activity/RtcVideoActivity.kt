@@ -1,6 +1,7 @@
 package com.mj.preventbullying.client.ui.activity
 
 
+import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.app.AppMvActivity
 import com.mj.preventbullying.client.app.MyApp
 import com.mj.preventbullying.client.databinding.ActivityRtcVideoBinding
@@ -136,6 +137,7 @@ class RtcVideoActivity : AppMvActivity<ActivityRtcVideoBinding, BaseViewModel>()
                         videoTrack = p0?.videoTracks?.get(0)
                         videoTrack?.addSink(binding.rtcVideo)
                         Logger.i("addStream")
+                        MyApp.heartbeatViewModel.sendHeartbeat(Constant.videoSnCOde)
                     }
 
                     override fun onRemoveStream(p0: MediaStream?) {
@@ -275,6 +277,7 @@ class RtcVideoActivity : AppMvActivity<ActivityRtcVideoBinding, BaseViewModel>()
             peerConnectionFactory = null
         }
         binding.rtcVideo.clearImage()
+        MyApp.heartbeatViewModel.stopSend()
 
     }
 }

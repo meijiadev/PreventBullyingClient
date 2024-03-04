@@ -169,7 +169,7 @@ fun <T> BaseViewModel.requestNoCheck(
     isShowDialog: Boolean = false,
     loadingMessage: String = "请求网络中..."
 ): Job {
-    Logger.i("access token:${SpManager.getString(Constant.ACCESS_TOKEN_KEY)}")
+    Logger.d("access token:${SpManager.getString(Constant.ACCESS_TOKEN_KEY)}")
     //如果需要弹窗 通知Activity/fragment弹窗
     if (isShowDialog) uiChangeLiveData.showDialogEvent.postValue(loadingMessage)
     return viewModelScope.launch {

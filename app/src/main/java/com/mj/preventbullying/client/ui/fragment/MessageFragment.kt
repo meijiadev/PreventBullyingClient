@@ -370,6 +370,7 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
             if (!isHideFragment) {
                 viewModel.getAllDeviceRecords(1, curShowType)
             }
+
         }
         viewModel.rtcVideoUrlEvent.observe(this) {
             val tipsDialog =

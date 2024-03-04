@@ -18,6 +18,7 @@ import com.hjq.toast.style.WhiteToastStyle
 import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.tool.SpManager
 import com.mj.preventbullying.client.ui.viewmodel.GlobalEventViewModel
+import com.mj.preventbullying.client.ui.viewmodel.HeartbeatViewModel
 import com.mj.preventbullying.client.ui.viewmodel.TimerViewModel
 import com.mj.preventbullying.client.webrtc.SocketEventViewModel
 import com.mj.preventbullying.client.webrtc.WebrtcSocketManager
@@ -36,6 +37,7 @@ class MyApp : Application(), ViewModelStoreOwner {
         lateinit var timerViewModel: TimerViewModel
         lateinit var webrtcSocketManager: WebrtcSocketManager
         lateinit var globalEventViewModel: GlobalEventViewModel
+        lateinit var heartbeatViewModel: HeartbeatViewModel
 
     }
 
@@ -90,8 +92,10 @@ class MyApp : Application(), ViewModelStoreOwner {
         socketEventViewModel = getApplicationViewModel(SocketEventViewModel::class.java)
         webrtcSocketManager = getApplicationViewModel(WebrtcSocketManager::class.java)
         globalEventViewModel = getApplicationViewModel(GlobalEventViewModel::class.java)
+        heartbeatViewModel = getApplicationViewModel(HeartbeatViewModel::class.java)
         //Logger.i("启动-start-5")
     }
+
 
     /**
      * 获取作用域在Application的ViewModel对象

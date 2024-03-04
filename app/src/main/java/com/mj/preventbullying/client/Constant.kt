@@ -26,6 +26,7 @@ object Constant {
     const val NOTIFY_MSG_EVENT_KEY = "notify_msg_event_key"  // 极光消息通知
 
     const val HTTP_RETURN_CODE_428 = 428
+    var videoSnCOde: String = ""
 }
 
 

@@ -231,7 +231,7 @@ class SocketEventViewModel : BaseViewModel(), HandlerAction {
         }
 
         mSocket?.on(Socket.EVENT_CONNECT_ERROR) {
-            Logger.i("全局socket.io 连接错误！${it[0].toString()}")
+            Logger.d("全局socket.io 连接错误！${it[0].toString()}")
             isConnected = false
             loginStatusEvent.postValue(SOCKET_IO_DISCONNECTED)
         }

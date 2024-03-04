@@ -5,10 +5,12 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.lifecycle.lifecycleScope
 import com.hjq.shape.view.ShapeTextView
 import com.lxj.xpopup.core.CenterPopupView
+import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.R
 import com.mj.preventbullying.client.app.MyApp
 import com.orhanobut.logger.Logger
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import okhttp3.Call
 import okhttp3.Callback
@@ -27,6 +29,8 @@ import org.webrtc.MediaStream
 import org.webrtc.MediaStreamTrack
 import org.webrtc.PeerConnection
 import org.webrtc.PeerConnectionFactory
+import org.webrtc.RTCStatsCollectorCallback
+import org.webrtc.RTCStatsReport
 import org.webrtc.RendererCommon
 import org.webrtc.RtpReceiver
 import org.webrtc.RtpTransceiver
@@ -52,6 +56,8 @@ class RtcVideoDialog(context: Context) : CenterPopupView(context) {
     private var eglBaseContext: EglBase.Context? = null
     private var videoTrack: VideoTrack? = null
     private var videoUrl: String? = null
+    private var isRunning = true
+    private var videoLength = 0L
 
     override fun getImplLayoutId(): Int {
         return R.layout.dialog_rtc_video
@@ -116,45 +122,46 @@ class RtcVideoDialog(context: Context) : CenterPopupView(context) {
                 rtcConfig,
                 object : PeerConnection.Observer {
                     override fun onSignalingChange(p0: PeerConnection.SignalingState?) {
-
+                        Logger.i("onSignalingChange")
                     }
 
                     override fun onIceConnectionChange(p0: PeerConnection.IceConnectionState?) {
-
+                        Logger.i("onIceConnectionChange")
                     }
 
                     override fun onIceConnectionReceivingChange(p0: Boolean) {
-
+                        Logger.i("onIceConnectionReceivingChange")
                     }
 
                     override fun onIceGatheringChange(p0: PeerConnection.IceGatheringState?) {
-
+                        Logger.i("onIceGatheringChange")
                     }
 
                     override fun onIceCandidate(p0: IceCandidate?) {
-
+                        Logger.i("onIceCandidate")
                     }
 
                     override fun onIceCandidatesRemoved(p0: Array<out IceCandidate>?) {
-
+                        Logger.i("onIceCandidatesRemoved")
                     }
 
                     override fun onAddStream(p0: MediaStream?) {
                         videoTrack = p0?.videoTracks?.get(0)
                         videoTrack?.addSink(rtcVideo)
-
+                        MyApp.heartbeatViewModel.sendHeartbeat(Constant.videoSnCOde)
+                        Logger.i("onAddStream")
                     }
 
                     override fun onRemoveStream(p0: MediaStream?) {
-
+                        Logger.i("onRemoveStream")
                     }
 
                     override fun onDataChannel(p0: DataChannel?) {
-
+                        Logger.i("onDataChannel:${p0?.bufferedAmount()},${p0?.state()}")
                     }
 
                     override fun onRenegotiationNeeded() {
-
+                        Logger.i("onRenegotiationNeeded")
                     }
 
                     override fun onAddTrack(p0: RtpReceiver?, p1: Array<out MediaStream>?) {
@@ -162,9 +169,8 @@ class RtcVideoDialog(context: Context) : CenterPopupView(context) {
                         if (track is VideoTrack) {
                             val remoteVideoTrack = track
                             remoteVideoTrack.setEnabled(true)
-
                         }
-
+                        Logger.i("onAddTrack")
                     }
                 })
         peerConnection?.addTransceiver(
@@ -176,6 +182,28 @@ class RtcVideoDialog(context: Context) : CenterPopupView(context) {
             RtpTransceiver.RtpTransceiverInit(RtpTransceiver.RtpTransceiverDirection.RECV_ONLY)
         )
         peerConnection?.createOffer(sdpObserver, MediaConstraints())
+        lifecycleScope.launch {
+            while (isRunning) {
+                peerConnection?.getStats {
+                    val rtc = it.statsMap
+                    for (value in rtc) {
+                        if (value.value?.type == "inbound-rtp") {
+                            if (value.value.members.get("mediaType") == "video") {
+                                Logger.i("监听：${value.value}")
+                                val curLength = value.value.members["bytesReceived"] as Long
+                                if (curLength > videoLength) {
+                                    videoLength = curLength
+                                } else if (curLength == videoLength){
+                                    Logger.i("视频流已暂停")
+                                    release()
+                                }
+                            }
+                        }
+                    }
+                }
+                delay(2000)
+            }
+        }
     }
 
     private val sdpObserver = object : SdpObserver {
@@ -201,6 +229,7 @@ class RtcVideoDialog(context: Context) : CenterPopupView(context) {
         }
 
     }
+
 
     fun setRemoteDescription(sdp: String) {
         val remoteSdp = SessionDescription(SessionDescription.Type.ANSWER, sdp)
@@ -263,7 +292,8 @@ class RtcVideoDialog(context: Context) : CenterPopupView(context) {
             peerConnectionFactory = null
         }
         rtcVideo.clearImage()
-
+        MyApp.heartbeatViewModel.stopSend()
+        isRunning = false
     }
 
 

@@ -3,6 +3,7 @@ package com.mj.preventbullying.client.ui.viewmodel
 import android.util.ArrayMap
 import com.blackview.base.http.requestNoCheck
 import com.kunminx.architecture.ui.callback.UnPeekLiveData
+import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.http.apiService
 import com.mj.preventbullying.client.http.result.DeviceRecordResult
 import com.mj.preventbullying.client.http.result.PreviewAudioResult
@@ -84,6 +85,7 @@ class MessageViewModel : BaseViewModel() {
             Logger.i("获取绑定摄像头返回结果")
             val url = it.data.webrtcUrl
             rtcVideoUrlEvent.postValue(url)
+            Constant.videoSnCOde = it.data.snCode
         })
     }
 

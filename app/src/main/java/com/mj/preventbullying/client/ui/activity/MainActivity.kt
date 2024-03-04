@@ -260,7 +260,6 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
 
                 LOGIN_STATUS_FORCE_LOGOUT -> {
                     toast("账号已被其他人登录，你已被强制退出！")
-                    // Logger.i("有其他人登录，你也被强制退出")
                     loginOut()
                 }
 
