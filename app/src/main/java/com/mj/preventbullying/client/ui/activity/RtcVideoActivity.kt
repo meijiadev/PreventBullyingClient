@@ -1,12 +1,20 @@
 package com.mj.preventbullying.client.ui.activity
 
 
+import android.view.View.GONE
+import android.view.View.VISIBLE
+import androidx.lifecycle.lifecycleScope
+import com.lxj.xpopup.core.CenterPopupView
 import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.app.AppMvActivity
 import com.mj.preventbullying.client.app.MyApp
 import com.mj.preventbullying.client.databinding.ActivityRtcVideoBinding
 import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -46,6 +54,9 @@ class RtcVideoActivity : AppMvActivity<ActivityRtcVideoBinding, BaseViewModel>()
     private var eglBaseContext: EglBase.Context? = null
     private var videoTrack: VideoTrack? = null
     private var videoUrl: String? = null
+    private var isRunning = true
+    private var videoLength = 0L
+    private var job: Job? = null
 
     override fun getViewBinding(): ActivityRtcVideoBinding {
         return ActivityRtcVideoBinding.inflate(layoutInflater)
@@ -71,6 +82,10 @@ class RtcVideoActivity : AppMvActivity<ActivityRtcVideoBinding, BaseViewModel>()
         binding.backIv.setOnClickListener {
             Logger.i("退出rtc全屏")
             finish()
+        }
+        binding.restartPlayTv.setOnClickListener {
+            if (binding.restartPlayTv.text == "正在加载中...")
+                initPeer()
         }
     }
 
@@ -157,9 +172,7 @@ class RtcVideoActivity : AppMvActivity<ActivityRtcVideoBinding, BaseViewModel>()
                         if (track is VideoTrack) {
                             val remoteVideoTrack = track
                             remoteVideoTrack.setEnabled(true)
-
                         }
-
                     }
                 })
         peerConnection?.addTransceiver(
@@ -171,6 +184,39 @@ class RtcVideoActivity : AppMvActivity<ActivityRtcVideoBinding, BaseViewModel>()
             RtpTransceiver.RtpTransceiverInit(RtpTransceiver.RtpTransceiverDirection.RECV_ONLY)
         )
         peerConnection?.createOffer(sdpObserver, MediaConstraints())
+        job = lifecycleScope.launch {
+            while (isRunning) {
+                peerConnection?.getStats {
+                    val rtc = it.statsMap
+                    for (value in rtc) {
+                        if (value.value?.type == "inbound-rtp") {
+                            if (value.value.members.get("mediaType") == "video") {
+                                Logger.i("监听：${value.value}")
+                                val curLength =
+                                    value.value.members["bytesReceived"].toString().toLong()
+                                if (videoLength == 0L) {
+                                    // 画面正式加载出来的时候
+                                    lifecycleScope.launch(Dispatchers.Main) {
+                                        binding.restartPlayTv.visibility = GONE
+                                        MyApp.heartbeatViewModel.sendHeartbeat(Constant.videoSnCOde)
+                                    }
+                                }
+                                if (curLength > videoLength) {
+                                    videoLength = curLength
+                                } else if (curLength == videoLength) {
+                                    Logger.i("视频流已暂停")
+                                    binding.restartPlayTv.text = "当前视频已断开，点击重新加载！"
+                                    binding.restartPlayTv.visibility = VISIBLE
+                                    release()
+                                }
+                            }
+                        }
+                    }
+                }
+                delay(2000)
+            }
+        }
+
     }
 
     private val sdpObserver = object : SdpObserver {
@@ -278,6 +324,8 @@ class RtcVideoActivity : AppMvActivity<ActivityRtcVideoBinding, BaseViewModel>()
         }
         binding.rtcVideo.clearImage()
         MyApp.heartbeatViewModel.stopSend()
+        isRunning = false
+        job?.cancel()
 
     }
 }

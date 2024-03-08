@@ -9,69 +9,83 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_5"
         app:shape_radius="@dimen/dp_12"
-        app:shape_solidColor="@color/white"
-        >
+        app:shape_solidColor="@color/white">
+
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/title_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="关联摄像头"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:textColor="@color/black"
             android:layout_marginTop="@dimen/dp_10"
-            android:textSize="@dimen/sp_16"
             android:gravity="center"
-            />
+            android:text="关联摄像头"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp_16"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <org.webrtc.SurfaceViewRenderer
             android:id="@+id/rtc_video"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginTop="@dimen/dp_5"
             app:layout_constraintDimensionRatio="H,16:9"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title_tv" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/restart_play_tv"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_50"
+            android:gravity="center"
+            android:text="正在加载中..."
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_15"
+            app:layout_constraintBottom_toTopOf="@id/bottom_layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title_tv"
-            android:layout_marginTop="@dimen/dp_5"
             />
+
         <com.hjq.shape.layout.ShapeLinearLayout
+            android:id="@+id/bottom_layout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_40"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rtc_video"
             app:shape_bottomLeftRadius="@dimen/dp_12"
             app:shape_bottomRightRadius="@dimen/dp_12"
-            app:shape_solidColor="@color/white"
-            app:layout_constraintTop_toBottomOf="@id/rtc_video"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:orientation="horizontal"
-            >
+            app:shape_solidColor="@color/white">
+
             <com.hjq.shape.view.ShapeTextView
                 android:id="@+id/full_tv"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/dp_40"
                 android:layout_weight="1"
-                android:textSize="@dimen/sp_15"
-                android:text="全屏显示"
-                android:textStyle="bold"
-                android:textColor="@color/common_confirm_text_color"
                 android:gravity="center"
-                />
+                android:text="全屏显示"
+                android:textColor="@color/common_confirm_text_color"
+                android:textSize="@dimen/sp_15"
+                android:textStyle="bold" />
+
             <View
                 android:layout_width="@dimen/dp_1"
                 android:layout_height="match_parent"
-                android:background="@color/common_line_color"
-                />
+                android:background="@color/common_line_color" />
+
             <com.hjq.shape.view.ShapeTextView
                 android:id="@+id/close_tv"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/dp_40"
                 android:layout_weight="1"
-                android:textSize="@dimen/sp_15"
-                android:text="退出监控"
-                android:textStyle="bold"
-                android:textColor="@color/common_confirm_text_color"
                 android:gravity="center"
-                />
+                android:text="退出监控"
+                android:textColor="@color/common_confirm_text_color"
+                android:textSize="@dimen/sp_15"
+                android:textStyle="bold" />
 
         </com.hjq.shape.layout.ShapeLinearLayout>
     </com.hjq.shape.layout.ShapeConstraintLayout>

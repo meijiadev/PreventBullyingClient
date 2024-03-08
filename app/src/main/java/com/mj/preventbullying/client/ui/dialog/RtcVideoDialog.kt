@@ -1,7 +1,7 @@
 package com.mj.preventbullying.client.ui.dialog
 
 import android.content.Context
-import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.lifecycle.lifecycleScope
 import com.hjq.shape.view.ShapeTextView
 import com.lxj.xpopup.core.CenterPopupView
@@ -10,6 +10,7 @@ import com.mj.preventbullying.client.R
 import com.mj.preventbullying.client.app.MyApp
 import com.orhanobut.logger.Logger
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import okhttp3.Call
@@ -50,6 +51,7 @@ class RtcVideoDialog(context: Context) : CenterPopupView(context) {
     private val closeTv: ShapeTextView by lazy { findViewById(R.id.close_tv) }
     private val fullTv: ShapeTextView by lazy { findViewById(R.id.full_tv) }
     private val rtcVideo: SurfaceViewRenderer by lazy { findViewById(R.id.rtc_video) }
+    private val restartPlayTv: AppCompatTextView by lazy { findViewById(R.id.restart_play_tv) }
 
     private var peerConnection: PeerConnection? = null
     private var peerConnectionFactory: PeerConnectionFactory? = null
@@ -58,6 +60,7 @@ class RtcVideoDialog(context: Context) : CenterPopupView(context) {
     private var videoUrl: String? = null
     private var isRunning = true
     private var videoLength = 0L
+    private var job: Job? = null
 
     override fun getImplLayoutId(): Int {
         return R.layout.dialog_rtc_video
@@ -66,7 +69,6 @@ class RtcVideoDialog(context: Context) : CenterPopupView(context) {
 
     override fun onCreate() {
         super.onCreate()
-
         closeTv.setOnClickListener {
             dismiss()
         }
@@ -75,6 +77,10 @@ class RtcVideoDialog(context: Context) : CenterPopupView(context) {
             onFull?.invoke()
         }
         initPeer()
+        restartPlayTv.setOnClickListener {
+            if (restartPlayTv.text == "正在加载中...")
+                initPeer()
+        }
     }
 
     private var onFull: (() -> Unit)? = null
@@ -148,7 +154,10 @@ class RtcVideoDialog(context: Context) : CenterPopupView(context) {
                     override fun onAddStream(p0: MediaStream?) {
                         videoTrack = p0?.videoTracks?.get(0)
                         videoTrack?.addSink(rtcVideo)
-                        MyApp.heartbeatViewModel.sendHeartbeat(Constant.videoSnCOde)
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            // restartPlayTv.visibility = GONE
+                            MyApp.heartbeatViewModel.sendHeartbeat(Constant.videoSnCOde)
+                        }
                         Logger.i("onAddStream")
                     }
 
@@ -182,7 +191,7 @@ class RtcVideoDialog(context: Context) : CenterPopupView(context) {
             RtpTransceiver.RtpTransceiverInit(RtpTransceiver.RtpTransceiverDirection.RECV_ONLY)
         )
         peerConnection?.createOffer(sdpObserver, MediaConstraints())
-        lifecycleScope.launch {
+        job = lifecycleScope.launch {
             while (isRunning) {
                 peerConnection?.getStats {
                     val rtc = it.statsMap
@@ -190,11 +199,21 @@ class RtcVideoDialog(context: Context) : CenterPopupView(context) {
                         if (value.value?.type == "inbound-rtp") {
                             if (value.value.members.get("mediaType") == "video") {
                                 Logger.i("监听：${value.value}")
-                                val curLength = value.value.members["bytesReceived"] as Long
+                                val curLength =
+                                    value.value.members["bytesReceived"].toString().toLong()
+                                if (videoLength == 0L) {
+                                    // 画面正式加载出来的时候
+                                    lifecycleScope.launch(Dispatchers.Main) {
+                                        restartPlayTv.visibility = GONE
+                                        MyApp.heartbeatViewModel.sendHeartbeat(Constant.videoSnCOde)
+                                    }
+                                }
                                 if (curLength > videoLength) {
                                     videoLength = curLength
-                                } else if (curLength == videoLength){
+                                } else if (curLength == videoLength) {
                                     Logger.i("视频流已暂停")
+                                    restartPlayTv.text = "当前视频已断开，点击重新加载！"
+                                    restartPlayTv.visibility = VISIBLE
                                     release()
                                 }
                             }
@@ -294,6 +313,7 @@ class RtcVideoDialog(context: Context) : CenterPopupView(context) {
         rtcVideo.clearImage()
         MyApp.heartbeatViewModel.stopSend()
         isRunning = false
+        job?.cancel()
     }
 
 
