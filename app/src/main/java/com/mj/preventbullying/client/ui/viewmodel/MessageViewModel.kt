@@ -83,9 +83,11 @@ class MessageViewModel : BaseViewModel() {
             apiService.getRtcVideoUrl(recordId)
         }, {
             Logger.i("获取绑定摄像头返回结果")
-            val url = it.data.webrtcUrl
-            rtcVideoUrlEvent.postValue(url)
-            Constant.videoSnCOde = it.data.snCode
+            if (it.success){
+                val url = it.data.webrtcUrl
+                rtcVideoUrlEvent.postValue(url)
+                Constant.videoSnCOde = it.data.snCode
+            }
         })
     }
 
