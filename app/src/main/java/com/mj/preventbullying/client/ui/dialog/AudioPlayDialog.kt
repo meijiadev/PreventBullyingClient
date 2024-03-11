@@ -39,7 +39,6 @@ class AudioPlayDialog(context: Context) : CenterPopupView(context),
     override fun onCreate() {
         super.onCreate()
         AudioPlayer.instance.addListener(this)
-        AudioPlayer.instance.play(audioUrl)
         isPlaying = true
         playIv?.setOnClickListener {
             Logger.i("当前是否在播放：${AudioPlayer.instance.isPlaying()}")
@@ -109,6 +108,7 @@ class AudioPlayDialog(context: Context) : CenterPopupView(context),
      */
     fun setPlayUrl(url: String): AudioPlayDialog = apply {
         this.audioUrl = url
+        AudioPlayer.instance.play(audioUrl)
     }
 
     //计算播放时间

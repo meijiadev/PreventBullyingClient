@@ -1,7 +1,10 @@
 package com.mj.preventbullying.client.ui.activity
 
 
+import android.view.MotionEvent
+import android.view.View
 import android.view.View.GONE
+import android.view.View.OnTouchListener
 import android.view.View.VISIBLE
 import androidx.lifecycle.lifecycleScope
 import com.lxj.xpopup.core.CenterPopupView
@@ -83,6 +86,7 @@ class RtcVideoActivity : AppMvActivity<ActivityRtcVideoBinding, BaseViewModel>()
             Logger.i("退出rtc全屏")
             finish()
         }
+
         binding.restartPlayTv.setOnClickListener {
             if (binding.restartPlayTv.text == "正在加载中...")
                 initPeer()
@@ -95,7 +99,7 @@ class RtcVideoActivity : AppMvActivity<ActivityRtcVideoBinding, BaseViewModel>()
         binding.rtcVideo.init(eglBaseContext, null)
         binding.rtcVideo.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FILL)
         binding.rtcVideo.setEnableHardwareScaler(true)
-        binding.rtcVideo.setZOrderMediaOverlay(true)
+        //binding.rtcVideo.setZOrderMediaOverlay(true)
         createPeer()
     }
 
@@ -191,7 +195,7 @@ class RtcVideoActivity : AppMvActivity<ActivityRtcVideoBinding, BaseViewModel>()
                     for (value in rtc) {
                         if (value.value?.type == "inbound-rtp") {
                             if (value.value.members.get("mediaType") == "video") {
-                                Logger.i("监听：${value.value}")
+                             //   Logger.i("监听：${value.value}")
                                 val curLength =
                                     value.value.members["bytesReceived"].toString().toLong()
                                 if (videoLength == 0L) {

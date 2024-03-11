@@ -75,7 +75,9 @@ class MessageViewModel : BaseViewModel() {
         }, {
             Logger.i("获取预览得 音频地址：$it")
             getPreVieUrlEvent.postValue(it)
-        })
+        },{
+
+        },true,"加载中...")
     }
 
     fun getRtcVideoUrl(recordId: String) {

@@ -124,7 +124,6 @@ class MineFragment : BaseMvFragment<FragmentMineBinding, SettingViewModel>() {
         }
 
         binding.aboutLy.setOnClickListener {
-            startActivity(RtcVideoActivity::class.java)
         }
     }
 

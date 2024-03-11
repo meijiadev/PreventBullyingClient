@@ -56,6 +56,7 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
     private var curShowType: String? = PENDING_STATUS
     private var isHideFragment: Boolean = false
     private var isNotify = false
+    private var audioPlayDialog: AudioPlayDialog? = null
 
     private var curDataPage = 1   //当前获取第几页数据
     private var maxPage = 1       // 最大页数
@@ -231,10 +232,10 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
         }
     }
 
-    private fun showRtcVideo(url:String) {
+    private fun showRtcVideo(url: String) {
         val rtcVideoDialog = RtcVideoDialog(requireContext()).onFullListener {
-            val intent=Intent(mActivity,RtcVideoActivity::class.java)
-            intent.putExtra("videoUrl",url)
+            val intent = Intent(mActivity, RtcVideoActivity::class.java)
+            intent.putExtra("videoUrl", url)
             startActivity(intent)
         }.setVideoUrl(url)
         XPopup.Builder(requireContext())
@@ -245,6 +246,28 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
             .popupAnimation(PopupAnimation.TranslateFromBottom)
             .asCustom(rtcVideoDialog)
             .show()
+    }
+
+    private fun showAudioDialog(url: String) {
+        if (audioPlayDialog == null || audioPlayDialog?.isShow == false) {
+            kotlin.runCatching {
+                audioPlayDialog =
+                    AudioPlayDialog(requireContext()).setPlayUrl(url)
+                        .setAudioPLayerStartListener {
+                        }
+                XPopup.Builder(requireContext())
+                    .isViewMode(true)
+                    .dismissOnBackPressed(false)
+                    .dismissOnTouchOutside(false)
+                    .isDestroyOnDismiss(true)
+                    .popupAnimation(PopupAnimation.TranslateFromBottom)
+                    .asCustom(audioPlayDialog)
+                    .show()
+            }.onFailure {
+                Logger.e("error:${it}")
+            }
+
+        }
     }
 
     private fun resetMessageBt() {
@@ -308,6 +331,7 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
                     messageAdapter?.removeAtRange(0..<size)
                 }
                 binding.smartRefreshLayout.finishRefresh()
+                loadMoreHelp?.trailingLoadState = LoadState.NotLoading(true)
                 return@observe
             }
             curDataPage = it.data?.current ?: 1
@@ -337,22 +361,7 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
             it?.let { it1 ->
                 it1.data?.let { data ->
                     lifecycleScope.launch(Dispatchers.IO) {
-                        kotlin.runCatching {
-                            val audioPlayDialog =
-                                AudioPlayDialog(requireContext()).setPlayUrl(data.url)
-                                    .setAudioPLayerStartListener {
-                                    }
-                            XPopup.Builder(requireContext())
-                                .isViewMode(true)
-                                .dismissOnBackPressed(false)
-                                .dismissOnTouchOutside(false)
-                                .isDestroyOnDismiss(true)
-                                .popupAnimation(PopupAnimation.TranslateFromBottom)
-                                .asCustom(audioPlayDialog)
-                                .show()
-                        }.onFailure {
-                            Logger.e("error:${it}")
-                        }
+                        showAudioDialog(data.url)
                     }
                 }
             }
@@ -373,22 +382,26 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
 
         }
         viewModel.rtcVideoUrlEvent.observe(this) {
-            val tipsDialog =
-                MessageTipsDialog(requireContext()).setTitle("查看当前设备关联的监控画面？")
-                    .setListener(object : MessageTipsDialog.OnListener {
-                        override fun onCancel() {
+            if (rtcTipsDialog == null || rtcTipsDialog?.isShow == false) {
+                rtcTipsDialog =
+                    MessageTipsDialog(requireContext()).setTitle("查看当前设备关联的监控画面？")
+                        .setListener(object : MessageTipsDialog.OnListener {
+                            override fun onCancel() {
 
-                        }
+                            }
 
-                        override fun onConfirm() {
-                            showRtcVideo(it)
-                        }
-                    })
-            XPopup.Builder(requireContext()).isViewMode(true)
-                .popupAnimation(PopupAnimation.TranslateFromBottom).asCustom(tipsDialog).show()
+                            override fun onConfirm() {
+                                showRtcVideo(it)
+                            }
+                        })
+                XPopup.Builder(requireContext()).isViewMode(true)
+                    .popupAnimation(PopupAnimation.TranslateFromBottom).asCustom(rtcTipsDialog)
+                    .show()
+            }
         }
     }
 
+    private var rtcTipsDialog: MessageTipsDialog? = null
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         Logger.i("是否隐藏：$hidden")

@@ -24,13 +24,13 @@ class MessageTipsDialog(context: Context) : CenterPopupView(context) {
         titleTv.text = titleMsg
         // 取消点击事件
         cancelTv.setOnClickListener {
-            listener?.onCancel()
             dismiss()
+            listener?.onCancel()
         }
         // 确定点击事件
         confirmTv.setOnClickListener {
-            listener?.onConfirm()
             dismiss()
+            listener?.onConfirm()
         }
     }
 

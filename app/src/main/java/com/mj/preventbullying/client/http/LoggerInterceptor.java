@@ -80,7 +80,7 @@ public class LoggerInterceptor implements Interceptor {
                 if (body != null) {
                     MediaType mediaType = body.contentType();
                     if (mediaType != null) {
-                        Logger.d("responseBody\'s contentType : " + mediaType);
+                    //    Logger.d("responseBody\'s contentType : " + mediaType);
                         if (this.isText(mediaType)) {
                             String resp = body.string();
                             Logger.d("responseBody\'s content : " + resp);

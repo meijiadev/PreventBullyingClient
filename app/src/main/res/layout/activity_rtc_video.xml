@@ -13,7 +13,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
        >
-
         <org.webrtc.SurfaceViewRenderer
             android:id="@+id/rtc_video"
             android:layout_width="wrap_content"
@@ -40,15 +39,16 @@
     <RelativeLayout
         android:id="@+id/title_rl"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_50"
+        android:layout_height="@dimen/dp_60"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/back_iv"
-            android:layout_width="@dimen/dp_30"
-            android:layout_height="@dimen/dp_30"
-            android:layout_centerVertical="true"
+            android:layout_width="@dimen/dp_35"
+            android:layout_height="@dimen/dp_35"
+            android:layout_alignParentBottom="true"
             android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginBottom="@dimen/dp_5"
             android:src="@mipmap/back_white" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -57,7 +57,10 @@
             android:layout_centerInParent="true"
             android:text="关联摄像头"
             android:textColor="@color/white"
-            android:textSize="@dimen/sp_15" />
+            android:textSize="@dimen/sp_15"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/dp_5"
+            />
 
     </RelativeLayout>
 

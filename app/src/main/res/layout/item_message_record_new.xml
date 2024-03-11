@@ -177,7 +177,7 @@
             android:layout_marginEnd="@dimen/dp_5"
             android:layout_marginBottom="@dimen/dp_10"
             android:gravity="center"
-            android:text="查看监控"
+            android:text="实时监控"
             android:textSize="@dimen/sp_13"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/process_bt"
