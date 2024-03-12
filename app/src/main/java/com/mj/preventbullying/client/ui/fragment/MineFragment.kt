@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import cn.jpush.android.ups.JPushUPSManager
 import com.azhon.appupdate.listener.OnDownloadListenerAdapter
 import com.azhon.appupdate.manager.DownloadManager
@@ -23,6 +24,7 @@ import com.mj.preventbullying.client.tool.ActivityManager
 import com.mj.preventbullying.client.tool.NetworkUtil
 import com.mj.preventbullying.client.tool.SpManager
 import com.mj.preventbullying.client.ui.activity.AlarmAudioActivity
+import com.mj.preventbullying.client.ui.activity.PrivacyActivity
 import com.mj.preventbullying.client.ui.activity.RtcVideoActivity
 import com.mj.preventbullying.client.ui.dialog.AmendPasswordDialog
 import com.mj.preventbullying.client.ui.dialog.ItemListDialog
@@ -71,7 +73,8 @@ class MineFragment : BaseMvFragment<FragmentMineBinding, SettingViewModel>() {
             View.GONE
         }
         binding.serviceTv.text =
-            ApiService.getHostUrl().substring(0, 10) + "****" + ApiService.getHostUrl().substring(14)
+            ApiService.getHostUrl().substring(0, 10) + "****" + ApiService.getHostUrl()
+                .substring(14)
         var phone = SpManager.getString(Constant.USER_PHONE_KEY)
         if (phone.isNullOrEmpty()) {
             phone = "未绑定手机号码"
@@ -124,6 +127,7 @@ class MineFragment : BaseMvFragment<FragmentMineBinding, SettingViewModel>() {
         }
 
         binding.aboutLy.setOnClickListener {
+            startActivity(PrivacyActivity::class.java)
         }
     }
 

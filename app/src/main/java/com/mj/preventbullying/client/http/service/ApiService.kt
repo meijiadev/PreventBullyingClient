@@ -38,18 +38,21 @@ import retrofit2.http.Query
 interface ApiService {
     companion object {
         private const val BASE_TEST_HTTP_URL = "https://cloud.hdvsiot.com:2443/"       // 测试环境
+
         //private const val BASE_HTTP_URL = "https://spad-cloud.hdvsiot.com/"             // 演示环境
-        private const val Base_COBWEB_URL="https://spad-cloud.cobwebiot.com/"
+        private const val Base_COBWEB_URL = "https://spad-cloud.cobwebiot.com/"
         private const val BASE_HTTP_URL_ZYQ = "http://cloud.zyq0407.com:8080/"       // 开发环境
         private const val PRE_BASE_HTTP_URL_ZYQ = "http://192.168.1.6:9999/"       // 开发环境
 
         const val API = "api/"
+        const val policy_file_url = "https://cloud.hdvsiot.com:2443/app/files/privacy_policy.html"
+
         //const val API = ""
         private var isDevVersion = true
         private var isTestVersion = true   // 是否是测试环境
         fun getHostUrl(): String {
             //  isDevVersion = SpManager.getBoolean(Constant.SERVICE_URL_KEY, true)
-           // return PRE_BASE_HTTP_URL_ZYQ
+            // return PRE_BASE_HTTP_URL_ZYQ
             return if (isTestVersion) {
                 BASE_TEST_HTTP_URL
             } else {

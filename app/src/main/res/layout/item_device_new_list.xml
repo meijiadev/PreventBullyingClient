@@ -29,6 +29,10 @@
             android:layout_marginStart="@dimen/dp_10"
             android:layout_marginTop="@dimen/dp_8"
             android:singleLine="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:text="惠州一中|二楼综合办公室"
             android:textSize="@dimen/sp_11" />
 
