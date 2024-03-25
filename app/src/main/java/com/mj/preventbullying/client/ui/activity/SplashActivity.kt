@@ -46,7 +46,7 @@ class SplashActivity : BaseMvActivity<ActivitySplashBinding, BaseViewModel>() {
             if (SpManager.getString(Constant.ACCESS_TOKEN_KEY).isNullOrEmpty()) {
                 startActivity(LoginActivity::class.java)
             } else {
-                startActivity(MainActivity::class.java)
+                startActivity(HomeActivity::class.java)
             }
             finish()
         }

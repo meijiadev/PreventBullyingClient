@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.jpush.android.api.JPushInterface
 import com.chad.library.adapter4.BaseQuickAdapter
@@ -83,6 +84,7 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
             delay(200)
             viewModel.getAllDeviceRecords(1, curShowType)
         }
+        binding.titleLayout.titleTv.text="告警消息"
     }
 
     override fun initData() {
@@ -229,6 +231,9 @@ class MessageFragment : BaseMvFragment<FragmentMessageBinding, MessageViewModel>
             binding.processingTv.shapeDrawableBuilder.setSolidColor(requireContext().getColor(com.sjb.base.R.color.gold))
                 .intoBackground()
             filtrationMsgTp(PROCESSING_STATUS)
+        }
+        binding.titleLayout.backIv.setOnClickListener {
+            findNavController().popBackStack()
         }
     }
 

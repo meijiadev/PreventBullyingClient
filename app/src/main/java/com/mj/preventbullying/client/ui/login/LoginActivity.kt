@@ -24,6 +24,7 @@ import com.mj.preventbullying.client.databinding.ActivityLoginBinding
 import com.mj.preventbullying.client.http.service.ApiService
 import com.mj.preventbullying.client.tool.ActivityManager
 import com.mj.preventbullying.client.tool.requestPermission
+import com.mj.preventbullying.client.ui.activity.HomeActivity
 import com.mj.preventbullying.client.ui.activity.MainActivity
 import com.orhanobut.logger.Logger
 import com.sjb.base.base.BaseMvActivity
@@ -112,7 +113,7 @@ class LoginActivity : BaseMvActivity<ActivityLoginBinding, LoginViewModel>() {
             JPushUPSManager.turnOnPush(this) {
                 Logger.i("打开极光推送服务：$it")
             }
-            startActivity(MainActivity::class.java)
+            startActivity(HomeActivity::class.java)
             finish()
         }
         MyApp.globalEventViewModel.codeEvent.observe(this) {

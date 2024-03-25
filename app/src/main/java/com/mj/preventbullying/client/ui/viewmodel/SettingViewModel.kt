@@ -2,6 +2,7 @@ package com.mj.preventbullying.client.ui.viewmodel
 
 import android.util.ArrayMap
 import com.blackview.base.http.requestNoCheck
+import com.kunminx.architecture.ui.callback.UnPeekLiveData
 import com.mj.preventbullying.client.Constant
 import com.mj.preventbullying.client.http.apiService
 import com.mj.preventbullying.client.tool.SpManager
@@ -14,7 +15,7 @@ import com.sjb.base.base.BaseViewModel
  */
 
 class SettingViewModel : BaseViewModel() {
-
+     var amendEvent=UnPeekLiveData<Boolean>()
     /**
      * 修改密码
      */
@@ -28,7 +29,8 @@ class SettingViewModel : BaseViewModel() {
         requestNoCheck({
             apiService.amendPs(params)
         }, {
-
+            Logger.i("修改密码：$it")
+            amendEvent.postValue(it.success)
         })
     }
 

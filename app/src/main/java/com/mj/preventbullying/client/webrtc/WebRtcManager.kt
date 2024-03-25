@@ -1,7 +1,9 @@
 package com.mj.preventbullying.client.webrtc
 
 import android.content.Context
+import android.media.AudioFormat
 import android.media.AudioManager
+import android.media.MediaRecorder
 import com.mj.preventbullying.client.app.MyApp
 import com.orhanobut.logger.Logger
 import org.webrtc.*
@@ -65,7 +67,11 @@ class WebRtcManager(context: Context) : SdpObserver {
         // -----------创建PeerConnectionFactory
         val adm =
             JavaAudioDeviceModule.builder(context)
-                .createAudioDeviceModule()  //音频配置当前JAVA实现，还有native
+                .setUseHardwareAcousticEchoCanceler(true)
+                .setUseHardwareNoiseSuppressor(true)
+                .setSampleRate(16000)
+                .setAudioFormat(AudioFormat.ENCODING_PCM_16BIT)
+                .setAudioSource(MediaRecorder.AudioSource.MIC)
         val encoderFactory: VideoEncoderFactory
         val decoderFactory: VideoDecoderFactory
 
@@ -82,7 +88,7 @@ class WebRtcManager(context: Context) : SdpObserver {
             .setOptions(options)
             .setVideoDecoderFactory(decoderFactory)
             .setVideoEncoderFactory(encoderFactory)
-            .setAudioDeviceModule(adm)    //设置音频采集和播放使用的配置,当前使用java中的audioTrack 和audioRecord
+            .setAudioDeviceModule(adm.createAudioDeviceModule())    //设置音频采集和播放使用的配置,当前使用java中的audioTrack 和audioRecord
             .createPeerConnectionFactory()
 
         Logger.i("createConnectFactory done")

@@ -91,10 +91,6 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
     override fun initParam() {
         // 获取组织列表
         MyApp.globalEventViewModel.getOrgList()
-//        immersionBar {
-//            //深色字体
-//            statusBarDarkFont(true)
-//        }
         requestPermission()
         // 设置通知的样式
         val builder = BasicPushNotificationBuilder(this)
@@ -178,7 +174,6 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
     }
 
     private fun showOrgDialog(v: View) {
-
         val treeList = mutableListOf<TreeModel>()
         MyApp.globalEventViewModel.treeList?.let { treeList.addAll(it) }
         val location = IntArray(2)
@@ -204,7 +199,6 @@ class MainActivity : AppMvActivity<ActivityMainBinding, MainViewModel>() {
 
 
     override fun initView() {
-
         navHostFragment =
             supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
         navController = navHostFragment.navController

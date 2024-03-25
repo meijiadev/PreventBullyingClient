@@ -57,6 +57,15 @@
         <activity
             android:name=".ui.login.LoginActivity"
             android:exported="true" />
+        <activity android:name=".ui.activity.HomeActivity"
+            android:exported="true"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="com.mj.preventbullying.client.ui.MainActivity" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.activity.MainActivity"
             android:exported="true"

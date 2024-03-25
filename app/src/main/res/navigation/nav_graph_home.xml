@@ -3,29 +3,66 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph_home"
-    app:startDestination="@id/message_fragment">
+    app:startDestination="@id/homeFragment">
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.mj.preventbullying.client.ui.fragment.HomeFragment"
+        android:label="HomeFragment"
+        tools:layout="@layout/fragment_home"
+        >
+        <action
+            android:id="@+id/action_homeFragment_to_messageFragment"
+            app:destination="@id/messageFragment"
+            app:enterAnim="@anim/action_right_enter"
+            app:exitAnim="@anim/action_right_exit"
+            app:popEnterAnim="@anim/action_left_enter"
+            app:popExitAnim="@anim/action_left_exit"/>
+        <action
+            android:id="@+id/action_homeFragment_to_devFragment"
+            app:destination="@id/devFragment"
+            app:enterAnim="@anim/action_right_enter"
+            app:exitAnim="@anim/action_left_exit"
+            app:popEnterAnim="@anim/action_left_enter"
+            app:popExitAnim="@anim/action_left_exit"
+            />
+        <action
+            android:id="@+id/action_settingFragment_to_keywordFragment"
+            app:destination="@id/keywordFragment"
+            app:enterAnim="@anim/action_right_enter"
+            app:exitAnim="@anim/action_left_exit"
+            app:popEnterAnim="@anim/action_left_enter"
+            app:popExitAnim="@anim/action_right_exit"
+            />
+        <action
+            android:id="@+id/action_settingFragment_to_mineFragment"
+            app:destination="@id/mineFragment"
+            app:enterAnim="@anim/action_right_enter"
+            app:exitAnim="@anim/action_left_exit"
+            app:popEnterAnim="@anim/action_left_enter"
+            app:popExitAnim="@anim/action_right_exit"/>
+    </fragment>
 
     <fragment
-        android:id="@+id/message_fragment"
+        android:id="@+id/messageFragment"
         android:name="com.mj.preventbullying.client.ui.fragment.MessageFragment"
         android:label="MessageFragment"
         tools:layout="@layout/fragment_message" />
+
     <fragment
-        android:id="@+id/dev_fragment"
+        android:id="@+id/devFragment"
         android:name="com.mj.preventbullying.client.ui.fragment.DeviceFragment"
         android:label="DevFragment"
         tools:layout="@layout/fragment_device" />
 
     <fragment
-        android:id="@+id/keyword_fragment"
+        android:id="@+id/keywordFragment"
         android:name="com.mj.preventbullying.client.ui.fragment.KeywordManagerFragment"
         android:label="KeywordFragment"
         tools:layout="@layout/fragment_keyword_manager" />
     <fragment
-        android:id="@+id/mine_fragment"
+        android:id="@+id/mineFragment"
         android:name="com.mj.preventbullying.client.ui.fragment.MineFragment"
         android:label="MineFragment"
         tools:layout="@layout/fragment_mine" />
-
 
 </navigation>

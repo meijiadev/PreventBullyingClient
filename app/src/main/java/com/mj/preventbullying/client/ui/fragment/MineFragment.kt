@@ -44,6 +44,7 @@ class MineFragment : BaseMvFragment<FragmentMineBinding, SettingViewModel>() {
 
     // 设备注册相关页面
     private var treeList: MutableList<TreeModel>? = null
+    private var passwordDialog: AmendPasswordDialog? = null
 
     companion object {
         fun newInstance(): MineFragment {
@@ -95,11 +96,11 @@ class MineFragment : BaseMvFragment<FragmentMineBinding, SettingViewModel>() {
             startActivity(AlarmAudioActivity::class.java)
         }
         binding.passwordLy.setOnClickListener {
-            val passwordDialog = AmendPasswordDialog(requireContext())
+            passwordDialog = AmendPasswordDialog(requireContext())
             XPopup.Builder(requireContext()).isViewMode(true)
                 .popupAnimation(PopupAnimation.TranslateFromBottom)
                 .asCustom(passwordDialog).show()
-            passwordDialog.setOnConfirmListener { oldPs, newPs ->
+            passwordDialog?.setOnConfirmListener { oldPs, newPs ->
                 // 确认修改密码
                 viewModel.amendPassword(oldPs, newPs)
             }
@@ -126,9 +127,9 @@ class MineFragment : BaseMvFragment<FragmentMineBinding, SettingViewModel>() {
             showOrgDialog(it)
         }
 
-        binding.aboutLy.setOnClickListener {
-            startActivity(PrivacyActivity::class.java)
-        }
+//        binding.aboutLy.setOnClickListener {
+//            startActivity(PrivacyActivity::class.java)
+//        }
     }
 
     /**
@@ -222,6 +223,16 @@ class MineFragment : BaseMvFragment<FragmentMineBinding, SettingViewModel>() {
                 Constant.isNewAppVersion = it.data.versionCode > BuildConfig.VERSION_CODE
                 if (!Constant.isNewAppVersion) {
                     toast("暂无新版本！")
+                }
+            }
+        }
+
+        viewModel.amendEvent.observe(this) {
+            it?.let {
+                if (it) {
+                    passwordDialog?.dismiss()
+                    toast("修改成功！")
+                    loginOut()
                 }
             }
         }
